@@ -235,9 +235,12 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                         <div className="bg-[#0A0A0A] p-8 rounded-[40px] text-white">
                             <h3 className="text-xl font-bold mb-8">Quick Actions</h3>
                             <div className="grid grid-cols-1 gap-4">
-                                <button className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+                                <Link 
+                                    href={route('loans.apply')}
+                                    className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform"
+                                >
                                     <Plus className="w-5 h-5" /> Apply for Loan
-                                </button>
+                                </Link>
                                 <button className="w-full bg-zinc-800 text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors">
                                     <CreditCard className="w-5 h-5" /> Pay EMI
                                 </button>

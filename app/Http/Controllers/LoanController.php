@@ -69,4 +69,10 @@ class LoanController extends Controller
             ]
         ]);
     }
+    public function apply()
+    {
+        return Inertia::render('Loans/Apply', [
+            'user' => auth()->user()
+        ]);
+    }
 }
