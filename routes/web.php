@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
     // Card Routes
     Route::get('/cards', [\App\Http\Controllers\CardController::class, 'index'])->name('cards.index');
+    Route::get('/cards/request', [\App\Http\Controllers\CardController::class, 'create'])->name('cards.request');
 
     // Investment Routes
     Route::get('/investments', [\App\Http\Controllers\InvestmentController::class, 'index'])->name('investments.index');

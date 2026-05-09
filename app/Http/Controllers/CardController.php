@@ -17,4 +17,11 @@ class CardController extends Controller
             'recentTransactions' => $user->transactions()->latest()->take(6)->get(),
         ]);
     }
+
+    public function create()
+    {
+        return Inertia::render('Cards/Request', [
+            'user' => auth()->user()
+        ]);
+    }
 }
