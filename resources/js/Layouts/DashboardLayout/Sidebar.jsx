@@ -64,9 +64,14 @@ export default function Sidebar() {
                         <button className="text-gray-400 hover:text-white transition-colors">
                             <Settings className="w-4 h-4" />
                         </button>
-                        <button className="text-red-400 hover:text-red-500 transition-colors">
+                        <Link 
+                            href={route('logout')} 
+                            method="post" 
+                            as="button" 
+                            className="text-red-400 hover:text-red-500 transition-colors"
+                        >
                             <LogOut className="w-4 h-4" />
-                        </button>
+                        </Link>
                     </div>
                 </div>
 
