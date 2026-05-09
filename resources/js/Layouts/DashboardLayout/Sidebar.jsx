@@ -1,10 +1,10 @@
-import { Link } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import clsx from 'clsx';
 import { 
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
-    TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown 
+    TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown, Camera
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) => (
@@ -27,7 +27,29 @@ const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) =
 );
 
 export default function Sidebar() {
+    const { auth } = usePage().props;
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const fileInputRef = useRef(null);
+    const { data, setData, post, processing } = useForm({
+        avatar: null,
+    });
+
+    const handleAvatarClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setData('avatar', file);
+            // Submit immediately
+            const formData = new FormData();
+            formData.append('avatar', file);
+            post(route('profile.avatar.update'), {
+                forceFormData: true,
+            });
+        }
+    };
 
     return (
         <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A0A0A] flex flex-col z-50">
@@ -59,11 +81,26 @@ export default function Sidebar() {
             {/* Bottom Section */}
             <div className="p-6 mt-auto">
                 <div className="bg-[#1F2937] rounded-full p-2 flex items-center justify-between mb-6">
-                    <img 
-                        src="https://ui-avatars.com/api/?name=John+Doe&background=8B5CF6&color=fff" 
-                        alt="User" 
-                        className="w-8 h-8 rounded-full"
-                    />
+                    <div className="relative group/avatar cursor-pointer" onClick={handleAvatarClick}>
+                        <img 
+                            src={auth.user.profile_photo_path ? `/storage/${auth.user.profile_photo_path}` : `https://ui-avatars.com/api/?name=${auth.user.name}&background=8B5CF6&color=fff`} 
+                            alt="User" 
+                            className={clsx(
+                                "w-8 h-8 rounded-full transition-opacity",
+                                processing ? "opacity-50" : "group-hover/avatar:opacity-40"
+                            )}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
+                            <Camera className="w-4 h-4 text-white" />
+                        </div>
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            onChange={handleFileChange} 
+                            className="hidden" 
+                            accept="image/*"
+                        />
+                    </div>
                     <div className="flex gap-2 pr-2">
                         <Link 
                             href={route('settings.index')}

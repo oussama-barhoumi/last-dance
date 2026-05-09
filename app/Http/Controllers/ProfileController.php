@@ -60,4 +60,29 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Update the user's profile photo.
+     */
+    public function updateAvatar(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'avatar' => ['required', 'image', 'max:2048'],
+        ]);
+
+        $user = $request->user();
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            
+            // Delete old avatar if exists
+            if ($user->profile_photo_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_photo_path);
+            }
+
+            $user->update(['profile_photo_path' => $path]);
+        }
+
+        return Redirect::back()->with('status', 'profile-photo-updated');
+    }
 }
