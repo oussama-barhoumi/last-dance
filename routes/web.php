@@ -32,6 +32,10 @@ Route::middleware('auth')->group(function () {
     
     // Transaction Routes
     Route::get('/transactions', [\App\Http\Controllers\TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/export-csv', [\App\Http\Controllers\TransactionController::class, 'exportCsv'])->name('transactions.export-csv');
+    Route::get('/transactions/download-statement', [\App\Http\Controllers\TransactionController::class, 'downloadStatement'])->name('transactions.download-statement');
+    Route::get('/transactions/payment-methods', [\App\Http\Controllers\TransactionController::class, 'paymentMethods'])->name('transactions.payment-methods');
+    Route::get('/transactions/recent-activity', [\App\Http\Controllers\TransactionController::class, 'recentActivity'])->name('transactions.recent-activity');
 
     // Account Routes
     Route::get('/accounts', [\App\Http\Controllers\AccountController::class, 'index'])->name('accounts.index');
