@@ -12,12 +12,26 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\KycDocument;
 
-#[Fillable(['name', 'email', 'password', 'phone', 'address', 'kyc_status', 'is_admin', 'balance', 'currency', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'])]
+#[Fillable(['name', 'email', 'profile_photo_path', 'password', 'phone', 'address', 'kyc_status', 'is_admin', 'balance', 'currency', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'])]
 #[Hidden(['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
+
+    protected $appends = ['profile_photo_url'];
+
+    /**
+     * Get the user's profile photo URL.
+     *
+     * @return string
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo_path
+            ? asset('storage/' . $this->profile_photo_path)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=8B5CF6&color=fff';
+    }
 
     /**
      * Get the attributes that should be cast.

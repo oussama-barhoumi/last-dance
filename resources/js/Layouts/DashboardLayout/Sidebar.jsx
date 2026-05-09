@@ -83,7 +83,7 @@ export default function Sidebar() {
                 <div className="bg-[#1F2937] rounded-full p-2 flex items-center justify-between mb-6">
                     <div className="relative group/avatar cursor-pointer" onClick={handleAvatarClick}>
                         <img 
-                            src={auth.user.profile_photo_path ? `/storage/${auth.user.profile_photo_path}` : `https://ui-avatars.com/api/?name=${auth.user.name}&background=8B5CF6&color=fff`} 
+                            src={auth.user.profile_photo_url} 
                             alt="User" 
                             className={clsx(
                                 "w-8 h-8 rounded-full transition-opacity",
