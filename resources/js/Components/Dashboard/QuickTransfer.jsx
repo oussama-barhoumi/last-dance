@@ -1,47 +1,101 @@
-import { Send, Plus } from 'lucide-react';
+import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function QuickTransfer() {
-    const avatars = [
-        "https://ui-avatars.com/api/?name=Alex&background=random",
-        "https://ui-avatars.com/api/?name=Sarah&background=random",
-        "https://ui-avatars.com/api/?name=Mike&background=random",
-    ];
+    const { auth } = usePage().props;
+    const [showSuccess, setShowSuccess] = useState(false);
+    const { data, setData, post, processing, errors, reset } = useForm({
+        email: '',
+        amount: '',
+        description: 'Quick Transfer',
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post(route('transactions.send'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setShowSuccess(true);
+                reset();
+                setTimeout(() => setShowSuccess(false), 3000);
+            },
+        });
+    };
 
     return (
-        <div className="bg-[#0A0A0A] p-8 rounded-[40px] shadow-sm text-white">
+        <div className="bg-[#0A0A0A] p-8 rounded-[40px] shadow-sm text-white relative overflow-hidden">
             <h3 className="text-xl font-bold mb-8">Quick Transfer</h3>
 
-            <div className="flex items-center justify-between mb-8">
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Write Amount -&gt;</span>
-                <div className="bg-[#10B981] px-5 py-2 rounded-full">
-                    <span className="text-sm font-black">$152.00</span>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-1">Recipient Email</label>
+                    <input 
+                        type="email"
+                        value={data.email}
+                        onChange={e => setData('email', e.target.value)}
+                        placeholder="example@email.com"
+                        className="w-full bg-zinc-900 border-none rounded-2xl p-4 text-sm text-white focus:ring-2 focus:ring-purple-500 transition-all"
+                    />
+                    {errors.email && <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.email}</p>}
                 </div>
-            </div>
 
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-1">Amount ($)</label>
+                    <div className="relative">
+                        <input 
+                            type="number"
+                            value={data.amount}
+                            onChange={e => setData('amount', e.target.value)}
+                            placeholder="0.00"
+                            className="w-full bg-zinc-900 border-none rounded-2xl p-4 text-sm text-white focus:ring-2 focus:ring-purple-500 transition-all pr-24"
+                        />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#10B981] px-4 py-1.5 rounded-full">
+                            <span className="text-[10px] font-black">USD</span>
+                        </div>
+                    </div>
+                    {errors.amount && <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.amount}</p>}
+                </div>
+
+                <div className="flex items-center justify-between pt-4">
                     <div className="flex -space-x-3">
-                        {avatars.map((url, i) => (
+                        {["Alex", "Sarah", "Mike"].map((name, i) => (
                             <img 
                                 key={i} 
-                                src={url} 
-                                alt="avatar" 
+                                src={`https://ui-avatars.com/api/?name=${name}&background=random`} 
+                                alt={name} 
                                 className="w-10 h-10 rounded-full border-4 border-[#0A0A0A]"
                             />
                         ))}
-                        <div className="w-10 h-10 rounded-full border-4 border-[#0A0A0A] bg-zinc-800 flex items-center justify-center text-[10px] font-black">
-                            8+
-                        </div>
                     </div>
-                    <button className="text-xs font-bold text-purple-400 hover:text-purple-300 transition-colors ml-2">
-                        Add New
+
+                    <button 
+                        type="submit"
+                        disabled={processing}
+                        className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-xl shadow-white/10 disabled:opacity-50 disabled:scale-100"
+                    >
+                        <Send className={processing ? "animate-pulse w-6 h-6 text-black" : "w-6 h-6 text-black"} />
                     </button>
                 </div>
+            </form>
 
-                <button className="w-14 h-14 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-xl shadow-white/10">
-                    <Send className="w-6 h-6 text-black" />
-                </button>
-            </div>
+            <AnimatePresence>
+                {showSuccess && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 bg-[#0A0A0A] flex flex-col items-center justify-center p-8 text-center"
+                    >
+                        <div className="w-16 h-16 bg-[#10B981]/20 rounded-full flex items-center justify-center mb-4">
+                            <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
+                        </div>
+                        <h4 className="font-bold text-lg">Sent Successfully!</h4>
+                        <p className="text-sm text-gray-400 mt-2">Your transfer of ${data.amount} has been processed.</p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

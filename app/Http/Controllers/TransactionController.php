@@ -172,4 +172,56 @@ class TransactionController extends Controller
                 'payment_method' => $tx->payment_method,
             ]);
     }
+
+    public function sendMoney(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'amount' => 'required|numeric|min:1',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        $sender = auth()->user();
+        $recipient = \App\Models\User::where('email', $request->email)->first();
+
+        if ($sender->id === $recipient->id) {
+            return back()->withErrors(['email' => 'You cannot send money to yourself.']);
+        }
+
+        if ($sender->balance < $request->amount) {
+            return back()->withErrors(['amount' => 'Insufficient balance.']);
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($sender, $recipient, $request) {
+            // Debit Sender
+            $sender->decrement('balance', $request->amount);
+            Transaction::create([
+                'user_id' => $sender->id,
+                'transaction_id' => 'TXN-' . strtoupper(uniqid()),
+                'description' => 'Transfer to ' . $recipient->name . ($request->description ? ': ' . $request->description : ''),
+                'type' => 'debit',
+                'amount' => $request->amount,
+                'status' => 'completed',
+                'payment_method' => 'bank_transfer',
+                'transaction_date' => now(),
+                'category' => 'Transfer',
+            ]);
+
+            // Credit Recipient
+            $recipient->increment('balance', $request->amount);
+            Transaction::create([
+                'user_id' => $recipient->id,
+                'transaction_id' => 'TXN-' . strtoupper(uniqid()),
+                'description' => 'Transfer from ' . $sender->name . ($request->description ? ': ' . $request->description : ''),
+                'type' => 'credit',
+                'amount' => $request->amount,
+                'status' => 'completed',
+                'payment_method' => 'bank_transfer',
+                'transaction_date' => now(),
+                'category' => 'Transfer',
+            ]);
+        });
+
+        return back()->with('success', 'Money sent successfully!');
+    }
 }
