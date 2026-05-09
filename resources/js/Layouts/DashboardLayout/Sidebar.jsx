@@ -46,7 +46,7 @@ export default function Sidebar() {
                     <NavItem icon={CreditCard} label="Accounts" active={route().current('accounts.index')} href={route('accounts.index')} />
                     <NavItem icon={CreditCard} label="Cards" active={route().current('cards.index')} href={route('cards.index')} badge="3" badgeColor="bg-[#8B5CF6]" />
                     <NavItem icon={Wallet} label="Investment" active={route().current('investments.index')} href={route('investments.index')} badge="14" badgeColor="bg-[#10B981]" />
-                    <NavItem icon={BarChart} label="Reports" />
+                    <NavItem icon={BarChart} label="Reports" active={route().current('reports.index')} href={route('reports.index')} />
                     <NavItem icon={TrendingUp} label="Loan" />
                 </nav>
             </div>
