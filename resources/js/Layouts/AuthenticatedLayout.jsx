@@ -30,6 +30,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    href={route('kyc.index')}
+                                    active={route().current('kyc.index')}
+                                >
+                                    Verification
+                                </NavLink>
                             </div>
                         </div>
 

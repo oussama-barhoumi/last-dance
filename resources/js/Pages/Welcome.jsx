@@ -100,7 +100,7 @@ export default function Welcome({ auth }) {
                         </motion.p>
 
                         <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-16">
-                            <Link href="#" className="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
+                            <Link href={route('register')} className="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
                                 Open an Account
                             </Link>
                             <Link href="#" className="bg-gray-100 text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">

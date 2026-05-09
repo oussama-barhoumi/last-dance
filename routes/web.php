@@ -22,6 +22,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // KYC Routes
+    Route::get('/kyc', [\App\Http\Controllers\KycController::class, 'index'])->name('kyc.index');
+    Route::post('/kyc', [\App\Http\Controllers\KycController::class, 'store'])->name('kyc.store');
+    
+    // Admin Routes (Simplified check)
+    Route::get('/admin/kyc', [\App\Http\Controllers\KycController::class, 'adminIndex'])->name('admin.kyc.index');
+    Route::patch('/admin/kyc/{document}', [\App\Http\Controllers\KycController::class, 'updateStatus'])->name('admin.kyc.update');
 });
 
 require __DIR__.'/auth.php';
