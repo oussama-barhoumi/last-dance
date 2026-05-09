@@ -49,6 +49,9 @@ Route::middleware('auth')->group(function () {
 
     // Report Routes
     Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+
+    // Settings Routes
+    Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
     
     // Admin Routes (Simplified check)
     Route::get('/admin/kyc', [\App\Http\Controllers\KycController::class, 'adminIndex'])->name('admin.kyc.index');

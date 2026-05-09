@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import clsx from 'clsx';
 import { 
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
     TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown 
@@ -64,9 +65,15 @@ export default function Sidebar() {
                         className="w-8 h-8 rounded-full"
                     />
                     <div className="flex gap-2 pr-2">
-                        <button className="text-gray-400 hover:text-white transition-colors">
+                        <Link 
+                            href={route('settings.index')}
+                            className={clsx(
+                                "transition-colors",
+                                route().current('settings.index') ? "text-white" : "text-gray-400 hover:text-white"
+                            )}
+                        >
                             <Settings className="w-4 h-4" />
-                        </button>
+                        </Link>
                         <button 
                             onClick={() => setShowLogoutModal(true)}
                             className="text-red-400 hover:text-red-500 transition-colors"
