@@ -3,7 +3,8 @@ import {
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
     TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown 
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) => (
     <Link 
@@ -25,6 +26,8 @@ const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) =
 );
 
 export default function Sidebar() {
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+
     return (
         <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A0A0A] flex flex-col z-50">
             <div className="p-8">
@@ -64,14 +67,12 @@ export default function Sidebar() {
                         <button className="text-gray-400 hover:text-white transition-colors">
                             <Settings className="w-4 h-4" />
                         </button>
-                        <Link 
-                            href={route('logout')} 
-                            method="post" 
-                            as="button" 
+                        <button 
+                            onClick={() => setShowLogoutModal(true)}
                             className="text-red-400 hover:text-red-500 transition-colors"
                         >
                             <LogOut className="w-4 h-4" />
-                        </Link>
+                        </button>
                     </div>
                 </div>
 
@@ -87,6 +88,50 @@ export default function Sidebar() {
                     <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">API</Link>
                 </div>
             </div>
+
+            {/* Logout Modal */}
+            <AnimatePresence>
+                {showLogoutModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowLogoutModal(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="bg-white w-full max-w-sm rounded-[32px] shadow-2xl relative overflow-hidden p-8 text-center"
+                        >
+                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <LogOut className="w-8 h-8 text-red-600" />
+                            </div>
+                            <h3 className="text-xl font-black text-gray-900 mb-2">Confirm Logout</h3>
+                            <p className="text-sm text-gray-500 mb-8">Are you sure you want to log out of your HarborBank account?</p>
+                            
+                            <div className="flex flex-col gap-3">
+                                <Link 
+                                    href={route('logout')} 
+                                    method="post" 
+                                    as="button" 
+                                    className="w-full bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform"
+                                >
+                                    Yes, Log Out
+                                </Link>
+                                <button 
+                                    onClick={() => setShowLogoutModal(false)}
+                                    className="w-full text-sm font-bold text-gray-400 hover:text-black transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </aside>
     );
 }
