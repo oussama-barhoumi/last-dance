@@ -35,6 +35,9 @@ Route::middleware('auth')->group(function () {
 
     // Account Routes
     Route::get('/accounts', [\App\Http\Controllers\AccountController::class, 'index'])->name('accounts.index');
+
+    // Card Routes
+    Route::get('/cards', [\App\Http\Controllers\CardController::class, 'index'])->name('cards.index');
     
     // Admin Routes (Simplified check)
     Route::get('/admin/kyc', [\App\Http\Controllers\KycController::class, 'adminIndex'])->name('admin.kyc.index');

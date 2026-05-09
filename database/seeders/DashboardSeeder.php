@@ -80,6 +80,44 @@ class DashboardSeeder extends Seeder
             $user->accounts()->create($acc);
         }
 
+        // Cards
+        $cards = [
+            [
+                'card_holder' => 'John Doe',
+                'card_number' => '4400 1234 5678 9012',
+                'expiry_date' => '12/28',
+                'cvv' => '321',
+                'type' => 'visa',
+                'category' => 'physical',
+                'balance' => 45000.00,
+                'color_theme' => 'black',
+            ],
+            [
+                'card_holder' => 'John Doe',
+                'card_number' => '5500 9876 5432 1098',
+                'expiry_date' => '05/27',
+                'cvv' => '999',
+                'type' => 'mastercard',
+                'category' => 'virtual',
+                'balance' => 1200.00,
+                'color_theme' => 'purple',
+            ],
+            [
+                'card_holder' => 'John Doe',
+                'card_number' => '4400 5555 6666 7777',
+                'expiry_date' => '09/26',
+                'cvv' => '444',
+                'type' => 'visa',
+                'category' => 'virtual',
+                'balance' => 8500.00,
+                'color_theme' => 'gradient',
+            ],
+        ];
+
+        foreach ($cards as $card) {
+            $user->cards()->create($card);
+        }
+
         // Investments
         $investments = [
             ['company_name' => 'Apple Store', 'sector' => 'E-commerce, Marketplace', 'value' => 54000.00, 'return_percentage' => 16.00],
