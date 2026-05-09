@@ -120,12 +120,46 @@ class DashboardSeeder extends Seeder
 
         // Investments
         $investments = [
-            ['company_name' => 'Apple Store', 'sector' => 'E-commerce, Marketplace', 'value' => 54000.00, 'return_percentage' => 16.00],
-            ['company_name' => 'Samsung Mobile', 'sector' => 'E-commerce, Marketplace', 'value' => 25300.00, 'return_percentage' => -4.00],
+            [
+                'company_name' => 'Apple Inc.', 
+                'sector' => 'Technology', 
+                'category' => 'Stock',
+                'invested_amount' => 45000.00,
+                'value' => 54000.00, 
+                'return_percentage' => 16.00,
+                'risk_level' => 'Low',
+            ],
+            [
+                'company_name' => 'Ethereum', 
+                'sector' => 'Blockchain', 
+                'category' => 'Crypto',
+                'invested_amount' => 12000.00,
+                'value' => 18500.00, 
+                'return_percentage' => 54.16,
+                'risk_level' => 'High',
+            ],
+            [
+                'company_name' => 'Tesla Motors', 
+                'sector' => 'Automotive', 
+                'category' => 'Stock',
+                'invested_amount' => 25000.00,
+                'value' => 22000.00, 
+                'return_percentage' => -12.00,
+                'risk_level' => 'Medium',
+            ],
+            [
+                'company_name' => 'Real Estate Fund', 
+                'sector' => 'Property', 
+                'category' => 'Savings',
+                'invested_amount' => 50000.00,
+                'value' => 52500.00, 
+                'return_percentage' => 5.00,
+                'risk_level' => 'Low',
+            ],
         ];
 
-        foreach ($investments as $i) {
-            $user->investments()->create($i);
+        foreach ($investments as $inv) {
+            $user->investments()->create($inv);
         }
 
         // Accounts
