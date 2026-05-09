@@ -52,6 +52,9 @@ Route::middleware('auth')->group(function () {
     // Report Routes
     Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
 
+    // Loan Routes
+    Route::get('/loans', [\App\Http\Controllers\LoanController::class, 'index'])->name('loans.index');
+
     // Settings Routes
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
     
