@@ -45,6 +45,41 @@ class DashboardSeeder extends Seeder
             $user->transactions()->create($t);
         }
 
+        // Accounts
+        $accounts = [
+            [
+                'account_type' => 'Main Account',
+                'account_number' => '4400 1234 5678 9012',
+                'iban' => 'FR76 3000 6000 0112 3456 7890 123',
+                'balance' => 45000.00,
+                'currency' => 'USD',
+                'status' => 'active',
+                'is_verified' => true,
+            ],
+            [
+                'account_type' => 'Savings Account',
+                'account_number' => '4400 9876 5432 1098',
+                'iban' => 'FR76 3000 6000 0198 7654 3210 987',
+                'balance' => 125000.50,
+                'currency' => 'EUR',
+                'status' => 'active',
+                'is_verified' => true,
+            ],
+            [
+                'account_type' => 'Current Account',
+                'account_number' => '4400 5555 6666 7777',
+                'iban' => 'FR76 3000 6000 0155 5566 6677 778',
+                'balance' => 8500.00,
+                'currency' => 'DH',
+                'status' => 'active',
+                'is_verified' => false,
+            ],
+        ];
+
+        foreach ($accounts as $acc) {
+            $user->accounts()->create($acc);
+        }
+
         // Investments
         $investments = [
             ['company_name' => 'Apple Store', 'sector' => 'E-commerce, Marketplace', 'value' => 54000.00, 'return_percentage' => 16.00],
