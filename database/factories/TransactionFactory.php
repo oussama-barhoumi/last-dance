@@ -21,6 +21,7 @@ class TransactionFactory extends Factory
         $types = ['debit', 'credit', 'transfer', 'payment'];
         $statuses = ['completed', 'pending', 'failed', 'cancelled'];
         $methods = ['credit_card', 'bank_transfer', 'cash', 'digital_wallet'];
+        $categories = ['Shopping', 'Food & Drink', 'Entertainment', 'Transport', 'Utilities', 'Salary', 'Investment'];
 
         $type = $this->faker->randomElement($types);
         
@@ -28,6 +29,7 @@ class TransactionFactory extends Factory
             'user_id' => User::factory(),
             'transaction_id' => 'TXN-' . now()->format('Ymd') . '-' . $this->faker->unique()->numberBetween(100, 999),
             'description' => $this->faker->randomElement($descriptions),
+            'category' => $this->faker->randomElement($categories),
             'type' => $type,
             'amount' => $this->faker->randomFloat(2, 10, 5000),
             'status' => $this->faker->randomElement($statuses),

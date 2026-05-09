@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('transaction_id')->unique();
             $table->string('description');
+            $table->string('category')->default('General');
             $table->enum('type', ['debit', 'credit', 'transfer', 'payment']);
             $table->decimal('amount', 15, 2);
             $table->enum('status', ['completed', 'pending', 'failed', 'cancelled']);

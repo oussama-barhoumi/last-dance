@@ -13,6 +13,7 @@ class Transaction extends Model
         'user_id',
         'transaction_id',
         'description',
+        'category',
         'type',
         'amount',
         'status',

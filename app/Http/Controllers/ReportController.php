@@ -12,13 +12,13 @@ class ReportController extends Controller
     {
         $user = auth()->user();
         
-        $income = $user->transactions()->where('type', 'receive')->sum('amount');
-        $expenses = $user->transactions()->where('type', 'expense')->sum('amount');
+        $income = $user->transactions()->where('type', 'credit')->sum('amount');
+        $expenses = $user->transactions()->where('type', 'debit')->sum('amount');
         $netFlow = $income - $expenses;
 
         // Grouping by category for the chart
         $categoryBreakdown = $user->transactions()
-            ->where('type', 'expense')
+            ->where('type', 'debit')
             ->selectRaw('category, sum(amount) as total')
             ->groupBy('category')
             ->get();

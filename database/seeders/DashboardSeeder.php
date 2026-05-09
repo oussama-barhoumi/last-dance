@@ -33,12 +33,12 @@ class DashboardSeeder extends Seeder
 
         // Transactions
         $transactions = [
-            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 25.00, 'description' => 'Spotify Subscription', 'category' => 'Shopping', 'status' => 'success', 'payment_method' => 'Credit Card', 'date' => now()->subDays(1)],
-            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 150.00, 'description' => 'Mobile Service', 'category' => 'Repair and Servicing', 'status' => 'success', 'payment_method' => 'Debit Card', 'date' => now()->subDays(2)],
-            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 1330.00, 'description' => 'Wilson', 'category' => 'Send Money', 'status' => 'pending', 'payment_method' => 'Bank Transfer', 'date' => now()->subDays(3)],
-            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'receive', 'amount' => 150.00, 'description' => 'Freepik', 'category' => 'Service Selling', 'status' => 'success', 'payment_method' => 'External Deposit', 'date' => now()->subDays(4)],
-            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'receive', 'amount' => 1330.00, 'description' => 'Emilly', 'category' => 'Transfer', 'status' => 'success', 'payment_method' => 'Internal Transfer', 'date' => now()->subDays(5)],
-            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 89.99, 'description' => 'Amazon.com', 'category' => 'Shopping', 'status' => 'failed', 'payment_method' => 'Credit Card', 'date' => now()->subHours(5)],
+            ['transaction_id' => 'TXN-'.rand(10000, 99999), 'type' => 'debit', 'amount' => 25.00, 'description' => 'Spotify Subscription', 'category' => 'Entertainment', 'status' => 'completed', 'payment_method' => 'credit_card', 'transaction_date' => now()->subDays(1)],
+            ['transaction_id' => 'TXN-'.rand(10000, 99999), 'type' => 'debit', 'amount' => 150.00, 'description' => 'Mobile Service', 'category' => 'Utilities', 'status' => 'completed', 'payment_method' => 'digital_wallet', 'transaction_date' => now()->subDays(2)],
+            ['transaction_id' => 'TXN-'.rand(10000, 99999), 'type' => 'transfer', 'amount' => 1330.00, 'description' => 'Wilson Transfer', 'category' => 'Transport', 'status' => 'pending', 'payment_method' => 'bank_transfer', 'transaction_date' => now()->subDays(3)],
+            ['transaction_id' => 'TXN-'.rand(10000, 99999), 'type' => 'credit', 'amount' => 150.00, 'description' => 'Freepik Payout', 'category' => 'Salary', 'status' => 'completed', 'payment_method' => 'bank_transfer', 'transaction_date' => now()->subDays(4)],
+            ['transaction_id' => 'TXN-'.rand(10000, 99999), 'type' => 'credit', 'amount' => 1330.00, 'description' => 'Emilly Deposit', 'category' => 'Investment', 'status' => 'completed', 'payment_method' => 'bank_transfer', 'transaction_date' => now()->subDays(5)],
+            ['transaction_id' => 'TXN-'.rand(10000, 99999), 'type' => 'debit', 'amount' => 89.99, 'description' => 'Amazon.com', 'category' => 'Shopping', 'status' => 'failed', 'payment_method' => 'credit_card', 'transaction_date' => now()->subHours(5)],
         ];
 
         foreach ($transactions as $t) {
