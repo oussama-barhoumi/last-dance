@@ -94,8 +94,8 @@ export default function Login({ status, canResetPassword }) {
                     disabled={processing}
                     className="w-full bg-white text-black font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors disabled:opacity-50"
                 >
-                    Log In
-                    <ArrowRight className="w-5 h-5" />
+                    {processing ? 'Logging in...' : 'Log In'}
+                    {!processing && <ArrowRight className="w-5 h-5" />}
                 </button>
 
                 <div className="pt-4 text-center">

@@ -15,7 +15,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Dashboard', [
+        'transactions' => auth()->user()->transactions()->latest()->take(5)->get(),
+        'investments' => auth()->user()->investments()->get(),
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

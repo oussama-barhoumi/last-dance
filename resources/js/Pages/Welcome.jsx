@@ -46,13 +46,43 @@ export default function Welcome({ auth }) {
                     <div className="hidden lg:flex items-center gap-8 text-sm font-medium">
                         <Link href="#" className="hover:text-gray-300 transition-colors">Personal Banking</Link>
                         <Link href="#" className="hover:text-gray-300 transition-colors">Business Banking</Link>
-                        <Link href="#" className="hover:text-gray-300 transition-colors">Support & Resources</Link>
-                        <Link
-                            href={auth.user ? route('dashboard') : route('login')}
-                            className="border border-white/30 px-6 py-2 rounded-full hover:bg-white hover:text-black transition-all duration-300"
-                        >
-                            {auth.user ? 'Dashboard' : 'Login'}
-                        </Link>
+                        <div className="flex items-center gap-8">
+                            <Link 
+                                href={route('dashboard')} 
+                                className="hover:text-white text-gray-400 transition-colors"
+                            >
+                                Dashboard
+                            </Link>
+
+                            {auth.user ? (
+                                <div className="flex items-center gap-4">
+                                    <span className="text-white font-bold">{auth.user.name}</span>
+                                    <Link
+                                        href={route('logout')}
+                                        method="post"
+                                        as="button"
+                                        className="bg-red-500/10 text-red-500 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white transition-all"
+                                    >
+                                        Logout
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-4">
+                                    <Link
+                                        href={route('login')}
+                                        className="hover:text-white text-gray-400 transition-colors"
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        href={route('register')}
+                                        className="bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 font-bold"
+                                    >
+                                        Create Account
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <button
@@ -73,7 +103,26 @@ export default function Welcome({ auth }) {
                         <Link href="#" className="px-2 py-1">Personal Banking</Link>
                         <Link href="#" className="px-2 py-1">Business Banking</Link>
                         <Link href="#" className="px-2 py-1">Support & Resources</Link>
-                        <Link href={route('login')} className="px-2 py-1 bg-white text-black text-center rounded-full font-bold">Login</Link>
+                        <Link href={route('dashboard')} className="px-2 py-1 text-center font-bold text-gray-400 hover:text-white transition-colors">Dashboard</Link>
+                        
+                        {auth.user ? (
+                            <div className="flex flex-col gap-4 border-t border-white/5 pt-4">
+                                <span className="px-2 py-1 text-white text-center font-bold">{auth.user.name}</span>
+                                <Link 
+                                    href={route('logout')} 
+                                    method="post" 
+                                    as="button" 
+                                    className="px-2 py-1 bg-red-500/10 text-red-500 text-center rounded-full font-bold"
+                                >
+                                    Logout
+                                </Link>
+                            </div>
+                        ) : (
+                            <>
+                                <Link href={route('login')} className="px-2 py-1 text-center font-bold text-gray-400">Login</Link>
+                                <Link href={route('register')} className="px-2 py-1 bg-white text-black text-center rounded-full font-bold">Create Account</Link>
+                            </>
+                        )}
                     </motion.div>
                 )}
             </nav>
@@ -100,12 +149,20 @@ export default function Welcome({ auth }) {
                         </motion.p>
 
                         <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-16">
-                            <Link href={route('register')} className="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
-                                Open an Account
-                            </Link>
-                            <Link href="#" className="bg-gray-100 text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">
-                                View Rates
-                            </Link>
+                            {auth.user ? (
+                                <Link href={route('dashboard')} className="bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
+                                    Go to Dashboard
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link href={route('register')} className="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
+                                        Create Account
+                                    </Link>
+                                    <Link href={route('login')} className="bg-gray-100 text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">
+                                        Login
+                                    </Link>
+                                </>
+                            )}
                         </motion.div>
 
                         <motion.div variants={fadeInUp} className="grid sm:grid-cols-2 gap-6">
