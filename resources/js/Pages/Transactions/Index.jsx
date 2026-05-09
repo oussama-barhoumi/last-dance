@@ -43,7 +43,7 @@ export default function Index({ transactions, filters, recentActivity }) {
 
     return (
         <DashboardLayout>
-            <Head title="Transactions - DoodlyBank" />
+            <Head title="Transactions - HarborBank" />
 
             <div className="space-y-8 mt-8">
                 {/* Header Actions */}

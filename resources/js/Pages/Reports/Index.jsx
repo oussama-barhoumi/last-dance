@@ -33,7 +33,7 @@ export default function Index({ stats, categoryBreakdown, recentReports }) {
 
     return (
         <DashboardLayout>
-            <Head title="Financial Reports - DoodlyBank" />
+            <Head title="Financial Reports - HarborBank" />
 
             <div className="space-y-10 mt-8">
                 {/* Header & Controls */}

@@ -25,7 +25,7 @@ export default function Dashboard({ auth }) {
 
     return (
         <DashboardLayout>
-            <Head title="Dashboard - DoodlyBank" />
+            <Head title="Dashboard - HarborBank" />
 
             <motion.div 
                 variants={container}

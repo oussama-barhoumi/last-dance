@@ -122,7 +122,7 @@ export default function Index({ cards, totalCardBalance, recentTransactions }) {
 
     return (
         <DashboardLayout>
-            <Head title="Card Management - DoodlyBank" />
+            <Head title="Card Management - HarborBank" />
 
             <div className="space-y-10 mt-8">
                 {/* Header Section */}
@@ -238,7 +238,7 @@ export default function Index({ cards, totalCardBalance, recentTransactions }) {
                                     <span className="text-sm font-bold">Purchase Protection</span>
                                 </div>
                                 <p className="text-[10px] text-gray-500 leading-relaxed font-medium">
-                                    Your physical cards are covered by DoodlyBank's advanced fraud protection and zero-liability policy.
+                                    Your physical cards are covered by HarborBank's advanced fraud protection and zero-liability policy.
                                 </p>
                             </div>
                         </div>

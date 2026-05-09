@@ -92,7 +92,7 @@ export default function Index({ investments, stats, recentTransactions }) {
 
     return (
         <DashboardLayout>
-            <Head title="Investment Portfolio - DoodlyBank" />
+            <Head title="Investment Portfolio - HarborBank" />
 
             <div className="space-y-8 mt-8">
                 {/* Header Stats */}

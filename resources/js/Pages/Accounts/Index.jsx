@@ -120,7 +120,7 @@ export default function Index({ accounts, totalBalance, recentTransactions }) {
 
     return (
         <DashboardLayout>
-            <Head title="Accounts - DoodlyBank" />
+            <Head title="Accounts - HarborBank" />
 
             <div className="space-y-10 mt-8">
                 {/* Header Section */}

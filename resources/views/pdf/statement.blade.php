@@ -119,7 +119,7 @@
     </table>
 
     <div className="footer">
-        <p>This statement was generated automatically by DoodlyBank Financial Systems.</p>
+        <p>This statement was generated automatically by HarborBank Financial Systems.</p>
     </div>
 </body>
 </html>

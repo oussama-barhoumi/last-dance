@@ -27,12 +27,13 @@ const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) =
 export default function Sidebar() {
     return (
         <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A0A0A] flex flex-col z-50">
-            {/* Logo Area */}
-            <div className="p-8 flex items-center gap-3">
-                <div className="bg-gradient-to-tr from-purple-500 to-pink-500 p-2 rounded-xl">
-                    <Anchor className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xl font-bold text-white tracking-tight">DoodlyBank</span>
+            <div className="p-8">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="bg-white p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
+                        <Anchor className="w-6 h-6 text-black" />
+                    </div>
+                    <span className="text-xl font-bold text-white tracking-tight">HarborBank</span>
+                </Link>
             </div>
 
             {/* Navigation Section */}
