@@ -5,9 +5,9 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const NavItem = ({ icon: Icon, label, active, badge, badgeColor }) => (
+const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) => (
     <Link 
-        href="#" 
+        href={href} 
         className={`flex items-center justify-between px-6 py-3 transition-all group ${
             active ? 'text-white border-l-4 border-purple-500 bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'
         }`}
@@ -41,8 +41,8 @@ export default function Sidebar() {
                     <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Navigation</span>
                 </div>
                 <nav className="space-y-1">
-                    <NavItem icon={LayoutDashboard} label="Dashboard" active />
-                    <NavItem icon={ArrowLeftRight} label="Transactions" />
+                    <NavItem icon={LayoutDashboard} label="Dashboard" active={route().current('dashboard')} href={route('dashboard')} />
+                    <NavItem icon={ArrowLeftRight} label="Transactions" active={route().current('transactions.index')} href={route('transactions.index')} />
                     <NavItem icon={CreditCard} label="Accounts" />
                     <NavItem icon={CreditCard} label="Cards" badge="3" badgeColor="bg-[#8B5CF6]" />
                     <NavItem icon={Wallet} label="Investment" badge="14" badgeColor="bg-[#10B981]" />

@@ -33,11 +33,12 @@ class DashboardSeeder extends Seeder
 
         // Transactions
         $transactions = [
-            ['type' => 'expense', 'amount' => 25.00, 'description' => 'Spotify Subscription', 'category' => 'Shopping', 'date' => now()->subDays(1)],
-            ['type' => 'expense', 'amount' => 150.00, 'description' => 'Mobile Service', 'category' => 'Repair and Servicing', 'date' => now()->subDays(2)],
-            ['type' => 'expense', 'amount' => 1330.00, 'description' => 'Wilson', 'category' => 'Send Money', 'date' => now()->subDays(3)],
-            ['type' => 'receive', 'amount' => 150.00, 'description' => 'Freepik', 'category' => 'Service Selling', 'date' => now()->subDays(4)],
-            ['type' => 'receive', 'amount' => 1330.00, 'description' => 'Emilly', 'category' => 'Transfer', 'date' => now()->subDays(5)],
+            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 25.00, 'description' => 'Spotify Subscription', 'category' => 'Shopping', 'status' => 'success', 'payment_method' => 'Credit Card', 'date' => now()->subDays(1)],
+            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 150.00, 'description' => 'Mobile Service', 'category' => 'Repair and Servicing', 'status' => 'success', 'payment_method' => 'Debit Card', 'date' => now()->subDays(2)],
+            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 1330.00, 'description' => 'Wilson', 'category' => 'Send Money', 'status' => 'pending', 'payment_method' => 'Bank Transfer', 'date' => now()->subDays(3)],
+            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'receive', 'amount' => 150.00, 'description' => 'Freepik', 'category' => 'Service Selling', 'status' => 'success', 'payment_method' => 'External Deposit', 'date' => now()->subDays(4)],
+            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'receive', 'amount' => 1330.00, 'description' => 'Emilly', 'category' => 'Transfer', 'status' => 'success', 'payment_method' => 'Internal Transfer', 'date' => now()->subDays(5)],
+            ['transaction_id' => 'HB-'.rand(10000, 99999), 'type' => 'expense', 'amount' => 89.99, 'description' => 'Amazon.com', 'category' => 'Shopping', 'status' => 'failed', 'payment_method' => 'Credit Card', 'date' => now()->subHours(5)],
         ];
 
         foreach ($transactions as $t) {
