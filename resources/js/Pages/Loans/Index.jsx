@@ -403,7 +403,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
             {/* Pay EMI Modal */}
             <AnimatePresence>
                 {showPayModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
                         <motion.div 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -521,7 +521,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
             {/* Loan Calculator Modal */}
             <AnimatePresence>
                 {showCalcModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
                         <motion.div 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -637,7 +637,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
             {/* Loan Statement Modal */}
             <AnimatePresence>
                 {showStatementModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
                         <motion.div 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -649,7 +649,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-3xl rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                            className="bg-white w-full max-w-lg rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
                         >
                             <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
                                 <div className="flex items-center gap-3">
