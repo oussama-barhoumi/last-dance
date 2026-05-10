@@ -71,6 +71,7 @@ export default function Sidebar() {
                     <NavItem icon={LayoutDashboard} label="Dashboard" active={route().current('dashboard')} href={route('dashboard')} />
                     <NavItem icon={ArrowLeftRight} label="Transactions" active={route().current('transactions.index')} href={route('transactions.index')} />
                     <NavItem icon={BarChart} label="AI Assistant" active={route().current('ai-assistant.index')} href={route('ai-assistant.index')} badge="AI" badgeColor="bg-blue-500" />
+                    <NavItem icon={Globe} label="Voice Coach" active={route().current('voice-coach.index')} href={route('voice-coach.index')} badge="LIVE" badgeColor="bg-red-500" />
                     <NavItem icon={CreditCard} label="Accounts" active={route().current('accounts.index')} href={route('accounts.index')} />
                     <NavItem icon={CreditCard} label="Cards" active={route().current('cards.index')} href={route('cards.index')} badge="3" badgeColor="bg-[#8B5CF6]" />
                     <NavItem icon={Wallet} label="Investment" active={route().current('investments.index')} href={route('investments.index')} badge="14" badgeColor="bg-[#10B981]" />

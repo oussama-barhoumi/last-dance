@@ -62,6 +62,10 @@ Route::middleware('auth')->group(function () {
     // AI Assistant Route
     Route::get('/ai-assistant', [\App\Http\Controllers\AiAssistantController::class, 'index'])->name('ai-assistant.index');
 
+    // Voice Coach Routes
+    Route::get('/voice-coach', [\App\Http\Controllers\VoiceCoachController::class, 'index'])->name('voice-coach.index');
+    Route::post('/voice-coach/ask', [\App\Http\Controllers\VoiceCoachController::class, 'ask'])->name('voice-coach.ask');
+
     // Loan Routes
     Route::get('/loans', [\App\Http\Controllers\LoanController::class, 'index'])->name('loans.index');
     Route::get('/loans/apply', [\App\Http\Controllers\LoanController::class, 'apply'])->name('loans.apply');
