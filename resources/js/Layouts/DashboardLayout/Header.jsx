@@ -1,4 +1,4 @@
-import { Search, Bell, ChevronDown, CheckCircle2, AlertCircle, Clock, ArrowRight, X } from 'lucide-react';
+import { Search, Bell, ChevronDown, CheckCircle2, AlertCircle, Clock, ArrowRight, X, LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, TrendingUp, Globe } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, router } from '@inertiajs/react';
@@ -11,11 +11,35 @@ export default function Header({ user }) {
     const [showNotifications, setShowNotifications] = useState(false);
     const dropdownRef = useRef(null);
 
+    // Search state
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showSearch, setShowSearch] = useState(false);
+    const searchRef = useRef(null);
+
+    const searchItems = [
+        { title: t('sidebar.dashboard'), route: 'dashboard', icon: LayoutDashboard },
+        { title: t('sidebar.transactions'), route: 'transactions.index', icon: ArrowLeftRight },
+        { title: t('sidebar.accounts'), route: 'accounts.index', icon: CreditCard },
+        { title: t('sidebar.cards'), route: 'cards.index', icon: CreditCard },
+        { title: t('sidebar.investment'), route: 'investments.index', icon: Wallet },
+        { title: t('sidebar.reports'), route: 'reports.index', icon: BarChart },
+        { title: t('sidebar.loan'), route: 'loans.index', icon: TrendingUp },
+        { title: t('sidebar.ai_assistant'), route: 'ai-assistant.index', icon: BarChart },
+        { title: t('sidebar.voice_coach'), route: 'voice-coach.index', icon: Globe },
+    ];
+
+    const filteredItems = searchItems.filter(item => 
+        searchQuery && item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     // Close on click outside
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setShowNotifications(false);
+            }
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setShowSearch(false);
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -39,9 +63,60 @@ export default function Header({ user }) {
             <div className="flex items-center gap-8">
                 <div className="flex items-center gap-6 text-gray-500 dark:text-zinc-400">
                     <ThemeToggle />
-                    <button className="hover:text-black dark:hover:text-white transition-colors">
-                        <Search className="w-5 h-5" />
-                    </button>
+                    <div className="relative" ref={searchRef}>
+                        <div className={clsx(
+                            "flex items-center gap-2 transition-all duration-300",
+                            showSearch ? "w-64 bg-white dark:bg-zinc-800 rounded-full px-4 py-2 border border-gray-200 dark:border-zinc-700 shadow-sm" : "w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 flex items-center justify-center cursor-pointer"
+                        )}
+                        onClick={() => !showSearch && setShowSearch(true)}>
+                            <Search className="w-5 h-5 text-gray-500 dark:text-zinc-400 shrink-0" />
+                            {showSearch && (
+                                <input
+                                    type="text"
+                                    autoFocus
+                                    placeholder={t('header.search_placeholder') || "Search..."}
+                                    className="w-full bg-transparent border-none focus:ring-0 text-sm text-gray-900 dark:text-white placeholder-gray-400 p-0"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            )}
+                        </div>
+
+                        {/* Search Results Dropdown */}
+                        <AnimatePresence>
+                            {showSearch && searchQuery && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    className="absolute top-full mt-4 w-72 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden left-0"
+                                >
+                                    {filteredItems.length > 0 ? (
+                                        <div className="py-2">
+                                            {filteredItems.map((item, i) => (
+                                                <Link
+                                                    key={i}
+                                                    href={route(item.route)}
+                                                    onClick={() => {
+                                                        setShowSearch(false);
+                                                        setSearchQuery('');
+                                                    }}
+                                                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors"
+                                                >
+                                                    <item.icon className="w-4 h-4 text-gray-400" />
+                                                    <span className="text-sm font-medium text-gray-700 dark:text-zinc-200">{item.title}</span>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="p-4 text-center text-sm text-gray-500 dark:text-zinc-400">
+                                            No results found
+                                        </div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
 
                     <div className="relative" ref={dropdownRef}>
                         <button
