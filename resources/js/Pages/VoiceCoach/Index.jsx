@@ -3,7 +3,7 @@ import { Head, router } from '@inertiajs/react';
 import { 
     Mic, Send, User, Bot, Sparkles, 
     ArrowLeft, MoreHorizontal, ShoppingBag, 
-    TrendingDown, Info
+    TrendingDown, Info, Volume2, VolumeX
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
@@ -16,15 +16,83 @@ export default function Index({ financialData, initialMessage }) {
     ]);
     const [input, setInput] = useState('');
     const [isThinking, setIsThinking] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
     const messagesEndRef = useRef(null);
+    const recognitionRef = useRef(null);
+
+    // Initialize Speech Recognition
+    useEffect(() => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognitionRef.current = new SpeechRecognition();
+            recognitionRef.current.continuous = false;
+            recognitionRef.current.interimResults = false;
+            recognitionRef.current.lang = 'en-US';
+
+            recognitionRef.current.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                setInput(transcript);
+                setIsRecording(false);
+                // Optionally auto-send
+                // handleSend({ preventDefault: () => {} }, transcript);
+            };
+
+            recognitionRef.current.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                setIsRecording(false);
+            };
+
+            recognitionRef.current.onend = () => {
+                setIsRecording(false);
+            };
+        }
+    }, []);
+
+    const toggleRecording = () => {
+        if (isRecording) {
+            recognitionRef.current?.stop();
+        } else {
+            setInput('');
+            recognitionRef.current?.start();
+            setIsRecording(true);
+        }
+    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    const speak = (text) => {
+        if (isMuted || !window.speechSynthesis) return;
+        
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        
+        // Try to find a nice female/natural voice
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Female'));
+        if (preferredVoice) utterance.voice = preferredVoice;
+
+        window.speechSynthesis.speak(utterance);
+    };
+
     useEffect(() => {
         scrollToBottom();
     }, [messages, isThinking]);
+
+    useEffect(() => {
+        // Speak initial message on mount
+        const timer = setTimeout(() => speak(initialMessage), 1000);
+        return () => {
+            clearTimeout(timer);
+            window.speechSynthesis?.cancel();
+        };
+    }, []);
 
     const handleSend = async (e) => {
         e.preventDefault();
@@ -40,18 +108,23 @@ export default function Index({ financialData, initialMessage }) {
                 question: input
             });
             
+            const botText = response.data.response;
             setMessages(prev => [...prev, {
                 id: Date.now() + 1,
                 type: 'bot',
-                text: response.data.response
+                text: botText
             }]);
+            
+            speak(botText);
         } catch (error) {
             console.error('Error asking coach:', error);
+            const errorText = "I'm sorry, I'm having a little trouble connecting right now. Can you try asking me again in a moment?";
             setMessages(prev => [...prev, {
                 id: Date.now() + 1,
                 type: 'bot',
-                text: "I'm sorry, I'm having a little trouble connecting right now. Can you try asking me again in a moment?"
+                text: errorText
             }]);
+            speak(errorText);
         } finally {
             setIsThinking(false);
         }
@@ -65,19 +138,48 @@ export default function Index({ financialData, initialMessage }) {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8 px-4">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20">
+                        <motion.div 
+                            animate={isRecording ? { scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] } : {}}
+                            transition={{ repeat: Infinity, duration: 1 }}
+                            onClick={toggleRecording}
+                            className={clsx(
+                                "w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all cursor-pointer",
+                                isRecording ? "bg-red-600 shadow-red-600/40" : "bg-red-500 shadow-red-500/20"
+                            )}
+                        >
                             <Mic className="w-6 h-6 text-white" />
-                        </div>
+                        </motion.div>
                         <div>
                             <h2 className="text-xl font-black text-gray-900">Voice Coach</h2>
                             <p className="text-[10px] font-black text-green-500 uppercase tracking-widest flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> Live Analysis Active
+                                <span className={clsx("w-1.5 h-1.5 rounded-full", isRecording ? "bg-red-500 animate-ping" : "bg-green-500 animate-pulse")} /> 
+                                {isRecording ? "Listening..." : "Live Analysis Active"}
                             </p>
                         </div>
                     </div>
-                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <MoreHorizontal className="w-5 h-5 text-gray-400" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button 
+                            onClick={() => router.visit(route('voice-call.index'))}
+                            className="bg-black text-white px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2 shadow-lg shadow-black/10"
+                        >
+                            <Volume2 className="w-4 h-4" /> Start AI Call
+                        </button>
+                        <button 
+                            onClick={() => {
+                                if (!isMuted) window.speechSynthesis.cancel();
+                                setIsMuted(!isMuted);
+                            }}
+                            className={clsx(
+                                "p-3 rounded-xl transition-all",
+                                isMuted ? "bg-gray-100 text-gray-400" : "bg-red-50 text-red-500 shadow-sm"
+                            )}
+                        >
+                            {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                        </button>
+                        <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+                            <MoreHorizontal className="w-5 h-5 text-gray-400" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Chat Container */}
@@ -134,14 +236,21 @@ export default function Index({ financialData, initialMessage }) {
                     <form onSubmit={handleSend} className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-orange-500 rounded-[32px] blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200" />
                         <div className="relative bg-white border border-gray-100 rounded-[28px] p-2 flex items-center gap-2 shadow-xl shadow-black/5">
-                            <div className="p-3 bg-gray-50 rounded-2xl text-gray-400 group-focus-within:text-red-500 transition-colors">
-                                <Sparkles className="w-5 h-5" />
-                            </div>
+                            <button 
+                                type="button"
+                                onClick={toggleRecording}
+                                className={clsx(
+                                    "p-3 rounded-2xl transition-colors",
+                                    isRecording ? "bg-red-500 text-white" : "bg-gray-50 text-gray-400 hover:text-red-500"
+                                )}
+                            >
+                                <Mic className="w-5 h-5" />
+                            </button>
                             <input 
                                 type="text" 
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Ask about your spending, saving, or credit..."
+                                placeholder={isRecording ? "Listening to you..." : "Ask about your spending, saving, or credit..."}
                                 className="flex-1 border-none focus:ring-0 text-sm font-bold placeholder:text-gray-300 bg-transparent"
                             />
                             <button 

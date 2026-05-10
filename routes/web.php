@@ -66,6 +66,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/voice-coach', [\App\Http\Controllers\VoiceCoachController::class, 'index'])->name('voice-coach.index');
     Route::post('/voice-coach/ask', [\App\Http\Controllers\VoiceCoachController::class, 'ask'])->name('voice-coach.ask');
 
+    // Voice Call Routes
+    Route::get('/voice-call', [\App\Http\Controllers\VoiceCallController::class, 'index'])->name('voice-call.index');
+    Route::post('/voice-call/process', [\App\Http\Controllers\VoiceCallController::class, 'process'])->name('voice-call.process');
+
     // Loan Routes
     Route::get('/loans', [\App\Http\Controllers\LoanController::class, 'index'])->name('loans.index');
     Route::get('/loans/apply', [\App\Http\Controllers\LoanController::class, 'apply'])->name('loans.apply');
