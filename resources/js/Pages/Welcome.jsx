@@ -25,15 +25,15 @@ export default function Welcome({ auth }) {
     };
 
     return (
-        <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-black selection:text-white">
+        <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-blue-600 selection:text-white">
             <Head title="HarborBank - Banking that moves with you" />
 
-            <nav className="sticky top-0 z-50 bg-black text-white px-6 py-4">
+            <nav className="sticky top-0 z-50 bg-blue-950 text-white px-6 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link href="/" className="flex items-center gap-2 group">
                             <div className="bg-white p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
-                                <Anchor className="w-6 h-6 text-black" />
+                                <Anchor className="w-6 h-6 text-blue-950" />
                             </div>
                             <span className="text-xl font-bold tracking-tight">HarborBank</span>
                         </Link>
@@ -76,7 +76,7 @@ export default function Welcome({ auth }) {
                                     </Link>
                                     <Link
                                         href={route('register')}
-                                        className="bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 font-bold"
+                                        className="bg-white text-blue-900 px-6 py-2 rounded-full hover:bg-blue-50 transition-all duration-300 font-bold"
                                     >
                                         Create Account
                                     </Link>
@@ -120,7 +120,7 @@ export default function Welcome({ auth }) {
                         ) : (
                             <>
                                 <Link href={route('login')} className="px-2 py-1 text-center font-bold text-gray-400">Login</Link>
-                                <Link href={route('register')} className="px-2 py-1 bg-white text-black text-center rounded-full font-bold">Create Account</Link>
+                                <Link href={route('register')} className="px-2 py-1 bg-white text-blue-900 text-center rounded-full font-bold">Create Account</Link>
                             </>
                         )}
                     </motion.div>
@@ -150,12 +150,12 @@ export default function Welcome({ auth }) {
 
                         <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-16">
                             {auth.user ? (
-                                <Link href={route('dashboard')} className="bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
+                                <Link href={route('dashboard')} className="bg-white text-blue-900 px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
                                     Go to Dashboard
                                 </Link>
                             ) : (
                                 <>
-                                    <Link href={route('register')} className="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
+                                    <Link href={route('register')} className="bg-blue-600 text-white px-8 py-4 rounded-full font-bold hover:bg-blue-700 hover:scale-105 transition-all">
                                         Create Account
                                     </Link>
                                     <Link href={route('login')} className="bg-gray-100 text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">
@@ -166,16 +166,16 @@ export default function Welcome({ auth }) {
                         </motion.div>
 
                         <motion.div variants={fadeInUp} className="grid sm:grid-cols-2 gap-6">
-                            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-black/10 transition-colors">
+                            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-blue-900/10 transition-colors">
                                 <div className="bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                                    <CreditCard className="w-6 h-6" />
+                                    <CreditCard className="w-6 h-6 text-blue-900" />
                                 </div>
                                 <h3 className="font-bold mb-2">Quick Start</h3>
                                 <p className="text-sm text-gray-500">Get started with a checking account in minutes with online verification.</p>
                             </div>
-                            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-black/10 transition-colors">
+                            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-blue-900/10 transition-colors">
                                 <div className="bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                                    <ShieldCheck className="w-6 h-6" />
+                                    <ShieldCheck className="w-6 h-6 text-blue-900" />
                                 </div>
                                 <h3 className="font-bold mb-2">Secure & insured</h3>
                                 <p className="text-sm text-gray-500">FDIC-insured products and multi-layer security to protect your accounts.</p>
@@ -206,9 +206,9 @@ export default function Welcome({ auth }) {
                                 <div className="flex justify-between items-start mb-6">
                                     <div>
                                         <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1">Harbor Checking • Tailored</p>
-                                        <h4 className="text-2xl font-bold text-black">$2,450.32</h4>
+                                        <h4 className="text-2xl font-bold text-blue-950">$2,450.32</h4>
                                     </div>
-                                    <div className="bg-black p-1 rounded-md">
+                                    <div className="bg-blue-900 p-1 rounded-md">
                                         <Anchor className="w-4 h-4 text-white" />
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@ export default function Welcome({ auth }) {
                                     <div className="flex justify-between items-center">
                                         <span className="text-[10px] text-gray-500">Available balance  Updated 2m ago</span>
                                     </div>
-                                    <div className="pt-3 border-t border-black/5 flex justify-between items-center">
+                                    <div className="pt-3 border-t border-blue-900/5 flex justify-between items-center">
                                         <span className="text-xs font-mono text-gray-400 leading-none">Account # •••• 8621</span>
                                         <div className="flex gap-1">
                                             <div className="w-4 h-4 rounded-full bg-red-500/20" />
@@ -268,7 +268,7 @@ export default function Welcome({ auth }) {
                                 className="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-start"
                             >
                                 <div className="bg-gray-50 p-4 rounded-2xl mb-8">
-                                    <service.icon className="w-8 h-8 text-black" />
+                                    <service.icon className="w-8 h-8 text-blue-900" />
                                 </div>
                                 <h3 className="text-xl font-bold mb-4">{service.title}</h3>
                                 <p className="text-gray-500 mb-8 leading-relaxed">{service.desc}</p>
@@ -304,7 +304,7 @@ export default function Welcome({ auth }) {
             <section className="py-24 px-6 bg-white">
                 <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
                     <div className="lg:w-1/3 bg-gray-50 p-12 rounded-[40px] flex flex-col justify-center">
-                        <div className="bg-black w-14 h-14 rounded-2xl flex items-center justify-center mb-8">
+                        <div className="bg-blue-950 w-14 h-14 rounded-2xl flex items-center justify-center mb-8">
                             <Megaphone className="w-7 h-7 text-white" />
                         </div>
                         <h2 className="text-3xl font-bold mb-6">Latest Promotions</h2>
@@ -325,12 +325,12 @@ export default function Welcome({ auth }) {
                             <motion.div
                                 key={i}
                                 whileHover={{ scale: 1.02 }}
-                                className="p-8 rounded-[32px] border border-gray-100 flex flex-col hover:border-black transition-colors cursor-pointer"
+                                className="p-8 rounded-[32px] border border-gray-100 flex flex-col hover:border-blue-600 transition-colors cursor-pointer"
                             >
                                 <span className="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">{promo.date}</span>
                                 <h4 className="font-bold leading-snug">{promo.title}</h4>
                                 <div className="mt-auto pt-6">
-                                    <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-black group-hover:border-black transition-colors">
+                                    <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-colors">
                                         <ArrowRight className="w-4 h-4" />
                                     </div>
                                 </div>
@@ -341,13 +341,13 @@ export default function Welcome({ auth }) {
             </section>
 
             {/* 6. Footer */}
-            <footer className="bg-black text-white pt-24 pb-12 px-6">
+            <footer className="bg-blue-950 text-white pt-24 pb-12 px-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 mb-20">
                         <div className="col-span-2 lg:col-span-1">
                             <div className="flex items-center gap-2 mb-8">
                                 <div className="bg-white p-1 rounded-lg">
-                                    <Anchor className="w-5 h-5 text-black" />
+                                    <Anchor className="w-5 h-5 text-blue-950" />
                                 </div>
                                 <span className="text-xl font-bold">HarborBank</span>
                             </div>
@@ -401,7 +401,7 @@ export default function Welcome({ auth }) {
                                         placeholder="Email Address"
                                         className="w-full bg-white/10 border-none rounded-full px-5 py-3 text-sm focus:ring-2 focus:ring-white/30"
                                     />
-                                    <button className="absolute right-1 top-1 bg-white text-black text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-200 transition-colors">
+                                    <button className="absolute right-1 top-1 bg-white text-blue-900 text-xs font-bold px-4 py-2 rounded-full hover:bg-blue-50 transition-colors">
                                         Subscribe
                                     </button>
                                 </div>

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function GuestLayout({ children }) {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden font-sans">
+        <div className="min-h-screen flex items-center justify-center bg-blue-950 relative overflow-hidden font-sans">
             {/* Animated Background Orbs */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <motion.div 
@@ -23,7 +23,7 @@ export default function GuestLayout({ children }) {
                         y: [0, -50, 0]
                     }}
                     transition={{ duration: 15, repeat: Infinity }}
-                    className="absolute -bottom-20 -right-20 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px]" 
+                    className="absolute -bottom-20 -right-20 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px]" 
                 />
             </div>
 
@@ -31,7 +31,7 @@ export default function GuestLayout({ children }) {
                 <div className="flex flex-col items-center mb-10">
                     <Link href="/" className="flex items-center gap-3 group">
                         <div className="bg-white p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-lg shadow-white/10">
-                            <Anchor className="w-8 h-8 text-black" />
+                            <Anchor className="w-8 h-8 text-blue-950" />
                         </div>
                         <span className="text-2xl font-bold tracking-tight text-white">HarborBank</span>
                     </Link>
@@ -40,13 +40,13 @@ export default function GuestLayout({ children }) {
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 rounded-[32px] shadow-2xl"
+                    className="bg-blue-900/50 backdrop-blur-xl border border-white/10 p-8 rounded-[32px] shadow-2xl"
                 >
                     {children}
                 </motion.div>
 
                 <div className="mt-8 text-center">
-                    <p className="text-zinc-500 text-xs font-medium uppercase tracking-[0.2em]">
+                    <p className="text-blue-300 text-xs font-medium uppercase tracking-[0.2em]">
                         Secure Financial Gateway
                     </p>
                 </div>

@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) => (
     <Link
         href={href}
-        className={`flex items-center justify-between px-6 py-3 transition-all group ${active ? 'text-white border-l-4 border-purple-500 bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'
+        className={`flex items-center justify-between px-6 py-3 transition-all group ${active ? 'text-white border-l-4 border-blue-400 bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'
             }`}
     >
         <div className="flex items-center gap-3">
@@ -51,7 +51,7 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A0A0A] flex flex-col z-50">
+        <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A192F] flex flex-col z-50">
             <div className="p-8">
                 <Link href="/" className="flex items-center gap-3 group">
                     <div className="bg-white p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
@@ -162,7 +162,7 @@ export default function Sidebar() {
                                     href={route('logout')}
                                     method="post"
                                     as="button"
-                                    className="w-full bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform"
+                                    className="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-700 hover:scale-[1.02] transition-all"
                                 >
                                     Yes, Log Out
                                 </Link>
