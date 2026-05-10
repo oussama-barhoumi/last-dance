@@ -1,10 +1,43 @@
-import { Search, Bell, ChevronDown, CheckCircle2, AlertCircle, Clock, ArrowRight, X, LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, TrendingUp, Globe } from 'lucide-react';
+import { Search, Bell, ChevronDown, CheckCircle2, AlertCircle, Clock, ArrowRight, X, LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, TrendingUp, Globe, Settings } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, router } from '@inertiajs/react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import ThemeToggle from '@/Components/ThemeToggle';
+import enTranslations from '@/locales/en/translation.json';
+
+// Helper to flatten translations
+const flattenObject = (obj, prefix = '') => {
+    return Object.keys(obj).reduce((acc, k) => {
+        const pre = prefix.length ? prefix + '.' : '';
+        if (typeof obj[k] === 'object' && obj[k] !== null) {
+            Object.assign(acc, flattenObject(obj[k], pre + k));
+        } else {
+            acc[pre + k] = obj[k];
+        }
+        return acc;
+    }, {});
+};
+
+const allTranslations = flattenObject(enTranslations);
+
+// Map top level keys to routes and icons
+const routeMapping = {
+    'sidebar': { route: 'dashboard', icon: LayoutDashboard },
+    'dashboard': { route: 'dashboard', icon: LayoutDashboard },
+    'transactions': { route: 'transactions.index', icon: ArrowLeftRight },
+    'ai_assistant': { route: 'ai-assistant.index', icon: BarChart },
+    'voice_coach': { route: 'voice-coach.index', icon: Globe },
+    'accounts': { route: 'accounts.index', icon: CreditCard },
+    'cards': { route: 'cards.index', icon: CreditCard },
+    'investments': { route: 'investments.index', icon: Wallet },
+    'loans': { route: 'loans.index', icon: TrendingUp },
+    'settings': { route: 'settings.index', icon: Settings },
+    'profile': { route: 'profile.edit', icon: Settings },
+    'welcome': { route: 'dashboard', icon: LayoutDashboard }, // Fallback
+    'auth': { route: 'login', icon: Search }
+};
 
 export default function Header({ user }) {
     const { t } = useTranslation();
@@ -16,7 +49,21 @@ export default function Header({ user }) {
     const [showSearch, setShowSearch] = useState(false);
     const searchRef = useRef(null);
 
-    const searchItems = [
+    // Generate searchable index from all translations
+    const searchableIndex = Object.entries(allTranslations).map(([key, value]) => {
+        const topLevelKey = key.split('.')[0];
+        const routeInfo = routeMapping[topLevelKey] || { route: 'dashboard', icon: Search };
+        
+        return {
+            title: value,
+            key: key,
+            route: routeInfo.route,
+            icon: routeInfo.icon
+        };
+    }).filter(item => typeof item.title === 'string'); // ensure only strings
+
+    // Keep the core sidebar items at the top
+    const coreItems = [
         { title: t('sidebar.dashboard'), route: 'dashboard', icon: LayoutDashboard },
         { title: t('sidebar.transactions'), route: 'transactions.index', icon: ArrowLeftRight },
         { title: t('sidebar.accounts'), route: 'accounts.index', icon: CreditCard },
@@ -28,9 +75,11 @@ export default function Header({ user }) {
         { title: t('sidebar.voice_coach'), route: 'voice-coach.index', icon: Globe },
     ];
 
-    const filteredItems = searchItems.filter(item => 
-        searchQuery && item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredItems = [...coreItems, ...searchableIndex]
+        .filter(item => searchQuery && item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+        // Remove duplicates by title
+        .filter((item, index, self) => index === self.findIndex((t) => t.title === item.title))
+        .slice(0, 8); // limit to 8 results for UI performance
 
     // Close on click outside
     useEffect(() => {
@@ -103,8 +152,8 @@ export default function Header({ user }) {
                                                     }}
                                                     className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors"
                                                 >
-                                                    <item.icon className="w-4 h-4 text-gray-400" />
-                                                    <span className="text-sm font-medium text-gray-700 dark:text-zinc-200">{item.title}</span>
+                                                    <item.icon className="w-4 h-4 text-gray-400 shrink-0" />
+                                                    <span className="text-sm font-medium text-gray-700 dark:text-zinc-200 truncate">{item.title}</span>
                                                 </Link>
                                             ))}
                                         </div>
