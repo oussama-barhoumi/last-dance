@@ -30,8 +30,14 @@ export default function Apply({ user }) {
         purpose: ''
     });
 
+    const [files, setFiles] = useState({});
+
     const handleNext = () => setStep(step + 1);
     const handleBack = () => setStep(step - 1);
+
+    const handleFileChange = (name, file) => {
+        setFiles(prev => ({ ...prev, [name]: file }));
+    };
 
     const FormInput = ({ label, name, type = "text", placeholder }) => (
         <div className="space-y-2">
@@ -46,18 +52,51 @@ export default function Apply({ user }) {
         </div>
     );
 
-    const DocumentUpload = ({ title, desc }) => (
-        <div className="p-6 bg-gray-50 rounded-3xl flex items-center justify-between group hover:bg-white hover:shadow-xl hover:shadow-black/5 transition-all border border-transparent hover:border-gray-100 cursor-pointer">
+    const DocumentUpload = ({ title, desc, name }) => (
+        <div 
+            onClick={() => document.getElementById(`file-${name}`).click()}
+            className={clsx(
+                "p-6 rounded-3xl flex items-center justify-between group transition-all border cursor-pointer",
+                files[name] 
+                    ? "bg-green-50 border-green-100 shadow-xl shadow-green-900/5" 
+                    : "bg-gray-50 border-transparent hover:bg-white hover:shadow-xl hover:shadow-black/5 hover:border-gray-100"
+            )}
+        >
             <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
-                    <FileText className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />
+                <div className={clsx(
+                    "w-10 h-10 rounded-xl flex items-center justify-center shadow-sm transition-colors",
+                    files[name] ? "bg-green-500 text-white" : "bg-white text-gray-400 group-hover:text-black"
+                )}>
+                    {files[name] ? <Check className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
                 </div>
-                <div>
-                    <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">{title}</h4>
-                    <p className="text-[9px] text-gray-400 font-bold">{desc}</p>
+                <div className="max-w-[150px]">
+                    <h4 className={clsx(
+                        "text-xs font-black uppercase tracking-widest truncate",
+                        files[name] ? "text-green-700" : "text-gray-900"
+                    )}>
+                        {files[name] ? files[name].name : title}
+                    </h4>
+                    <p className={clsx(
+                        "text-[9px] font-bold truncate",
+                        files[name] ? "text-green-600/70" : "text-gray-400"
+                    )}>
+                        {files[name] ? `${(files[name].size / 1024).toFixed(1)} KB` : desc}
+                    </p>
                 </div>
             </div>
-            <Upload className="w-5 h-5 text-gray-300 group-hover:text-black transition-colors" />
+            <input 
+                type="file" 
+                id={`file-${name}`} 
+                className="hidden" 
+                onChange={(e) => handleFileChange(name, e.target.files[0])}
+            />
+            {files[name] ? (
+                <div className="bg-green-500/10 p-2 rounded-full">
+                    <Check className="w-4 h-4 text-green-600" />
+                </div>
+            ) : (
+                <Upload className="w-5 h-5 text-gray-300 group-hover:text-black transition-colors" />
+            )}
         </div>
     );
 
@@ -225,17 +264,17 @@ export default function Apply({ user }) {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <DocumentUpload title="Copy of CIN" desc="Both sides of your national ID" />
-                                <DocumentUpload title="Salary Certificate" desc="Recent certificate from employer" />
-                                <DocumentUpload title="Bank Statements" desc="Last 3–6 months of activity" />
-                                <DocumentUpload title="Work Contract" desc="Signed employment contract" />
-                                <DocumentUpload title="Proof of Address" desc="Electricity or water bill" />
-                                <DocumentUpload title="Recent Payslips" desc="Last 3 monthly payslips" />
+                                <DocumentUpload title="Copy of CIN" desc="Both sides of your national ID" name="cin_copy" />
+                                <DocumentUpload title="Salary Certificate" desc="Recent certificate from employer" name="salary_cert" />
+                                <DocumentUpload title="Bank Statements" desc="Last 3–6 months of activity" name="bank_statements" />
+                                <DocumentUpload title="Work Contract" desc="Signed employment contract" name="work_contract" />
+                                <DocumentUpload title="Proof of Address" desc="Electricity or water bill" name="proof_address" />
+                                <DocumentUpload title="Recent Payslips" desc="Last 3 monthly payslips" name="payslips" />
                                 {formData.job_title?.toLowerCase().includes('self') && (
-                                    <DocumentUpload title="Business Documents" desc="Company registration / status" />
+                                    <DocumentUpload title="Business Documents" desc="Company registration / status" name="business_docs" />
                                 )}
                                 {formData.loan_type === 'home' && (
-                                    <DocumentUpload title="Property Documents" desc="Title deed or sales agreement" />
+                                    <DocumentUpload title="Property Documents" desc="Title deed or sales agreement" name="property_docs" />
                                 )}
                             </div>
 
