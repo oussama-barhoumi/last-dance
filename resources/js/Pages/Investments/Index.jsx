@@ -79,11 +79,22 @@ const StockMarket = ({ userBalance }) => {
     const [loading, setLoading] = useState(false);
     const [shares, setShares] = useState(1);
 
-    const fetchQuote = async () => {
-        if (!search) return;
+    const suggestedStocks = [
+        { name: 'Attijariwafa Bank', symbol: 'ATW.MA', price: '450.20', change: '+1.45%', up: true },
+        { name: 'Maroc Telecom', symbol: 'IAM.MA', price: '102.50', change: '-0.32%', up: false },
+        { name: 'OCP Group', symbol: 'OCP.MA', price: '2,840.00', change: '+2.10%', up: true },
+        { name: 'Bank of Africa', symbol: 'BOA.MA', price: '185.00', change: '+0.15%', up: true },
+        { name: 'TAQA Morocco', symbol: 'TQM.MA', price: '1,120.00', change: '-1.25%', up: false },
+        { name: 'LabelVie', symbol: 'LBV.MA', price: '4,560.00', change: '+0.85%', up: true },
+        { name: 'Cosumar', symbol: 'CSM.MA', price: '198.40', change: '-0.45%', up: false },
+        { name: 'HPS', symbol: 'HPS.MA', price: '6,200.00', change: '+3.40%', up: true }
+    ];
+
+    const fetchQuote = async (symbol = search) => {
+        if (!symbol) return;
         setLoading(true);
         try {
-            const response = await fetch(`/stocks/${search}`);
+            const response = await fetch(`/stocks/${symbol}`);
             const data = await response.json();
             setQuote(data);
         } catch (error) {
@@ -93,6 +104,11 @@ const StockMarket = ({ userBalance }) => {
         }
     };
 
+    const handleSuggestClick = (symbol) => {
+        setSearch(symbol);
+        fetchQuote(symbol);
+    };
+
     const handleTrade = (type) => {
         if (!quote || !search) return;
         
@@ -100,7 +116,7 @@ const StockMarket = ({ userBalance }) => {
             symbol: search.toUpperCase(),
             shares: shares,
             price: quote.c,
-            company_name: search.toUpperCase() // For now, use symbol as name
+            company_name: search.toUpperCase() 
         });
     };
 
@@ -124,23 +140,73 @@ const StockMarket = ({ userBalance }) => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div className="space-y-6">
-                        <div className="relative">
-                            <input 
-                                type="text"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value.toUpperCase())}
-                                onKeyPress={(e) => e.key === 'Enter' && fetchQuote()}
-                                placeholder="Enter Stock Symbol (e.g. AAPL, TSLA)"
-                                className="w-full bg-gray-50 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-14"
-                            />
-                            <Search className="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" />
-                            <button 
-                                onClick={fetchQuote}
-                                disabled={loading}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-black text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform disabled:opacity-50"
-                            >
-                                {loading ? '...' : 'Quote'}
-                            </button>
+                        <div className="space-y-8">
+                            <div className="relative">
+                                <input 
+                                    type="text"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value.toUpperCase())}
+                                    onKeyPress={(e) => e.key === 'Enter' && fetchQuote()}
+                                    placeholder="Enter Stock Symbol (e.g. AAPL, TSLA)"
+                                    className="w-full bg-gray-50 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-14"
+                                />
+                                <Search className="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" />
+                                <button 
+                                    onClick={() => fetchQuote()}
+                                    disabled={loading}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-black text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform disabled:opacity-50"
+                                >
+                                    {loading ? '...' : 'Quote'}
+                                </button>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center px-1">
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Market Highlights</p>
+                                    <div className="flex gap-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-black" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+                                    </div>
+                                </div>
+                                <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar no-scrollbar scroll-smooth">
+                                    {suggestedStocks.map((stock) => (
+                                        <button 
+                                            key={stock.symbol}
+                                            onClick={() => handleSuggestClick(stock.symbol)}
+                                            className={clsx(
+                                                "flex-shrink-0 w-48 p-4 rounded-3xl border transition-all flex items-center gap-3 text-left group",
+                                                search === stock.symbol ? "bg-black text-white border-black" : "bg-white text-gray-900 border-gray-100 hover:border-gray-200"
+                                            )}
+                                        >
+                                            <div className={clsx(
+                                                "w-10 h-10 rounded-2xl flex items-center justify-center font-black text-xs shadow-sm",
+                                                search === stock.symbol ? "bg-white/10" : "bg-gray-50"
+                                            )}>
+                                                {stock.symbol.substring(0, 2)}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between items-start">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest block truncate">{stock.symbol}</span>
+                                                    <span className={clsx(
+                                                        "text-[9px] font-black",
+                                                        stock.up ? "text-green-500" : "text-red-500"
+                                                    )}>
+                                                        {stock.change}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between items-end mt-0.5">
+                                                    <span className={clsx(
+                                                        "text-[8px] font-bold uppercase tracking-tight truncate",
+                                                        search === stock.symbol ? "text-gray-400" : "text-gray-400"
+                                                    )}>{stock.name}</span>
+                                                    <span className="text-[10px] font-black ml-auto">${stock.price}</span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
 
                         {quote && quote.c > 0 ? (
