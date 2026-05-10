@@ -12,9 +12,10 @@ import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 
 export default function Dashboard({ auth }) {
-    const { data, setData, post, processing, errors, reset, success } = useForm({
-        email: '',
+    const { data, setData, post, processing, errors, reset } = useForm({
+        receiver_email: '',
         amount: '',
+        currency: 'USD',
         description: 'Direct Transfer',
     });
 
@@ -220,13 +221,13 @@ export default function Dashboard({ auth }) {
                                                     </div>
                                                     <input 
                                                         type="text" 
-                                                        value={data.email}
-                                                        onChange={e => setData('email', e.target.value)}
-                                                        placeholder="Email address"
+                                                        value={data.receiver_email}
+                                                        onChange={e => setData('receiver_email', e.target.value)}
+                                                        placeholder="Recipient email identifier"
                                                         className="w-full bg-zinc-900 border-none rounded-2xl p-4 text-white text-sm focus:ring-2 focus:ring-purple-600 transition-all"
                                                         required
                                                     />
-                                                    {errors.email && <p className="text-red-500 text-[10px] mt-1 font-black uppercase tracking-widest">{errors.email}</p>}
+                                                    {errors.receiver_email && <p className="text-red-500 text-[10px] mt-1 font-black uppercase tracking-widest">{errors.receiver_email}</p>}
                                                 </div>
 
                                                 <div className="space-y-2">
@@ -237,11 +238,19 @@ export default function Dashboard({ auth }) {
                                                             value={data.amount}
                                                             onChange={e => setData('amount', e.target.value)}
                                                             placeholder="0.00"
-                                                            className="w-full bg-zinc-900 border-none rounded-2xl p-6 text-white text-2xl font-black focus:ring-2 focus:ring-purple-600 transition-all pr-20"
+                                                            className="w-full bg-zinc-900 border-none rounded-2xl p-6 text-white text-2xl font-black focus:ring-2 focus:ring-purple-600 transition-all pr-32"
                                                             required
                                                             min="1"
                                                         />
-                                                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-black text-zinc-500">USD</span>
+                                                        <select 
+                                                            value={data.currency}
+                                                            onChange={e => setData('currency', e.target.value)}
+                                                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-zinc-800 text-white border-none rounded-xl text-xs font-black focus:ring-0 cursor-pointer"
+                                                        >
+                                                            <option value="USD">USD</option>
+                                                            <option value="MAD">MAD</option>
+                                                            <option value="EUR">EUR</option>
+                                                        </select>
                                                     </div>
                                                     {errors.amount && <p className="text-red-500 text-[10px] mt-1 font-black uppercase tracking-widest">{errors.amount}</p>}
                                                 </div>

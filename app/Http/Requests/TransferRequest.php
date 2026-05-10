@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class TransferRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'receiver_email' => 'required|email|exists:users,email',
+            'amount' => 'required|numeric|min:1',
+            'currency' => 'required|string|size:3',
+            'description' => 'nullable|string|max:255',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'receiver_email.exists' => 'Recipient account not found in the HarborBank network.',
+            'amount.min' => 'The minimum transfer amount is 1.00.',
+        ];
+    }
+}

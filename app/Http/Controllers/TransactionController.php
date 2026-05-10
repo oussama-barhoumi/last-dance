@@ -173,55 +173,20 @@ class TransactionController extends Controller
             ]);
     }
 
-    public function sendMoney(Request $request)
+    public function sendMoney(\App\Http\Requests\TransferRequest $request, \App\Services\TransferService $transferService)
     {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'amount' => 'required|numeric|min:1',
-            'description' => 'nullable|string|max:255',
-        ]);
+        try {
+            $result = $transferService->execute(
+                auth()->user(),
+                $request->receiver_email,
+                $request->amount,
+                $request->currency,
+                $request->description
+            );
 
-        $sender = auth()->user();
-        $recipient = \App\Models\User::where('email', $request->email)->first();
-
-        if ($sender->id === $recipient->id) {
-            return back()->withErrors(['email' => 'You cannot send money to yourself.']);
+            return back()->with('success', 'Transfer Protocol Complete. Funds have been securely synchronized.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['amount' => $e->getMessage()]);
         }
-
-        if ($sender->balance < $request->amount) {
-            return back()->withErrors(['amount' => 'Insufficient balance.']);
-        }
-
-        \Illuminate\Support\Facades\DB::transaction(function () use ($sender, $recipient, $request) {
-            // Debit Sender
-            $sender->decrement('balance', $request->amount);
-            Transaction::create([
-                'user_id' => $sender->id,
-                'transaction_id' => 'TXN-' . strtoupper(uniqid()),
-                'description' => 'Transfer to ' . $recipient->name . ($request->description ? ': ' . $request->description : ''),
-                'type' => 'debit',
-                'amount' => $request->amount,
-                'status' => 'completed',
-                'payment_method' => 'bank_transfer',
-                'transaction_date' => now(),
-                'category' => 'Transfer',
-            ]);
-
-            // Credit Recipient
-            $recipient->increment('balance', $request->amount);
-            Transaction::create([
-                'user_id' => $recipient->id,
-                'transaction_id' => 'TXN-' . strtoupper(uniqid()),
-                'description' => 'Transfer from ' . $sender->name . ($request->description ? ': ' . $request->description : ''),
-                'type' => 'credit',
-                'amount' => $request->amount,
-                'status' => 'completed',
-                'payment_method' => 'bank_transfer',
-                'transaction_date' => now(),
-                'category' => 'Transfer',
-            ]);
-        });
-
-        return back()->with('success', 'Money sent successfully!');
     }
 }
