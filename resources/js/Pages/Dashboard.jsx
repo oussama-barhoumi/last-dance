@@ -5,9 +5,37 @@ import RecentTransactions from '@/Components/Dashboard/RecentTransactions';
 import QuickTransfer from '@/Components/Dashboard/QuickTransfer';
 import InvestmentList from '@/Components/Dashboard/InvestmentList';
 import { Head } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, Plus, X, QrCode, Scan, Camera, CheckCircle2, AlertCircle, ArrowRight, Info } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import clsx from 'clsx';
 
 export default function Dashboard({ auth }) {
+    const [showSendModal, setShowSendModal] = useState(false);
+    const [activeTab, setActiveTab] = useState('transfer'); // 'transfer' or 'qr'
+    const [isScanning, setIsScanning] = useState(false);
+    const videoRef = useRef(null);
+
+    const startScanner = async () => {
+        setIsScanning(true);
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (err) {
+            console.error("Camera access denied", err);
+        }
+    };
+
+    const stopScanner = () => {
+        if (videoRef.current && videoRef.current.srcObject) {
+            const tracks = videoRef.current.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+        }
+        setIsScanning(false);
+    };
+
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -33,25 +61,52 @@ export default function Dashboard({ auth }) {
                 animate="show"
                 className="space-y-10 mt-8"
             >
-                {/* Row 1: Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Row 1: Financial Hub & Stats */}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <motion.div variants={item} className="lg:col-span-2 bg-[#0A0A0A] p-8 rounded-[40px] text-white flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group">
+                        <div className="relative z-10">
+                            <h3 className="text-2xl font-black mb-2">Financial Hub</h3>
+                            <p className="text-zinc-400 text-xs font-medium max-w-[200px]">Quickly manage your capital with secure global transfers.</p>
+                            <div className="flex gap-4 mt-8">
+                                <button 
+                                    onClick={() => setShowSendModal(true)}
+                                    className="bg-white text-black px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-2"
+                                >
+                                    <Send className="w-3 h-3" /> Send Money
+                                </button>
+                                <button className="bg-zinc-800 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-zinc-700 transition-colors flex items-center gap-2">
+                                    <Plus className="w-3 h-3" /> Add Payment
+                                </button>
+                            </div>
+                        </div>
+                        <div className="relative z-10 w-full md:w-auto bg-zinc-900/50 backdrop-blur-xl p-6 rounded-3xl border border-zinc-800">
+                            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Your Balance</p>
+                            <p className="text-3xl font-black">${Number(auth.user.balance).toLocaleString()}</p>
+                            <div className="mt-4 flex items-center gap-2">
+                                <div className="flex -space-x-2">
+                                    {[1,2,3].map(i => <div key={i} className="w-6 h-6 rounded-full border-2 border-zinc-900 bg-zinc-800" />)}
+                                </div>
+                                <span className="text-[8px] font-black text-zinc-500 uppercase">+12 Recent</span>
+                            </div>
+                        </div>
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 rounded-full blur-[100px] -mr-32 -mt-32 group-hover:bg-purple-600/30 transition-colors" />
+                    </motion.div>
+
                     <motion.div variants={item} className="lg:col-span-1">
                         <StatsCard 
                             type="spending" 
-                            label="Spending in Jul" 
-                            value="1,250" 
+                            label="Total Spending" 
+                            value="4,850" 
                         />
                     </motion.div>
                     <motion.div variants={item} className="lg:col-span-1">
                         <StatsCard 
                             type="investment" 
-                            label="Number of Invest" 
-                            value="1,250" 
+                            label="Net Portfolio" 
+                            value="124,500" 
                             dark 
                         />
                     </motion.div>
-                    {/* Placeholder for future stats */}
-                    <div className="hidden lg:block lg:col-span-2" />
                 </div>
 
                 {/* Row 2: Main Content Grid */}
@@ -71,6 +126,194 @@ export default function Dashboard({ auth }) {
                     </motion.div>
                 </div>
             </motion.div>
+
+            {/* Send Money Modal with QR Scanner */}
+            <AnimatePresence>
+                {showSendModal && (
+                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => {
+                                stopScanner();
+                                setShowSendModal(false);
+                            }}
+                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                        />
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="bg-[#0A0A0A] w-full max-w-lg rounded-[40px] shadow-2xl relative z-10 overflow-hidden border border-zinc-800"
+                        >
+                            <div className="p-8 flex justify-between items-center border-b border-zinc-900">
+                                <div className="flex items-center gap-3 text-white">
+                                    <div className="bg-purple-600 p-2 rounded-xl">
+                                        <Send className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black">Send Money</h3>
+                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Global Secure Transfer</p>
+                                    </div>
+                                </div>
+                                <button onClick={() => { stopScanner(); setShowSendModal(false); }} className="p-2 hover:bg-zinc-900 rounded-full transition-colors text-zinc-500">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className="p-8">
+                                {!isScanning ? (
+                                    <div className="space-y-8">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <button 
+                                                onClick={() => setActiveTab('transfer')}
+                                                className={clsx(
+                                                    "p-6 rounded-3xl border-2 flex flex-col items-center gap-3 transition-all",
+                                                    activeTab === 'transfer' ? "bg-zinc-900 border-purple-600" : "bg-zinc-900/50 border-transparent text-zinc-500"
+                                                )}
+                                            >
+                                                <Send className={clsx("w-6 h-6", activeTab === 'transfer' ? "text-purple-500" : "text-zinc-500")} />
+                                                <span className={clsx("text-[10px] font-black uppercase tracking-widest", activeTab === 'transfer' ? "text-white" : "text-zinc-500")}>Transfer</span>
+                                            </button>
+                                            <button 
+                                                onClick={() => setActiveTab('qr')}
+                                                className={clsx(
+                                                    "p-6 rounded-3xl border-2 flex flex-col items-center gap-3 transition-all",
+                                                    activeTab === 'qr' ? "bg-zinc-900 border-purple-600" : "bg-zinc-900/50 border-transparent text-zinc-500"
+                                                )}
+                                            >
+                                                <QrCode className={clsx("w-6 h-6", activeTab === 'qr' ? "text-purple-500" : "text-zinc-500")} />
+                                                <span className={clsx("text-[10px] font-black uppercase tracking-widest", activeTab === 'qr' ? "text-white" : "text-zinc-500")}>My QR</span>
+                                            </button>
+                                        </div>
+
+                                        {activeTab === 'transfer' ? (
+                                            <div className="space-y-6">
+                                                <div className="space-y-2">
+                                                    <div className="flex justify-between items-center px-1">
+                                                        <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Recipient</label>
+                                                        <button 
+                                                            onClick={startScanner}
+                                                            className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+                                                        >
+                                                            <Scan className="w-3 h-3" />
+                                                            <span className="text-[10px] font-black uppercase tracking-widest">Scan QR</span>
+                                                        </button>
+                                                    </div>
+                                                    <input 
+                                                        type="text" 
+                                                        placeholder="Email, Phone or Username"
+                                                        className="w-full bg-zinc-900 border-none rounded-2xl p-4 text-white text-sm focus:ring-2 focus:ring-purple-600 transition-all"
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest px-1">Amount</label>
+                                                    <div className="relative">
+                                                        <input 
+                                                            type="number" 
+                                                            placeholder="0.00"
+                                                            className="w-full bg-zinc-900 border-none rounded-2xl p-6 text-white text-2xl font-black focus:ring-2 focus:ring-purple-600 transition-all pr-20"
+                                                        />
+                                                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-black text-zinc-500">USD</span>
+                                                    </div>
+                                                </div>
+
+                                                <button className="w-full bg-white text-black py-5 rounded-[20px] font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-white/5">
+                                                    Continue Transfer <ArrowRight className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-8 flex flex-col items-center py-4">
+                                                <div className="bg-white p-6 rounded-[40px] shadow-[0_0_50px_rgba(168,85,247,0.15)] relative group overflow-hidden">
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                    <img 
+                                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${auth.user.email}`} 
+                                                        alt="User QR Code" 
+                                                        className="w-48 h-48 relative z-10"
+                                                    />
+                                                </div>
+                                                
+                                                <div className="text-center space-y-2">
+                                                    <h4 className="text-xl font-black text-white">{auth.user.name}</h4>
+                                                    <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{auth.user.email}</p>
+                                                </div>
+
+                                                <div className="w-full grid grid-cols-2 gap-4">
+                                                    <button className="bg-zinc-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-colors">
+                                                        Download QR
+                                                    </button>
+                                                    <button className="bg-zinc-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-colors">
+                                                        Share Profile
+                                                    </button>
+                                                </div>
+
+                                                <div className="p-6 bg-zinc-900/30 rounded-3xl border border-zinc-900 flex items-center gap-4 w-full">
+                                                    <div className="bg-zinc-900 p-2 rounded-lg">
+                                                        <Info className="w-4 h-4 text-purple-400" />
+                                                    </div>
+                                                    <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest leading-relaxed">
+                                                        Scan this code to instantly receive money from any HarborBank user.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-6">
+                                        <div className="relative aspect-square bg-zinc-900 rounded-[32px] overflow-hidden border border-zinc-800">
+                                            <video 
+                                                ref={videoRef}
+                                                autoPlay
+                                                playsInline
+                                                className="w-full h-full object-cover"
+                                            />
+                                            {/* Scanning Animation */}
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                                <div className="w-48 h-48 border-2 border-white/20 rounded-[32px] relative overflow-hidden">
+                                                    <motion.div 
+                                                        animate={{ top: ['0%', '100%', '0%'] }}
+                                                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                                        className="absolute left-0 right-0 h-1 bg-purple-500 shadow-[0_0_20px_#A855F7]"
+                                                    />
+                                                </div>
+                                                <div className="mt-8 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full">
+                                                    <p className="text-[10px] font-black text-white uppercase tracking-widest">Scanning QR Code...</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <button 
+                                                onClick={stopScanner}
+                                                className="absolute top-4 right-4 bg-black/40 hover:bg-black/60 p-2 rounded-full transition-colors text-white"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                        
+                                        <div className="p-6 bg-zinc-900/50 rounded-3xl flex items-start gap-4 border border-zinc-900">
+                                            <Camera className="w-5 h-5 text-purple-400 mt-1 flex-shrink-0" />
+                                            <p className="text-[10px] leading-relaxed text-zinc-500 font-bold uppercase tracking-wide">
+                                                Position the recipient's QR code within the frame to automatically extract their information.
+                                            </p>
+                                        </div>
+
+                                        <button 
+                                            onClick={() => {
+                                                // Simulated Scan Result
+                                                stopScanner();
+                                            }}
+                                            className="w-full bg-zinc-800 text-white py-4 rounded-2xl font-black text-sm hover:bg-zinc-700 transition-colors"
+                                        >
+                                            Back to Manual Entry
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </DashboardLayout>
     );
 }
