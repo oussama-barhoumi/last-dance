@@ -143,7 +143,7 @@ export default function Welcome({ auth }) {
                         </motion.h1>
                         <motion.p
                             variants={fadeInUp}
-                            className="text-lg text-gray-600 mb-10 max-w-xl leading-relaxed"
+                            className="text-lg text-gray-600 dark:text-zinc-400 mb-10 max-w-xl leading-relaxed"
                         >
                             {t('welcome.subtitle')}
                         </motion.p>
@@ -158,7 +158,7 @@ export default function Welcome({ auth }) {
                                     <Link href={route('register')} className="bg-blue-600 text-white px-8 py-4 rounded-full font-bold hover:bg-blue-700 hover:scale-105 transition-all">
                                         {t('hero.create_account')}
                                     </Link>
-                                    <Link href={route('login')} className="bg-gray-100 text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">
+                                    <Link href={route('login')} className="bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 px-8 py-4 rounded-full font-bold hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors">
                                         {t('hero.login')}
                                     </Link>
                                 </>
@@ -171,14 +171,14 @@ export default function Welcome({ auth }) {
                                     <CreditCard className="w-6 h-6 text-blue-900 dark:text-zinc-100" />
                                 </div>
                                 <h3 className="font-bold mb-2">Quick Start</h3>
-                                <p className="text-sm text-gray-500">Get started with a checking account in minutes with online verification.</p>
+                                <p className="text-sm text-gray-500 dark:text-zinc-400">Get started with a checking account in minutes with online verification.</p>
                             </div>
                             <div className="p-6 rounded-2xl bg-gray-50 dark:bg-zinc-900/50 border border-gray-100 dark:border-zinc-800 group hover:border-blue-900/10 dark:hover:border-zinc-700 transition-colors">
                                 <div className="bg-white dark:bg-zinc-800 w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
                                     <ShieldCheck className="w-6 h-6 text-blue-900 dark:text-zinc-100" />
                                 </div>
                                 <h3 className="font-bold mb-2">Secure & insured</h3>
-                                <p className="text-sm text-gray-500">FDIC-insured products and multi-layer security to protect your accounts.</p>
+                                <p className="text-sm text-gray-500 dark:text-zinc-400">FDIC-insured products and multi-layer security to protect your accounts.</p>
                             </div>
                         </motion.div>
                     </motion.div>
@@ -214,7 +214,7 @@ export default function Welcome({ auth }) {
                                 </div>
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-[10px] text-gray-500">Available balance  Updated 2m ago</span>
+                                        <span className="text-[10px] text-gray-500 dark:text-zinc-400">Available balance  Updated 2m ago</span>
                                     </div>
                                     <div className="pt-3 border-t border-blue-900/5 flex justify-between items-center">
                                         <span className="text-xs font-mono text-gray-400 leading-none">Account # •••• 8621</span>
@@ -405,12 +405,12 @@ export default function Welcome({ auth }) {
                                         {t('welcome.footer_subscribe')}
                                     </button>
                                 </div>
-                                <p className="text-[10px] text-gray-500">{t('welcome.footer_respect_privacy')}</p>
+                                <p className="text-[10px] text-gray-500 dark:text-zinc-400">{t('welcome.footer_respect_privacy')}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                    <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
                         <p>{t('welcome.footer_rights')}</p>
                         <div className="flex gap-8">
                             <Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_legal')}</Link>
