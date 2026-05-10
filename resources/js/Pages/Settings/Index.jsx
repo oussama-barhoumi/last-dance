@@ -10,6 +10,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 const SettingSection = ({ icon: Icon, title, description, children, active = false }) => (
     <div className={clsx(
@@ -56,27 +57,28 @@ const Toggle = ({ active, onToggle }) => (
 );
 
 export default function Index({ user, sessions, beneficiaries }) {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('personal');
 
     const tabs = [
-        { id: 'personal', label: 'Personal Information', sub: 'المعلومات الشخصية', icon: User },
-        { id: 'security', label: 'Security Settings', sub: 'الحماية والولوج', icon: Lock },
-        { id: 'cards', label: 'Cards Management', sub: 'تسيير البطائق', icon: CreditCard },
-        { id: 'notifications', label: 'Notifications', sub: 'التنبيهات', icon: Bell },
-        { id: 'language', label: 'Language Settings', sub: 'اللغة والإعدادات', icon: Globe },
-        { id: 'beneficiaries', label: 'Beneficiaries', sub: 'المستفيدين', icon: Users },
-        { id: 'devices', label: 'Devices', sub: 'الأجهزة المرتبطة', icon: Smartphone },
+        { id: 'personal', label: t('settings.tabs.personal'), icon: User },
+        { id: 'security', label: t('settings.tabs.security'), icon: Lock },
+        { id: 'cards', label: t('settings.tabs.cards'), icon: CreditCard },
+        { id: 'notifications', label: t('settings.tabs.notifications'), icon: Bell },
+        { id: 'language', label: t('settings.tabs.language'), icon: Globe },
+        { id: 'beneficiaries', label: t('settings.tabs.beneficiaries'), icon: Users },
+        { id: 'devices', label: t('settings.tabs.devices'), icon: Smartphone },
     ];
 
     return (
         <DashboardLayout>
-            <Head title="Account Settings - HarborBank" />
+            <Head title={`${t('settings.title')} - HarborBank`} />
 
             <div className="flex flex-col lg:flex-row gap-12 mt-8 mb-12">
                 {/* Sidebar Navigation */}
                 <div className="w-full lg:w-80 shrink-0">
                     <div className="sticky top-24 space-y-2">
-                        <h2 className="text-3xl font-black text-gray-900 mb-8 px-6">Settings</h2>
+                        <h2 className="text-3xl font-black text-gray-900 mb-8 px-6">{t('settings.title')}</h2>
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
@@ -92,10 +94,6 @@ export default function Index({ user, sessions, beneficiaries }) {
                                 )} />
                                 <div>
                                     <p className="text-sm font-bold">{tab.label}</p>
-                                    <p className={clsx(
-                                        "text-[10px] font-black uppercase tracking-widest",
-                                        activeTab === tab.id ? "text-white/50" : "text-gray-400"
-                                    )}>{tab.sub}</p>
                                 </div>
                             </button>
                         ))}
@@ -107,37 +105,37 @@ export default function Index({ user, sessions, beneficiaries }) {
                     {activeTab === 'personal' && (
                         <SettingSection 
                             icon={User} 
-                            title="Personal Information" 
-                            description="المعلومات الشخصية - Manage your identity and contact details."
+                            title={t('settings.personal.title')} 
+                            description={t('settings.personal.desc')}
                             active={true}
                         >
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Full Name</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.apply.personal.full_name')}</label>
                                     <input type="text" defaultValue={user.name} className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Email Address</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.apply.personal.email')}</label>
                                     <input type="email" defaultValue={user.email} className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">National ID (CIN)</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.apply.personal.cin')}</label>
                                     <input type="text" placeholder="AB123456" className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Phone Number</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.apply.personal.phone')}</label>
                                     <input type="text" placeholder="+212 6..." className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black" />
                                 </div>
                             </div>
-                            <button className="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm hover:scale-105 transition-transform">Save Changes</button>
+                            <button className="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm hover:scale-105 transition-transform">{t('settings.personal.save')}</button>
                         </SettingSection>
                     )}
 
                     {activeTab === 'security' && (
                         <SettingSection 
                             icon={Shield} 
-                            title="Security Settings" 
-                            description="Protection / PIN / Biometric - Secure your account."
+                            title={t('settings.security.title')} 
+                            description={t('settings.security.desc')}
                             active={true}
                         >
                             <div className="space-y-6">
@@ -147,11 +145,11 @@ export default function Index({ user, sessions, beneficiaries }) {
                                             <Key className="w-5 h-5 text-purple-600" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">Change Password</p>
-                                            <p className="text-xs text-gray-500">Update your account password</p>
+                                            <p className="text-sm font-bold text-gray-900">{t('settings.security.change_password')}</p>
+                                            <p className="text-xs text-gray-500">{t('settings.security.update_password')}</p>
                                         </div>
                                     </div>
-                                    <button className="text-xs font-black uppercase tracking-widest text-black hover:underline">Change</button>
+                                    <button className="text-xs font-black uppercase tracking-widest text-black hover:underline">{t('settings.security.change')}</button>
                                 </div>
                                 <div className="flex items-center justify-between p-6 bg-gray-50 rounded-3xl">
                                     <div className="flex items-center gap-4">
@@ -159,8 +157,8 @@ export default function Index({ user, sessions, beneficiaries }) {
                                             <Fingerprint className="w-5 h-5 text-green-600" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">Biometric Login</p>
-                                            <p className="text-xs text-gray-500">Face ID or Fingerprint</p>
+                                            <p className="text-sm font-bold text-gray-900">{t('settings.security.biometric')}</p>
+                                            <p className="text-xs text-gray-500">{t('settings.security.face_finger')}</p>
                                         </div>
                                     </div>
                                     <Toggle active={true} onToggle={() => {}} />
@@ -171,11 +169,11 @@ export default function Index({ user, sessions, beneficiaries }) {
                                             <Sliders className="w-5 h-5 text-blue-600" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">Transaction PIN</p>
-                                            <p className="text-xs text-gray-500">Required for all payments</p>
+                                            <p className="text-sm font-bold text-gray-900">{t('settings.security.tx_pin')}</p>
+                                            <p className="text-xs text-gray-500">{t('settings.security.required_payments')}</p>
                                         </div>
                                     </div>
-                                    <button className="text-xs font-black uppercase tracking-widest text-black hover:underline">Set PIN</button>
+                                    <button className="text-xs font-black uppercase tracking-widest text-black hover:underline">{t('settings.security.set_pin')}</button>
                                 </div>
                             </div>
                         </SettingSection>
@@ -184,8 +182,8 @@ export default function Index({ user, sessions, beneficiaries }) {
                     {activeTab === 'cards' && (
                         <SettingSection 
                             icon={CreditCard} 
-                            title="Cards Management" 
-                            description="Enable/Disable/Limits - Control your physical and virtual cards."
+                            title={t('settings.cards.title')} 
+                            description={t('settings.cards.desc')}
                             active={true}
                         >
                             <div className="space-y-8">
@@ -195,7 +193,7 @@ export default function Index({ user, sessions, beneficiaries }) {
                                             <CreditCard className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold">Main Visa Card</p>
+                                            <p className="text-sm font-bold">{t('settings.cards.main_visa')}</p>
                                             <p className="text-xs text-gray-500">**** 4589</p>
                                         </div>
                                     </div>
@@ -204,14 +202,14 @@ export default function Index({ user, sessions, beneficiaries }) {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-4">
-                                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Daily ATM Limit</h4>
+                                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('settings.cards.atm_limit')}</h4>
                                         <div className="flex items-center gap-4">
                                             <input type="range" className="flex-1 accent-black" min="0" max="10000" defaultValue="5000" />
                                             <span className="text-sm font-black text-gray-900">5,000 DH</span>
                                         </div>
                                     </div>
                                     <div className="space-y-4">
-                                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Online Purchase Limit</h4>
+                                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('settings.cards.online_limit')}</h4>
                                         <div className="flex items-center gap-4">
                                             <input type="range" className="flex-1 accent-black" min="0" max="50000" defaultValue="20000" />
                                             <span className="text-sm font-black text-gray-900">20,000 DH</span>
@@ -220,9 +218,9 @@ export default function Index({ user, sessions, beneficiaries }) {
                                 </div>
 
                                 <div className="flex flex-wrap gap-4">
-                                    <button className="px-6 py-3 rounded-xl bg-gray-50 text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Contactless Pay</button>
-                                    <button className="px-6 py-3 rounded-xl bg-gray-50 text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">International Use</button>
-                                    <button className="px-6 py-3 rounded-xl bg-red-50 text-[10px] font-black uppercase tracking-widest text-red-600 hover:bg-red-100 transition-colors">Report Stolen</button>
+                                    <button className="px-6 py-3 rounded-xl bg-gray-50 text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">{t('settings.cards.contactless')}</button>
+                                    <button className="px-6 py-3 rounded-xl bg-gray-50 text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">{t('settings.cards.intl_use')}</button>
+                                    <button className="px-6 py-3 rounded-xl bg-red-50 text-[10px] font-black uppercase tracking-widest text-red-600 hover:bg-red-100 transition-colors">{t('settings.cards.report_stolen')}</button>
                                 </div>
                             </div>
                         </SettingSection>
@@ -231,29 +229,29 @@ export default function Index({ user, sessions, beneficiaries }) {
                     {activeTab === 'notifications' && (
                         <SettingSection 
                             icon={Bell} 
-                            title="Notifications" 
-                            description="SMS / Email Alerts - Stay informed about your activity."
+                            title={t('settings.notifications.title')} 
+                            description={t('settings.notifications.desc')}
                             active={true}
                         >
                             <div className="space-y-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-bold text-gray-900">Push Notifications</p>
-                                        <p className="text-xs text-gray-500">Transaction alerts and security warnings</p>
+                                        <p className="text-sm font-bold text-gray-900">{t('settings.notifications.push')}</p>
+                                        <p className="text-xs text-gray-500">{t('settings.notifications.push_desc')}</p>
                                     </div>
                                     <Toggle active={true} onToggle={() => {}} />
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-bold text-gray-900">Email Alerts</p>
-                                        <p className="text-xs text-gray-500">Monthly statements and reports</p>
+                                        <p className="text-sm font-bold text-gray-900">{t('settings.notifications.email')}</p>
+                                        <p className="text-xs text-gray-500">{t('settings.notifications.email_desc')}</p>
                                     </div>
                                     <Toggle active={true} onToggle={() => {}} />
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-bold text-gray-900">SMS Verification</p>
-                                        <p className="text-xs text-gray-500">One-time passcodes for payments</p>
+                                        <p className="text-sm font-bold text-gray-900">{t('settings.notifications.sms')}</p>
+                                        <p className="text-xs text-gray-500">{t('settings.notifications.sms_desc')}</p>
                                     </div>
                                     <Toggle active={false} onToggle={() => {}} />
                                 </div>
@@ -264,8 +262,8 @@ export default function Index({ user, sessions, beneficiaries }) {
                     {activeTab === 'language' && (
                         <SettingSection 
                             icon={Languages} 
-                            title="Language & Regional" 
-                            description="العربية / Français - Customize your interface language."
+                            title={t('settings.language.title')} 
+                            description={t('settings.language.desc')}
                             active={true}
                         >
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -287,8 +285,8 @@ export default function Index({ user, sessions, beneficiaries }) {
                     {activeTab === 'beneficiaries' && (
                         <SettingSection 
                             icon={Users} 
-                            title="Beneficiaries" 
-                            description="المستفيدين - Manage people you send money to frequently."
+                            title={t('settings.beneficiaries.title')} 
+                            description={t('settings.beneficiaries.desc')}
                             active={true}
                         >
                             <div className="space-y-4">
@@ -309,7 +307,7 @@ export default function Index({ user, sessions, beneficiaries }) {
                                     </div>
                                 ))}
                                 <button className="w-full py-4 rounded-2xl border-2 border-dashed border-gray-100 text-gray-400 hover:border-black hover:text-black transition-all flex items-center justify-center gap-2 font-bold text-sm">
-                                    <Plus className="w-4 h-4" /> Add New Beneficiary
+                                    <Plus className="w-4 h-4" /> {t('settings.beneficiaries.add_new')}
                                 </button>
                             </div>
                         </SettingSection>
@@ -318,8 +316,8 @@ export default function Index({ user, sessions, beneficiaries }) {
                     {activeTab === 'devices' && (
                         <SettingSection 
                             icon={Smartphone} 
-                            title="Device Management" 
-                            description="الأجهزة المرتبطة - Sessions and devices with account access."
+                            title={t('settings.devices.title')} 
+                            description={t('settings.devices.desc')}
                             active={true}
                         >
                             <div className="space-y-4">
@@ -333,14 +331,14 @@ export default function Index({ user, sessions, beneficiaries }) {
                                                 <div className="flex items-center gap-2">
                                                     <p className="text-sm font-bold text-gray-900">{session.device}</p>
                                                     {session.status === 'Current Session' && (
-                                                        <span className="text-[8px] font-black px-2 py-0.5 rounded-full bg-green-100 text-green-600 uppercase tracking-widest">Active</span>
+                                                        <span className="text-[8px] font-black px-2 py-0.5 rounded-full bg-green-100 text-green-600 uppercase tracking-widest">{t('settings.devices.active')}</span>
                                                     )}
                                                 </div>
                                                 <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{session.location} • {session.last_active}</p>
                                             </div>
                                         </div>
                                         {session.status !== 'Current Session' && (
-                                            <button className="text-xs font-black uppercase tracking-widest text-red-500 hover:underline">Logout Device</button>
+                                            <button className="text-xs font-black uppercase tracking-widest text-red-500 hover:underline">{t('settings.devices.logout_device')}</button>
                                         )}
                                     </div>
                                 ))}

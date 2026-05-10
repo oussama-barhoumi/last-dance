@@ -1,21 +1,24 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus } from 'lucide-react';
-
-const data = [
-    { name: 'Jul', value: 300 },
-    { name: 'Aug', value: 500 },
-    { name: 'Sep', value: 450 },
-    { name: 'Oct', value: 800 },
-    { name: 'Nov', value: 200 },
-    { name: 'Dec', value: 600 },
-    { name: 'Jan', value: 750 },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function BalanceHistoryChart() {
+    const { t } = useTranslation();
+
+    const data = [
+        { name: t('dashboard.months.jul'), value: 300 },
+        { name: t('dashboard.months.aug'), value: 500 },
+        { name: t('dashboard.months.sep'), value: 450 },
+        { name: t('dashboard.months.oct'), value: 800 },
+        { name: t('dashboard.months.nov'), value: 200 },
+        { name: t('dashboard.months.dec'), value: 600 },
+        { name: t('dashboard.months.jan'), value: 750 },
+    ];
+
     return (
         <div className="bg-white p-8 rounded-[40px] shadow-sm">
             <div className="flex items-center justify-between mb-10">
-                <h3 className="text-xl font-bold text-gray-900">Balance History</h3>
+                <h3 className="text-xl font-bold text-gray-900">{t('dashboard.balance_history')}</h3>
                 <button className="w-10 h-10 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center hover:border-black transition-colors text-gray-400 hover:text-black">
                     <Plus className="w-5 h-5" />
                 </button>

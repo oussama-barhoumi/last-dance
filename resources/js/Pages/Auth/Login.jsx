@@ -4,8 +4,10 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Login({ status, canResetPassword }) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -31,8 +33,8 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Secure Vault Access" />
 
             <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
-                <p className="text-zinc-400 text-sm">Securely access your HarborBank vault.</p>
+                <h2 className="text-2xl font-bold text-white mb-2">{t('auth.login_title')}</h2>
+                <p className="text-zinc-400 text-sm">{t('auth.login_subtitle')}</p>
             </div>
 
             {status && <div className="mb-4 font-medium text-sm text-green-400">{status}</div>}
@@ -42,7 +44,7 @@ export default function Login({ status, canResetPassword }) {
                     <Mail className={iconClasses} />
                     <input
                         type="email"
-                        placeholder="Email Address"
+                        placeholder={t('auth.email_placeholder')}
                         className={inputClasses}
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
@@ -56,7 +58,7 @@ export default function Login({ status, canResetPassword }) {
                     <Lock className={iconClasses} />
                     <input
                         type="password"
-                        placeholder="Password"
+                        placeholder={t('auth.password_placeholder')}
                         className={inputClasses}
                         value={data.password}
                         onChange={(e) => setData('password', e.target.value)}
@@ -75,7 +77,7 @@ export default function Login({ status, canResetPassword }) {
                             className="bg-white/5 border-white/10 text-white focus:ring-0"
                         />
                         <span className="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors">
-                            Remember this device
+                            {t('auth.remember_me')}
                         </span>
                     </label>
 
@@ -84,7 +86,7 @@ export default function Login({ status, canResetPassword }) {
                             href={route('password.request')}
                             className="text-xs text-zinc-500 hover:text-white transition-colors"
                         >
-                            Forgot password?
+                            {t('auth.forgot_password')}
                         </Link>
                     )}
                 </div>
@@ -94,7 +96,7 @@ export default function Login({ status, canResetPassword }) {
                     disabled={processing}
                     className="w-full bg-white text-black font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors disabled:opacity-50"
                 >
-                    {processing ? 'Logging in...' : 'Log In'}
+                    {processing ? t('auth.logging_in') : t('auth.log_in')}
                     {!processing && <ArrowRight className="w-5 h-5" />}
                 </button>
 
@@ -103,7 +105,7 @@ export default function Login({ status, canResetPassword }) {
                         href={route('register')}
                         className="text-sm text-zinc-500 hover:text-white transition-colors"
                     >
-                        Don't have an account? <span className="font-bold text-white">Create one</span>
+                        {t('auth.no_account')} <span className="font-bold text-white">{t('auth.create_one')}</span>
                     </Link>
                 </div>
             </form>

@@ -2,8 +2,10 @@ import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export default function QuickTransfer() {
+    const { t } = useTranslation();
     const { auth } = usePage().props;
     const [showSuccess, setShowSuccess] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -26,11 +28,11 @@ export default function QuickTransfer() {
 
     return (
         <div className="bg-[#0A0A0A] p-8 rounded-[40px] shadow-sm text-white relative overflow-hidden">
-            <h3 className="text-xl font-bold mb-8">Quick Transfer</h3>
+            <h3 className="text-xl font-bold mb-8">{t('dashboard.quick_transfer')}</h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-1">Recipient Email</label>
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-1">{t('dashboard.recipient_email')}</label>
                     <input 
                         type="email"
                         value={data.email}
@@ -42,7 +44,7 @@ export default function QuickTransfer() {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-1">Amount ($)</label>
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-1">{t('dashboard.amount')} ($)</label>
                     <div className="relative">
                         <input 
                             type="number"
@@ -91,8 +93,8 @@ export default function QuickTransfer() {
                         <div className="w-16 h-16 bg-[#10B981]/20 rounded-full flex items-center justify-center mb-4">
                             <CheckCircle2 className="w-8 h-8 text-[#10B981]" />
                         </div>
-                        <h4 className="font-bold text-lg">Sent Successfully!</h4>
-                        <p className="text-sm text-gray-400 mt-2">Your transfer of ${data.amount} has been processed.</p>
+                        <h4 className="font-bold text-lg">{t('dashboard.sent_successfully')}</h4>
+                        <p className="text-sm text-gray-400 mt-2">{t('dashboard.transfer_processed', { amount: `$${data.amount}` })}</p>
                     </motion.div>
                 )}
             </AnimatePresence>

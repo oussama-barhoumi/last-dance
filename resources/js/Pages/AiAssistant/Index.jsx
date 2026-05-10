@@ -8,6 +8,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 const container = {
     hidden: { opacity: 0 },
@@ -25,6 +26,7 @@ const item = {
 };
 
 export default function Index({ financialData, analysis }) {
+    const { t } = useTranslation();
     const [isScanning, setIsScanning] = useState(true);
 
     useEffect(() => {
@@ -34,7 +36,7 @@ export default function Index({ financialData, analysis }) {
 
     return (
         <DashboardLayout>
-            <Head title="AI Financial Assistant - HarborBank" />
+            <Head title={`${t('ai_assistant.title')} - HarborBank`} />
 
             <AnimatePresence mode="wait">
                 {isScanning ? (
@@ -59,8 +61,8 @@ export default function Index({ financialData, analysis }) {
                             <Sparkles className="w-10 h-10 text-blue-500 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2" />
                         </div>
                         <div className="text-center space-y-2">
-                            <h3 className="text-2xl font-black text-gray-900">HarborAI Scanning...</h3>
-                            <p className="text-sm text-gray-400 font-medium">Analyzing income, expenses, and investment patterns.</p>
+                            <h3 className="text-2xl font-black text-gray-900">{t('ai_assistant.scanning')}</h3>
+                            <p className="text-sm text-gray-400 font-medium">{t('ai_assistant.scanning_desc')}</p>
                         </div>
                     </motion.div>
                 ) : (
@@ -79,13 +81,13 @@ export default function Index({ financialData, analysis }) {
                                     <div className="bg-blue-500 p-2 rounded-xl">
                                         <Sparkles className="w-5 h-5 text-white" />
                                     </div>
-                                    <h2 className="text-3xl font-black">Financial Health Report</h2>
+                                    <h2 className="text-3xl font-black">{t('ai_assistant.health_report')}</h2>
                                 </div>
-                                <p className="text-gray-400 text-sm max-w-md">Real-time analysis powered by HarborAI. Based on your activity from {new Date().toLocaleString('default', { month: 'long' })}.</p>
+                                <p className="text-gray-400 text-sm max-w-md">{t('ai_assistant.powered_by')} {new Date().toLocaleString('default', { month: 'long' })}.</p>
                             </div>
                             <div className="relative z-10 hidden md:block">
                                 <button className="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2">
-                                    <RefreshCcw className="w-4 h-4" /> Refresh Analysis
+                                    <RefreshCcw className="w-4 h-4" /> {t('ai_assistant.refresh_analysis')}
                                 </button>
                             </div>
                         </motion.div>
@@ -95,7 +97,7 @@ export default function Index({ financialData, analysis }) {
                             <motion.div variants={item} className="lg:col-span-2 space-y-8">
                                 <div className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 h-full">
                                     <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-3">
-                                        <Info className="w-6 h-6 text-blue-500" /> Executive Summary
+                                        <Info className="w-6 h-6 text-blue-500" /> {t('ai_assistant.executive_summary')}
                                     </h3>
                                     <p className="text-lg text-gray-600 leading-relaxed font-medium">
                                         {analysis.summary}
@@ -103,15 +105,15 @@ export default function Index({ financialData, analysis }) {
                                     
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
                                         <div className="bg-gray-50 p-6 rounded-[32px] border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Monthly Income</p>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('ai_assistant.monthly_income')}</p>
                                             <p className="text-xl font-black text-gray-900">${financialData.income.toLocaleString()}</p>
                                         </div>
                                         <div className="bg-gray-50 p-6 rounded-[32px] border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Monthly Expenses</p>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('ai_assistant.monthly_expenses')}</p>
                                             <p className="text-xl font-black text-gray-900">${financialData.expenses.toLocaleString()}</p>
                                         </div>
                                         <div className="bg-gray-50 p-6 rounded-[32px] border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Assets</p>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('ai_assistant.total_assets')}</p>
                                             <p className="text-xl font-black text-gray-900">${financialData.savings.toLocaleString()}</p>
                                         </div>
                                     </div>
@@ -131,14 +133,14 @@ export default function Index({ financialData, analysis }) {
                                             ) : (
                                                 <ShieldCheck className="w-6 h-6 text-green-500" />
                                             )}
-                                            <h3 className="text-xl font-black text-gray-900">Spending Analysis</h3>
+                                            <h3 className="text-xl font-black text-gray-900">{t('ai_assistant.spending_analysis')}</h3>
                                         </div>
                                         <div className="space-y-4">
                                             <span className={clsx(
                                                 "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border",
                                                 analysis.spendingAnalysis.level === 'High Risk' ? "bg-red-500 text-white border-red-600" : "bg-green-500 text-white border-green-600"
                                             )}>
-                                                {analysis.spendingAnalysis.level}
+                                                {analysis.spendingAnalysis.level === 'High Risk' ? t('ai_assistant.high_risk') : t('ai_assistant.low_risk')}
                                             </span>
                                             <p className="text-sm font-bold text-gray-600 leading-relaxed">
                                                 {analysis.spendingAnalysis.details}
@@ -147,7 +149,7 @@ export default function Index({ financialData, analysis }) {
                                     </div>
                                     <div className="mt-8 pt-8 border-t border-black/5">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Efficiency Score</span>
+                                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('ai_assistant.efficiency_score')}</span>
                                             <span className="text-xl font-black text-gray-900">84/100</span>
                                         </div>
                                     </div>
@@ -159,12 +161,12 @@ export default function Index({ financialData, analysis }) {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <motion.div variants={item} className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50">
                                 <h3 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
-                                    <PieChart className="w-6 h-6 text-purple-500" /> {analysis.budgetRecommendation.method} Budget
+                                    <PieChart className="w-6 h-6 text-purple-500" /> {analysis.budgetRecommendation.method} {t('ai_assistant.budget_recommendation')}
                                 </h3>
                                 <div className="space-y-6">
                                     <div className="space-y-2">
                                         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                                            <span className="text-gray-400">Needs (50%)</span>
+                                            <span className="text-gray-400">{t('dashboard.needs')} (50%)</span>
                                             <span className="text-gray-900">${analysis.budgetRecommendation.needs.toLocaleString()}</span>
                                         </div>
                                         <div className="h-3 bg-gray-50 rounded-full overflow-hidden">
@@ -173,7 +175,7 @@ export default function Index({ financialData, analysis }) {
                                     </div>
                                     <div className="space-y-2">
                                         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                                            <span className="text-gray-400">Wants (30%)</span>
+                                            <span className="text-gray-400">{t('dashboard.wants')} (30%)</span>
                                             <span className="text-gray-900">${analysis.budgetRecommendation.wants.toLocaleString()}</span>
                                         </div>
                                         <div className="h-3 bg-gray-50 rounded-full overflow-hidden">
@@ -182,7 +184,7 @@ export default function Index({ financialData, analysis }) {
                                     </div>
                                     <div className="space-y-2">
                                         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                                            <span className="text-gray-400">Savings & Debt (20%)</span>
+                                            <span className="text-gray-400">{t('dashboard.savings')} & Debt (20%)</span>
                                             <span className="text-gray-900">${analysis.budgetRecommendation.savings.toLocaleString()}</span>
                                         </div>
                                         <div className="h-3 bg-gray-50 rounded-full overflow-hidden">
@@ -194,16 +196,16 @@ export default function Index({ financialData, analysis }) {
 
                             <motion.div variants={item} className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50">
                                 <h3 className="text-xl font-black text-gray-900 mb-8 flex items-center gap-3">
-                                    <CreditCard className="w-6 h-6 text-orange-500" /> Responsible Credit Eligibility
+                                    <CreditCard className="w-6 h-6 text-orange-500" /> {t('ai_assistant.responsible_credit')}
                                 </h3>
                                 <div className="bg-gray-50 p-8 rounded-[32px] border border-gray-100">
                                     <div className="flex items-center justify-between mb-6">
-                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Debt-to-Income</span>
+                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{t('ai_assistant.debt_to_income')}</span>
                                         <span className="text-2xl font-black text-gray-900">{analysis.creditAssessment.debtToIncome}</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-green-500 bg-green-50 p-4 rounded-2xl mb-6">
                                         <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-                                        <p className="text-xs font-bold">{analysis.creditAssessment.status}: Your profile qualifies for tier-1 credit products.</p>
+                                        <p className="text-xs font-bold">{analysis.creditAssessment.status}: {t('ai_assistant.credit_qualify')}</p>
                                     </div>
                                     <p className="text-[11px] font-medium text-gray-400 uppercase tracking-widest leading-loose">
                                         {analysis.creditAssessment.advice}
@@ -215,19 +217,19 @@ export default function Index({ financialData, analysis }) {
                         {/* Investment Suggestions */}
                         <motion.div variants={item} className="bg-[#FAF9F6] p-12 rounded-[48px] border border-gray-100">
                             <h3 className="text-2xl font-black text-gray-900 mb-10 flex items-center gap-3">
-                                <TrendingUp className="w-7 h-7 text-green-600" /> Diversified Investment Roadmap
+                                <TrendingUp className="w-7 h-7 text-green-600" /> {t('ai_assistant.investment_roadmap')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 <div className="space-y-4">
-                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-[9px] font-black uppercase tracking-widest">Low Risk</span>
+                                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-[9px] font-black uppercase tracking-widest">{t('ai_assistant.low_risk')}</span>
                                     <p className="text-sm font-bold text-gray-900 leading-relaxed">{analysis.investmentSuggestion.lowRisk}</p>
                                 </div>
                                 <div className="space-y-4">
-                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-[9px] font-black uppercase tracking-widest">Medium Risk</span>
+                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-[9px] font-black uppercase tracking-widest">{t('ai_assistant.medium_risk')}</span>
                                     <p className="text-sm font-bold text-gray-900 leading-relaxed">{analysis.investmentSuggestion.mediumRisk}</p>
                                 </div>
                                 <div className="space-y-4">
-                                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-[9px] font-black uppercase tracking-widest">High Risk</span>
+                                    <span className="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-[9px] font-black uppercase tracking-widest">{t('ai_assistant.high_risk')}</span>
                                     <p className="text-sm font-bold text-gray-900 leading-relaxed">{analysis.investmentSuggestion.highRisk}</p>
                                 </div>
                             </div>
@@ -236,7 +238,7 @@ export default function Index({ financialData, analysis }) {
                         {/* Actionable Tips */}
                         <div className="space-y-6">
                             <h3 className="text-xl font-black text-gray-900 flex items-center gap-3">
-                                <Zap className="w-6 h-6 text-yellow-500" /> Actionable Financial Tips
+                                <Zap className="w-6 h-6 text-yellow-500" /> {t('ai_assistant.actionable_tips')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {analysis.tips.map((tip, i) => (
@@ -264,8 +266,8 @@ export default function Index({ financialData, analysis }) {
                                 <span className="text-[10px] font-black uppercase tracking-widest">{analysis.disclaimer}</span>
                             </div>
                             <div className="flex gap-4">
-                                <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors">Legal Disclosure</button>
-                                <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors">Terms of Use</button>
+                                <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors">{t('ai_assistant.legal_disclosure')}</button>
+                                <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors">{t('ai_assistant.terms_of_use')}</button>
                             </div>
                         </motion.div>
                     </motion.div>

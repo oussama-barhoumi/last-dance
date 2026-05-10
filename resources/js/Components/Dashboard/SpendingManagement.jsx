@@ -7,12 +7,14 @@ import {
 import { useState } from 'react';
 import { useForm, usePage, router } from '@inertiajs/react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 const iconMap = {
     ShoppingBag, Car, Home, Film, Utensils, Zap, Smartphone, Heart
 };
 
 const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
+    const { t } = useTranslation();
     const Icon = iconMap[icon] || Tag;
     const percentage = Math.min((spent / budget) * 100, 100);
     
@@ -44,17 +46,17 @@ const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
             <div className="space-y-4">
                 <div>
                     <h4 className="text-sm font-black text-gray-900">{name}</h4>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Monthly Budget</p>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{t('dashboard.monthly_budget')}</p>
                 </div>
 
                 <div className="flex justify-between items-end">
                     <div className="space-y-1">
                         <p className="text-xl font-black text-gray-900">${Number(spent).toLocaleString()}</p>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Spent</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('dashboard.spent')}</p>
                     </div>
                     <div className="text-right space-y-1">
                         <p className="text-sm font-black text-gray-900">${Number(budget).toLocaleString()}</p>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Limit</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('dashboard.limit')}</p>
                     </div>
                 </div>
 
@@ -69,9 +71,9 @@ const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
                     </div>
                     <div className="flex justify-between text-[8px] font-black uppercase tracking-widest">
                         <span className={clsx(percentage > 90 ? "text-red-500" : "text-gray-400")}>
-                            {percentage.toFixed(0)}% Consumed
+                            {percentage.toFixed(0)}% {t('dashboard.consumed')}
                         </span>
-                        <span className="text-gray-400">${(budget - spent).toLocaleString()} Left</span>
+                        <span className="text-gray-400">${(budget - spent).toLocaleString()} {t('dashboard.left')}</span>
                     </div>
                 </div>
             </div>
@@ -80,6 +82,7 @@ const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
 };
 
 export default function SpendingManagement() {
+    const { t } = useTranslation();
     const { budgets } = usePage().props;
     const [showAddModal, setShowAddModal] = useState(false);
     const [showAiPlanner, setShowAiPlanner] = useState(false);
@@ -170,15 +173,15 @@ export default function SpendingManagement() {
         <div className="space-y-8">
             <div className="flex justify-between items-center">
                 <div>
-                    <h3 className="text-2xl font-black text-gray-900">Pricing Management</h3>
-                    <p className="text-sm text-gray-400 mt-1">Monitor your monthly activity budgets and spending limits.</p>
+                    <h3 className="text-2xl font-black text-gray-900">{t('dashboard.pricing_management')}</h3>
+                    <p className="text-sm text-gray-400 mt-1">{t('dashboard.pricing_desc')}</p>
                 </div>
                 <div className="flex gap-3">
                     <button 
                         onClick={() => setShowAiPlanner(true)}
                         className="bg-purple-600 text-white px-5 py-3 rounded-2xl shadow-xl shadow-purple-600/20 hover:scale-105 transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
                     >
-                        <Sparkles className="w-4 h-4" /> AI Planner
+                        <Sparkles className="w-4 h-4" /> {t('dashboard.ai_planner')}
                     </button>
                     <button 
                         onClick={() => setShowAddModal(true)}
@@ -208,8 +211,8 @@ export default function SpendingManagement() {
                         <div className="bg-gray-50 p-4 rounded-2xl mb-4 text-gray-400">
                             <Tag className="w-8 h-8" />
                         </div>
-                        <h4 className="text-sm font-black text-gray-900">No active budgets</h4>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Start by creating your first spending limit</p>
+                        <h4 className="text-sm font-black text-gray-900">{t('dashboard.no_active_budgets')}</h4>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{t('dashboard.start_creating_budget')}</p>
                     </div>
                 )}
             </div>
@@ -231,7 +234,7 @@ export default function SpendingManagement() {
                             className="bg-white w-full max-w-md rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
                         >
                             <div className="p-8 border-b border-gray-50 flex justify-between items-center">
-                                <h3 className="text-xl font-black text-gray-900">Add New Activity</h3>
+                                <h3 className="text-xl font-black text-gray-900">{t('dashboard.add_new_activity')}</h3>
                                 <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                                     <X className="w-5 h-5 text-gray-400" />
                                 </button>
@@ -239,14 +242,14 @@ export default function SpendingManagement() {
 
                             <form onSubmit={handleSubmit} className="p-8 space-y-6">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Activity Name</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('dashboard.activity_name')}</label>
                                     <div className="relative">
                                         <input 
                                             type="text" 
                                             required
                                             value={data.name}
                                             onChange={e => handleNameChange(e.target.value)}
-                                            placeholder="e.g. Weekly Groceries"
+                                            placeholder={t('dashboard.activity_placeholder')}
                                             className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-12"
                                         />
                                         <Tag className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -255,7 +258,7 @@ export default function SpendingManagement() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Monthly Budget ($)</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('dashboard.monthly_budget')} ($)</label>
                                     <div className="relative">
                                         <input 
                                             type="number" 
@@ -273,7 +276,7 @@ export default function SpendingManagement() {
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center px-1">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                            {isAutoMatched ? 'Detected Category' : 'Select Category & Theme'}
+                                            {isAutoMatched ? t('dashboard.detected_category') : t('dashboard.select_category_theme')}
                                         </label>
                                         {(isAutoMatched || data.name.length > 0) && (
                                             <button 
@@ -284,7 +287,7 @@ export default function SpendingManagement() {
                                                 }}
                                                 className="text-[10px] font-black text-purple-600 uppercase tracking-widest hover:underline"
                                             >
-                                                Clear Search
+                                                {t('dashboard.clear_search')}
                                             </button>
                                         )}
                                     </div>
@@ -322,9 +325,9 @@ export default function SpendingManagement() {
                                                                 <cat.icon className="w-5 h-5" />
                                                             </div>
                                                             <div>
-                                                                <span className="text-xs font-black uppercase tracking-widest leading-tight block">{cat.name}</span>
+                                                                <span className="text-xs font-black uppercase tracking-widest leading-tight block">{t(`dashboard.categories.${cat.name.toLowerCase()}`)}</span>
                                                                 <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">
-                                                                    {isAutoMatched && data.category === cat.name ? 'Recommended Theme' : 'Theme Active'}
+                                                                    {isAutoMatched && data.category === cat.name ? t('dashboard.recommended_theme') : t('dashboard.theme_active')}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -345,7 +348,7 @@ export default function SpendingManagement() {
                                     disabled={processing}
                                     className="w-full bg-black text-white py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 mt-4 disabled:opacity-50"
                                 >
-                                    {processing ? 'Creating Activity...' : 'Create Budget Activity'}
+                                    {processing ? t('dashboard.creating_activity') : t('dashboard.create_budget_activity')}
                                 </button>
                             </form>
                         </motion.div>
@@ -373,7 +376,7 @@ export default function SpendingManagement() {
                                     <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/20">
                                         <Sparkles className="w-5 h-5 text-white" />
                                     </div>
-                                    <h3 className="text-xl font-black text-gray-900">AI Budget Planner</h3>
+                                    <h3 className="text-xl font-black text-gray-900">{t('dashboard.ai_budget_planner')}</h3>
                                 </div>
                                 <button onClick={() => setShowAiPlanner(false)} className="p-2 hover:bg-white rounded-full transition-colors">
                                     <X className="w-5 h-5 text-gray-400" />
@@ -382,18 +385,18 @@ export default function SpendingManagement() {
 
                             <div className="p-8 space-y-6">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Monthly Salary ($)</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('dashboard.monthly_salary')}</label>
                                     <div className="relative">
                                         <input 
                                             type="number" 
                                             value={salary}
                                             onChange={e => setSalary(e.target.value)}
-                                            placeholder="Enter your monthly income..."
+                                            placeholder={t('dashboard.income_placeholder')}
                                             className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-purple-500 transition-all pl-12"
                                         />
                                         <Wallet className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                                     </div>
-                                    <p className="text-[9px] text-gray-400 font-bold italic px-1">We will use this to calculate an optimal 50/30/20 plan.</p>
+                                    <p className="text-[9px] text-gray-400 font-bold italic px-1">{t('dashboard.ai_calc_desc')}</p>
                                 </div>
 
                                 {salary > 0 && (
@@ -403,18 +406,18 @@ export default function SpendingManagement() {
                                         className="space-y-4"
                                     >
                                         <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Planned Allocation</p>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">{t('dashboard.planned_allocation')}</p>
                                             <div className="space-y-3">
                                                 <div className="flex justify-between text-xs font-bold">
-                                                    <span className="text-gray-600">Needs (50%)</span>
+                                                    <span className="text-gray-600">{t('dashboard.needs')} (50%)</span>
                                                     <span className="text-black">${(salary * 0.5).toLocaleString()}</span>
                                                 </div>
                                                 <div className="flex justify-between text-xs font-bold">
-                                                    <span className="text-gray-600">Wants (30%)</span>
+                                                    <span className="text-gray-600">{t('dashboard.wants')} (30%)</span>
                                                     <span className="text-black">${(salary * 0.3).toLocaleString()}</span>
                                                 </div>
                                                 <div className="flex justify-between text-xs font-bold">
-                                                    <span className="text-gray-600">Savings (20%)</span>
+                                                    <span className="text-gray-600">{t('dashboard.savings')} (20%)</span>
                                                     <span className="text-black text-green-600">${(salary * 0.2).toLocaleString()}</span>
                                                 </div>
                                             </div>
@@ -427,9 +430,9 @@ export default function SpendingManagement() {
                                     disabled={!salary || salary <= 0}
                                     className="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-purple-600/20 mt-4 disabled:opacity-50"
                                 >
-                                    Generate & Apply Plan
+                                    {t('dashboard.generate_apply_plan')}
                                 </button>
-                                <p className="text-[8px] text-gray-400 text-center font-black uppercase tracking-[0.2em]">Note: This will overwrite your current activity limits</p>
+                                <p className="text-[8px] text-gray-400 text-center font-black uppercase tracking-[0.2em]">{t('dashboard.ai_overwrite_note')}</p>
                             </div>
                         </motion.div>
                     </div>

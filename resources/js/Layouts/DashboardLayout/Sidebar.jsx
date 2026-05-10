@@ -4,8 +4,10 @@ import {
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart,
     TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown, Camera
 } from 'lucide-react';
+import LanguageSwitcher from '@/Components/LanguageSwitcher';
 import { useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) => (
     <Link
@@ -26,6 +28,7 @@ const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) =
 );
 
 export default function Sidebar() {
+    const { t } = useTranslation();
     const { auth } = usePage().props;
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const fileInputRef = useRef(null);
@@ -52,7 +55,7 @@ export default function Sidebar() {
 
     return (
         <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A192F] flex flex-col z-50">
-            <div className="p-8">
+            <div className="p-8 pb-4 flex justify-between items-center">
                 <Link href="/" className="flex items-center gap-3 group">
                     <div className="bg-white p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
                         <Anchor className="w-6 h-6 text-black" />
@@ -64,18 +67,18 @@ export default function Sidebar() {
             {/* Navigation Section */}
             <div className="flex-1 overflow-y-auto pt-4">
                 <div className="px-6 mb-4">
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Navigation</span>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{t('sidebar.navigation')}</span>
                 </div>
                 <nav className="space-y-1">
-                    <NavItem icon={LayoutDashboard} label="Dashboard" active={route().current('dashboard')} href={route('dashboard')} />
-                    <NavItem icon={ArrowLeftRight} label="Transactions" active={route().current('transactions.index')} href={route('transactions.index')} />
-                    <NavItem icon={BarChart} label="AI Assistant" active={route().current('ai-assistant.index')} href={route('ai-assistant.index')} badge="AI" badgeColor="bg-blue-500" />
-                    <NavItem icon={Globe} label="Voice Coach" active={route().current('voice-coach.index')} href={route('voice-coach.index')} badge="LIVE" badgeColor="bg-red-500" />
-                    <NavItem icon={CreditCard} label="Accounts" active={route().current('accounts.index')} href={route('accounts.index')} />
-                    <NavItem icon={CreditCard} label="Cards" active={route().current('cards.index')} href={route('cards.index')} badge="3" badgeColor="bg-[#8B5CF6]" />
-                    <NavItem icon={Wallet} label="Investment" active={route().current('investments.index')} href={route('investments.index')} badge="14" badgeColor="bg-[#10B981]" />
-                    <NavItem icon={BarChart} label="Reports" active={route().current('reports.index')} href={route('reports.index')} />
-                    <NavItem icon={TrendingUp} label="Loan" active={route().current('loans.index')} href={route('loans.index')} />
+                    <NavItem icon={LayoutDashboard} label={t('sidebar.dashboard')} active={route().current('dashboard')} href={route('dashboard')} />
+                    <NavItem icon={ArrowLeftRight} label={t('sidebar.transactions')} active={route().current('transactions.index')} href={route('transactions.index')} />
+                    <NavItem icon={BarChart} label={t('sidebar.ai_assistant')} active={route().current('ai-assistant.index')} href={route('ai-assistant.index')} badge="AI" badgeColor="bg-blue-500" />
+                    <NavItem icon={Globe} label={t('sidebar.voice_coach')} active={route().current('voice-coach.index')} href={route('voice-coach.index')} badge="LIVE" badgeColor="bg-red-500" />
+                    <NavItem icon={CreditCard} label={t('sidebar.accounts')} active={route().current('accounts.index')} href={route('accounts.index')} />
+                    <NavItem icon={CreditCard} label={t('sidebar.cards')} active={route().current('cards.index')} href={route('cards.index')} badge="3" badgeColor="bg-[#8B5CF6]" />
+                    <NavItem icon={Wallet} label={t('sidebar.investment')} active={route().current('investments.index')} href={route('investments.index')} badge="14" badgeColor="bg-[#10B981]" />
+                    <NavItem icon={BarChart} label={t('sidebar.reports')} active={route().current('reports.index')} href={route('reports.index')} />
+                    <NavItem icon={TrendingUp} label={t('sidebar.loan')} active={route().current('loans.index')} href={route('loans.index')} />
                 </nav>
             </div>
 
@@ -121,16 +124,14 @@ export default function Sidebar() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-gray-400 text-xs mb-6 px-2 hover:text-white cursor-pointer transition-colors">
-                    <Globe className="w-4 h-4" />
-                    <span>English</span>
-                    <ChevronDown className="w-3 h-3 ml-auto" />
+                <div className="mb-6 px-2">
+                    <LanguageSwitcher />
                 </div>
 
                 <div className="flex gap-4 px-2">
-                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">Privacy Policy</Link>
-                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">License</Link>
-                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">API</Link>
+                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">{t('sidebar.privacy')}</Link>
+                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">{t('sidebar.license')}</Link>
+                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">{t('sidebar.api')}</Link>
                 </div>
             </div>
 
@@ -154,8 +155,8 @@ export default function Sidebar() {
                             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <LogOut className="w-8 h-8 text-red-600" />
                             </div>
-                            <h3 className="text-xl font-black text-gray-900 mb-2">Confirm Logout</h3>
-                            <p className="text-sm text-gray-500 mb-8">Are you sure you want to log out of your HarborBank account?</p>
+                            <h3 className="text-xl font-black text-gray-900 mb-2">{t('sidebar.confirm_logout')}</h3>
+                            <p className="text-sm text-gray-500 mb-8">{t('sidebar.logout_message')}</p>
 
                             <div className="flex flex-col gap-3">
                                 <Link
@@ -164,13 +165,13 @@ export default function Sidebar() {
                                     as="button"
                                     className="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-700 hover:scale-[1.02] transition-all"
                                 >
-                                    Yes, Log Out
+                                    {t('sidebar.yes_logout')}
                                 </Link>
                                 <button
                                     onClick={() => setShowLogoutModal(false)}
                                     className="w-full text-sm font-bold text-gray-400 hover:text-black transition-colors"
                                 >
-                                    Cancel
+                                    {t('sidebar.cancel')}
                                 </button>
                             </div>
                         </motion.div>

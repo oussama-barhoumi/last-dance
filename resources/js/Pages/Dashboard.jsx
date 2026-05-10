@@ -10,8 +10,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Plus, X, QrCode, Scan, Camera, CheckCircle2, AlertCircle, ArrowRight, Info } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 export default function Dashboard({ auth }) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset } = useForm({
         receiver_email: '',
         amount: '',
@@ -83,28 +85,28 @@ export default function Dashboard({ auth }) {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     <motion.div variants={item} className="lg:col-span-2 bg-[#0A0A0A] p-8 rounded-[40px] text-white flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group">
                         <div className="relative z-10">
-                            <h3 className="text-2xl font-black mb-2">Financial Hub</h3>
-                            <p className="text-zinc-400 text-xs font-medium max-w-[200px]">Quickly manage your capital with secure global transfers.</p>
+                            <h3 className="text-2xl font-black mb-2">{t('dashboard.financial_hub')}</h3>
+                            <p className="text-zinc-400 text-xs font-medium max-w-[200px]">{t('dashboard.financial_hub_desc')}</p>
                             <div className="flex gap-4 mt-8">
                                 <button 
                                     onClick={() => setShowSendModal(true)}
                                     className="bg-white text-black px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-2"
                                 >
-                                    <Send className="w-3 h-3" /> Send Money
+                                    <Send className="w-3 h-3" /> {t('dashboard.send_money')}
                                 </button>
                                 <button className="bg-zinc-800 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-zinc-700 transition-colors flex items-center gap-2">
-                                    <Plus className="w-3 h-3" /> Add Payment
+                                    <Plus className="w-3 h-3" /> {t('dashboard.add_payment')}
                                 </button>
                             </div>
                         </div>
                         <div className="relative z-10 w-full md:w-auto bg-zinc-900/50 backdrop-blur-xl p-6 rounded-3xl border border-zinc-800">
-                            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Your Balance</p>
+                            <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">{t('dashboard.your_balance')}</p>
                             <p className="text-3xl font-black">${Number(auth.user.balance).toLocaleString()}</p>
                             <div className="mt-4 flex items-center gap-2">
                                 <div className="flex -space-x-2">
                                     {[1,2,3].map(i => <div key={i} className="w-6 h-6 rounded-full border-2 border-zinc-900 bg-zinc-800" />)}
                                 </div>
-                                <span className="text-[8px] font-black text-zinc-500 uppercase">+12 Recent</span>
+                                <span className="text-[8px] font-black text-zinc-500 uppercase">+12 {t('dashboard.recent')}</span>
                             </div>
                         </div>
                         <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 rounded-full blur-[100px] -mr-32 -mt-32 group-hover:bg-purple-600/30 transition-colors" />
@@ -113,14 +115,14 @@ export default function Dashboard({ auth }) {
                     <motion.div variants={item} className="lg:col-span-1">
                         <StatsCard 
                             type="spending" 
-                            label="Total Spending" 
+                            label={t('dashboard.total_spending')} 
                             value="4,850" 
                         />
                     </motion.div>
                     <motion.div variants={item} className="lg:col-span-1">
                         <StatsCard 
                             type="investment" 
-                            label="Net Portfolio" 
+                            label={t('dashboard.net_portfolio')} 
                             value="124,500" 
                             dark 
                         />
@@ -170,8 +172,8 @@ export default function Dashboard({ auth }) {
                                         <Send className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-black">Send Money</h3>
-                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Global Secure Transfer</p>
+                                        <h3 className="text-xl font-black">{t('dashboard.send_money')}</h3>
+                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('dashboard.global_secure_transfer')}</p>
                                     </div>
                                 </div>
                                 <button onClick={() => { stopScanner(); setShowSendModal(false); }} className="p-2 hover:bg-zinc-900 rounded-full transition-colors text-zinc-500">
@@ -191,7 +193,7 @@ export default function Dashboard({ auth }) {
                                                 )}
                                             >
                                                 <Send className={clsx("w-6 h-6", activeTab === 'transfer' ? "text-purple-500" : "text-zinc-500")} />
-                                                <span className={clsx("text-[10px] font-black uppercase tracking-widest", activeTab === 'transfer' ? "text-white" : "text-zinc-500")}>Transfer</span>
+                                                <span className={clsx("text-[10px] font-black uppercase tracking-widest", activeTab === 'transfer' ? "text-white" : "text-zinc-500")}>{t('dashboard.transfer')}</span>
                                             </button>
                                             <button 
                                                 onClick={() => setActiveTab('qr')}
@@ -201,7 +203,7 @@ export default function Dashboard({ auth }) {
                                                 )}
                                             >
                                                 <QrCode className={clsx("w-6 h-6", activeTab === 'qr' ? "text-purple-500" : "text-zinc-500")} />
-                                                <span className={clsx("text-[10px] font-black uppercase tracking-widest", activeTab === 'qr' ? "text-white" : "text-zinc-500")}>My QR</span>
+                                                <span className={clsx("text-[10px] font-black uppercase tracking-widest", activeTab === 'qr' ? "text-white" : "text-zinc-500")}>{t('dashboard.my_qr')}</span>
                                             </button>
                                         </div>
 
@@ -209,21 +211,21 @@ export default function Dashboard({ auth }) {
                                             <form onSubmit={handleSendMoney} className="space-y-6">
                                                 <div className="space-y-2">
                                                     <div className="flex justify-between items-center px-1">
-                                                        <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Recipient</label>
+                                                        <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('dashboard.recipient')}</label>
                                                         <button 
                                                             type="button"
                                                             onClick={startScanner}
                                                             className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
                                                         >
                                                             <Scan className="w-3 h-3" />
-                                                            <span className="text-[10px] font-black uppercase tracking-widest">Scan QR</span>
+                                                            <span className="text-[10px] font-black uppercase tracking-widest">{t('dashboard.scan_qr')}</span>
                                                         </button>
                                                     </div>
                                                     <input 
                                                         type="text" 
                                                         value={data.receiver_email}
                                                         onChange={e => setData('receiver_email', e.target.value)}
-                                                        placeholder="Recipient email identifier"
+                                                        placeholder={t('dashboard.recipient_placeholder')}
                                                         className="w-full bg-zinc-900 border-none rounded-2xl p-4 text-white text-sm focus:ring-2 focus:ring-purple-600 transition-all"
                                                         required
                                                     />
@@ -231,7 +233,7 @@ export default function Dashboard({ auth }) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest px-1">Amount</label>
+                                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest px-1">{t('dashboard.amount')}</label>
                                                     <div className="relative">
                                                         <input 
                                                             type="number" 
@@ -260,7 +262,7 @@ export default function Dashboard({ auth }) {
                                                     disabled={processing}
                                                     className="w-full bg-white text-black py-5 rounded-[20px] font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-white/5 disabled:opacity-50"
                                                 >
-                                                    {processing ? 'Processing...' : 'Continue Transfer'} <ArrowRight className="w-4 h-4" />
+                                                    {processing ? t('dashboard.processing') : t('dashboard.continue_transfer')} <ArrowRight className="w-4 h-4" />
                                                 </button>
                                             </form>
                                         ) : (
@@ -281,10 +283,10 @@ export default function Dashboard({ auth }) {
 
                                                 <div className="w-full grid grid-cols-2 gap-4">
                                                     <button className="bg-zinc-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-colors">
-                                                        Download QR
+                                                        {t('dashboard.download_qr')}
                                                     </button>
                                                     <button className="bg-zinc-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-colors">
-                                                        Share Profile
+                                                        {t('dashboard.share_profile')}
                                                     </button>
                                                 </div>
 
@@ -293,7 +295,7 @@ export default function Dashboard({ auth }) {
                                                         <Info className="w-4 h-4 text-purple-400" />
                                                     </div>
                                                     <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest leading-relaxed">
-                                                        Scan this code to instantly receive money from any HarborBank user.
+                                                        {t('dashboard.scan_qr_desc')}
                                                     </p>
                                                 </div>
                                             </div>
@@ -318,7 +320,7 @@ export default function Dashboard({ auth }) {
                                                     />
                                                 </div>
                                                 <div className="mt-8 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full">
-                                                    <p className="text-[10px] font-black text-white uppercase tracking-widest">Scanning QR Code...</p>
+                                                    <p className="text-[10px] font-black text-white uppercase tracking-widest">{t('dashboard.scanning_qr')}</p>
                                                 </div>
                                             </div>
                                             
@@ -333,7 +335,7 @@ export default function Dashboard({ auth }) {
                                         <div className="p-6 bg-zinc-900/50 rounded-3xl flex items-start gap-4 border border-zinc-900">
                                             <Camera className="w-5 h-5 text-purple-400 mt-1 flex-shrink-0" />
                                             <p className="text-[10px] leading-relaxed text-zinc-500 font-bold uppercase tracking-wide">
-                                                Position the recipient's QR code within the frame to automatically extract their information.
+                                                {t('dashboard.position_qr')}
                                             </p>
                                         </div>
 
@@ -344,7 +346,7 @@ export default function Dashboard({ auth }) {
                                             }}
                                             className="w-full bg-zinc-800 text-white py-4 rounded-2xl font-black text-sm hover:bg-zinc-700 transition-colors"
                                         >
-                                            Back to Manual Entry
+                                            {t('dashboard.back_to_manual')}
                                         </button>
                                     </div>
                                 )}

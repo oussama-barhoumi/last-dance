@@ -6,8 +6,11 @@ import {
     Mail, ArrowRight, CheckCircle2, Shield, Menu, X
 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/Components/LanguageSwitcher';
 
 export default function Welcome({ auth }) {
+    const { t } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const fadeInUp = {
@@ -45,11 +48,12 @@ export default function Welcome({ auth }) {
 
                     <div className="hidden lg:flex items-center gap-8 text-sm font-medium">
                         <div className="flex items-center gap-8">
+                            <LanguageSwitcher />
                             <Link
                                 href={route('dashboard')}
                                 className="hover:text-white text-gray-400 transition-colors"
                             >
-                                Dashboard
+                                {t('nav.dashboard')}
                             </Link>
 
                             {auth.user ? (
@@ -60,7 +64,7 @@ export default function Welcome({ auth }) {
                                         as="button"
                                         className="bg-red-500/10 text-red-500 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white transition-all"
                                     >
-                                        Logout
+                                        {t('nav.logout')}
                                     </Link>
                                 </div>
                             ) : (
@@ -69,13 +73,13 @@ export default function Welcome({ auth }) {
                                         href={route('login')}
                                         className="hover:text-white text-gray-400 transition-colors"
                                     >
-                                        Login
+                                        {t('nav.login')}
                                     </Link>
                                     <Link
                                         href={route('register')}
                                         className="bg-white text-blue-900 px-6 py-2 rounded-full hover:bg-blue-50 transition-all duration-300 font-bold"
                                     >
-                                        Create Account
+                                        {t('nav.register')}
                                     </Link>
                                 </div>
                             )}
@@ -132,28 +136,28 @@ export default function Welcome({ auth }) {
                             variants={fadeInUp}
                             className="text-5xl lg:text-7xl font-bold leading-tight mb-6"
                         >
-                            Banking that <br />
-                            <span className="text-gray-400">moves with you</span>
+                            {t('welcome.banking_that')} <br />
+                            <span className="text-gray-400">{t('welcome.moves_with_you')}</span>
                         </motion.h1>
                         <motion.p
                             variants={fadeInUp}
                             className="text-lg text-gray-600 mb-10 max-w-xl leading-relaxed"
                         >
-                            Modern, secure personal and business banking built for the way you live and work — competitive rates, 24/7 support, and a network of branches across the coast.
+                            {t('welcome.subtitle')}
                         </motion.p>
 
                         <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-16">
                             {auth.user ? (
                                 <Link href={route('dashboard')} className="bg-white text-blue-900 px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
-                                    Go to Dashboard
+                                    {t('hero.go_to_dashboard')}
                                 </Link>
                             ) : (
                                 <>
                                     <Link href={route('register')} className="bg-blue-600 text-white px-8 py-4 rounded-full font-bold hover:bg-blue-700 hover:scale-105 transition-all">
-                                        Create Account
+                                        {t('hero.create_account')}
                                     </Link>
                                     <Link href={route('login')} className="bg-gray-100 text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">
-                                        Login
+                                        {t('hero.login')}
                                     </Link>
                                 </>
                             )}
@@ -231,28 +235,28 @@ export default function Welcome({ auth }) {
             <section className="bg-gray-50 py-24 px-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-16">
-                        <h2 className="text-3xl font-bold mb-4">Financial solutions for every stage</h2>
-                        <p className="text-gray-500 max-w-2xl">Tailored services designed to help you reach your financial goals with ease and confidence.</p>
+                        <h2 className="text-3xl font-bold mb-4">{t('welcome.solutions_title')}</h2>
+                        <p className="text-gray-500 max-w-2xl">{t('welcome.solutions_desc')}</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
                         {[
                             {
                                 icon: Landmark,
-                                title: "Everyday Checking",
-                                desc: "No monthly fees, contactless cards, and an easy mobile experience to manage daily spending.",
+                                title: t('welcome.everyday_checking'),
+                                desc: t('welcome.everyday_checking_desc'),
                                 link: "#"
                             },
                             {
                                 icon: PiggyBank,
-                                title: "Savings & Investments",
-                                desc: "High-yield savings, IRAs, and curated investment accounts with expert guidance.",
+                                title: t('welcome.savings_investments'),
+                                desc: t('welcome.savings_investments_desc'),
                                 link: "#"
                             },
                             {
                                 icon: Home,
-                                title: "Loans & Mortgages",
-                                desc: "Competitive rates for home loans, personal loans, and refinancing options tailored to you.",
+                                title: t('welcome.loans_mortgages'),
+                                desc: t('welcome.loans_mortgages_desc'),
                                 link: "#"
                             }
                         ].map((service, i) => (
@@ -267,7 +271,7 @@ export default function Welcome({ auth }) {
                                 <h3 className="text-xl font-bold mb-4">{service.title}</h3>
                                 <p className="text-gray-500 mb-8 leading-relaxed">{service.desc}</p>
                                 <Link href={service.link} className="mt-auto group flex items-center gap-2 font-bold text-sm hover:gap-4 transition-all">
-                                    Learn More <ArrowRight className="w-4 h-4" />
+                                    {t('welcome.learn_more')} <ArrowRight className="w-4 h-4" />
                                 </Link>
                             </motion.div>
                         ))}
@@ -289,7 +293,7 @@ export default function Welcome({ auth }) {
                         <div className="flex items-center gap-2 font-bold text-sm uppercase tracking-widest"><CheckCircle2 className="w-4 h-4" /> Secured</div>
                     </div>
                     <div className="text-gray-400 text-sm max-w-md text-right">
-                        Trusted by over 600,000 customers and local businesses across the coastal region.
+                        {t('welcome.trust_text')}
                     </div>
                 </div>
             </section>
@@ -301,20 +305,20 @@ export default function Welcome({ auth }) {
                         <div className="bg-blue-950 w-14 h-14 rounded-2xl flex items-center justify-center mb-8">
                             <Megaphone className="w-7 h-7 text-white" />
                         </div>
-                        <h2 className="text-3xl font-bold mb-6">Latest Promotions</h2>
+                        <h2 className="text-3xl font-bold mb-6">{t('welcome.promotions_title')}</h2>
                         <div className="p-6 bg-white rounded-2xl border border-gray-100">
-                            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md mb-3 inline-block">Featured</span>
+                            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md mb-3 inline-block">{t('welcome.featured')}</span>
                             <p className="text-gray-900 font-medium leading-relaxed">
-                                New: 2.25% APY on Savings for the first 6 months when you open an account by June 30.
+                                {t('welcome.promo_featured_desc')}
                             </p>
                         </div>
                     </div>
 
                     <div className="lg:w-2/3 grid sm:grid-cols-3 gap-6">
                         {[
-                            { date: "June 02, 2026", title: "Summer Rewards: Earn 3x points on local dining." },
-                            { date: "May 18, 2026", title: "Refinance special: Save on mortgage rates this season." },
-                            { date: "Apr 27, 2026", title: "Community Grant winners announced for coastal conservation." }
+                            { date: "June 02, 2026", title: t('welcome.promo_1_title') },
+                            { date: "May 18, 2026", title: t('welcome.promo_2_title') },
+                            { date: "Apr 27, 2026", title: t('welcome.promo_3_title') }
                         ].map((promo, i) => (
                             <motion.div
                                 key={i}
@@ -355,34 +359,34 @@ export default function Welcome({ auth }) {
                         </div>
 
                         <div>
-                            <h5 className="font-bold mb-6">Personal</h5>
+                            <h5 className="font-bold mb-6">{t('welcome.footer_personal')}</h5>
                             <ul className="space-y-4 text-sm text-gray-400">
-                                <li><Link href="#" className="hover:text-white transition-colors">Checking Accounts</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Savings & CDs</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Credit Cards</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_checking')}</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_savings')}</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_credit_cards')}</Link></li>
                             </ul>
                         </div>
 
                         <div>
-                            <h5 className="font-bold mb-6">Business</h5>
+                            <h5 className="font-bold mb-6">{t('welcome.footer_business')}</h5>
                             <ul className="space-y-4 text-sm text-gray-400">
-                                <li><Link href="#" className="hover:text-white transition-colors">Business Checking</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Merchant Services</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Corporate Lending</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_business_checking')}</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_merchant_services')}</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_corporate_lending')}</Link></li>
                             </ul>
                         </div>
 
                         <div>
-                            <h5 className="font-bold mb-6">Support</h5>
+                            <h5 className="font-bold mb-6">{t('welcome.footer_support')}</h5>
                             <ul className="space-y-4 text-sm text-gray-400">
-                                <li><Link href="#" className="hover:text-white transition-colors">Help Center</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Security Center</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Privacy & Legal</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_help_center')}</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_security_center')}</Link></li>
+                                <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_privacy_legal')}</Link></li>
                             </ul>
                         </div>
 
                         <div className="col-span-2 lg:col-span-1">
-                            <h5 className="font-bold mb-6">Stay Connected</h5>
+                            <h5 className="font-bold mb-6">{t('welcome.footer_stay_connected')}</h5>
                             <div className="flex gap-4 mb-8">
                                 <Link href="#" className="bg-white/10 p-2 rounded-lg hover:bg-white/20 transition-colors"><Facebook className="w-5 h-5" /></Link>
                                 <Link href="#" className="bg-white/10 p-2 rounded-lg hover:bg-white/20 transition-colors"><Twitter className="w-5 h-5" /></Link>
@@ -392,24 +396,24 @@ export default function Welcome({ auth }) {
                                 <div className="relative">
                                     <input
                                         type="email"
-                                        placeholder="Email Address"
+                                        placeholder={t('welcome.footer_email_placeholder')}
                                         className="w-full bg-white/10 border-none rounded-full px-5 py-3 text-sm focus:ring-2 focus:ring-white/30"
                                     />
                                     <button className="absolute right-1 top-1 bg-white text-blue-900 text-xs font-bold px-4 py-2 rounded-full hover:bg-blue-50 transition-colors">
-                                        Subscribe
+                                        {t('welcome.footer_subscribe')}
                                     </button>
                                 </div>
-                                <p className="text-[10px] text-gray-500">We respect your privacy. Unsubscribe anytime.</p>
+                                <p className="text-[10px] text-gray-500">{t('welcome.footer_respect_privacy')}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                        <p>© 2026 HarborBank. All rights reserved.</p>
+                        <p>{t('welcome.footer_rights')}</p>
                         <div className="flex gap-8">
-                            <Link href="#" className="hover:text-white transition-colors">Legal</Link>
-                            <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
-                            <Link href="#" className="hover:text-white transition-colors">Security</Link>
+                            <Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_legal')}</Link>
+                            <Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_privacy')}</Link>
+                            <Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_security')}</Link>
                         </div>
                     </div>
                 </div>

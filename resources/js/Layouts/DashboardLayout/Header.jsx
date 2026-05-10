@@ -3,8 +3,10 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, router } from '@inertiajs/react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 export default function Header({ user }) {
+    const { t } = useTranslation();
     const [showNotifications, setShowNotifications] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -30,7 +32,7 @@ export default function Header({ user }) {
     return (
         <header className="sticky top-0 z-40 bg-transparent/50 backdrop-blur-sm px-10 py-6 flex items-center justify-between">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">Overview</h1>
+                <h1 className="text-3xl font-bold text-gray-900">{t('header.overview')}</h1>
             </div>
 
             <div className="flex items-center gap-8">
@@ -65,9 +67,9 @@ export default function Header({ user }) {
                                 >
                                     <div className="p-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
                                         <div>
-                                            <h3 className="font-black text-sm text-gray-900">Notifications</h3>
+                                            <h3 className="font-black text-sm text-gray-900">{t('header.notifications')}</h3>
                                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">
-                                                {user.unread_notifications_count} New Alerts
+                                                {user.unread_notifications_count} {t('header.new_alerts')}
                                             </p>
                                         </div>
                                         {user.unread_notifications_count > 0 && (
@@ -75,7 +77,7 @@ export default function Header({ user }) {
                                                 onClick={markAllRead}
                                                 className="text-[10px] font-black text-purple-600 hover:text-purple-700 uppercase tracking-widest"
                                             >
-                                                Mark all read
+                                                {t('header.mark_all_read')}
                                             </button>
                                         )}
                                     </div>
@@ -116,8 +118,8 @@ export default function Header({ user }) {
                                                 <div className="bg-gray-50 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                                     <Bell className="w-6 h-6 text-gray-300" />
                                                 </div>
-                                                <p className="text-sm font-bold text-gray-900">All caught up!</p>
-                                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">No new notifications</p>
+                                                <p className="text-sm font-bold text-gray-900">{t('header.all_caught_up')}</p>
+                                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{t('header.no_new_notifications')}</p>
                                             </div>
                                         )}
                                     </div>
@@ -126,7 +128,7 @@ export default function Header({ user }) {
                                         href="#"
                                         className="p-4 bg-gray-50 text-center block text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors"
                                     >
-                                        View All Notifications
+                                        {t('header.view_all')}
                                     </Link>
                                 </motion.div>
                             )}
@@ -137,7 +139,7 @@ export default function Header({ user }) {
                 <div className="p-[1px] rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500">
                     <div className="bg-white rounded-[15px] px-6 py-2.5 flex items-center gap-3">
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">My Balance</span>
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">{t('header.my_balance')}</span>
                             <div className="flex items-center gap-2">
                                 <span className="text-lg font-black text-gray-900 leading-none">
                                     ${parseFloat(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}

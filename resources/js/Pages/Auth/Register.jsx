@@ -4,8 +4,10 @@ import InputError from '@/Components/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, MapPin, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Register() {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -35,8 +37,8 @@ export default function Register() {
             <Head title="Create your HarborBank Account" />
 
             <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">Create Account</h2>
-                <p className="text-zinc-400 text-sm">Join over 600,000 customers worldwide.</p>
+                <h2 className="text-2xl font-bold text-white mb-2">{t('auth.register_title')}</h2>
+                <p className="text-zinc-400 text-sm">{t('auth.register_subtitle')}</p>
             </div>
 
             <form onSubmit={submit} className="space-y-5">
@@ -45,7 +47,7 @@ export default function Register() {
                     <User className={iconClasses} />
                     <input
                         type="text"
-                        placeholder="Full Name"
+                        placeholder={t('auth.full_name_placeholder')}
                         className={inputClasses}
                         value={data.name}
                         onChange={(e) => setData('name', e.target.value)}
@@ -59,7 +61,7 @@ export default function Register() {
                     <Mail className={iconClasses} />
                     <input
                         type="email"
-                        placeholder="Email Address"
+                        placeholder={t('auth.email_placeholder')}
                         className={inputClasses}
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
@@ -73,7 +75,7 @@ export default function Register() {
                     <Phone className={iconClasses} />
                     <input
                         type="tel"
-                        placeholder="Phone Number"
+                        placeholder={t('auth.phone_placeholder')}
                         className={inputClasses}
                         value={data.phone}
                         onChange={(e) => setData('phone', e.target.value)}
@@ -86,7 +88,7 @@ export default function Register() {
                 <div className="relative">
                     <MapPin className={iconClasses} />
                     <textarea
-                        placeholder="Residential Address"
+                        placeholder={t('auth.address_placeholder')}
                         className={`${inputClasses} h-24 resize-none pt-4`}
                         value={data.address}
                         onChange={(e) => setData('address', e.target.value)}
@@ -101,7 +103,7 @@ export default function Register() {
                         <Lock className={iconClasses} />
                         <input
                             type="password"
-                            placeholder="Password"
+                            placeholder={t('auth.password_placeholder')}
                             className={inputClasses}
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
@@ -113,7 +115,7 @@ export default function Register() {
                         <Lock className={iconClasses} />
                         <input
                             type="password"
-                            placeholder="Confirm"
+                            placeholder={t('auth.confirm_password_placeholder')}
                             className={inputClasses}
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
@@ -134,7 +136,7 @@ export default function Register() {
                         required
                     />
                     <label htmlFor="terms" className="text-xs text-zinc-400 leading-relaxed">
-                        I agree to the <Link href="#" className="text-white hover:underline">Terms of Service</Link> and <Link href="#" className="text-white hover:underline">Privacy Policy</Link>, including FDIC insurance disclosures.
+                        {t('auth.terms_agree')} <Link href="#" className="text-white hover:underline">{t('auth.terms_of_service')}</Link> {t('auth.terms_and')} <Link href="#" className="text-white hover:underline">{t('auth.terms_privacy')}</Link>{t('auth.terms_fdic')}
                     </label>
                 </div>
                 <InputError message={errors.terms} className="mt-1" />
@@ -144,7 +146,7 @@ export default function Register() {
                     disabled={processing}
                     className="w-full bg-white text-black font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors disabled:opacity-50"
                 >
-                    Create Account
+                    {t('auth.create_account_btn')}
                     <ArrowRight className="w-5 h-5" />
                 </button>
 
@@ -153,7 +155,7 @@ export default function Register() {
                         href={route('login')}
                         className="text-sm text-zinc-500 hover:text-white transition-colors"
                     >
-                        Already have an account? <span className="font-bold text-white">Log in</span>
+                        {t('auth.already_have_account')} <span className="font-bold text-white">{t('auth.log_in_text')}</span>
                     </Link>
                 </div>
             </form>

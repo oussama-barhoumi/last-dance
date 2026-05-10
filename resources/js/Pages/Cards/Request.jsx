@@ -9,20 +9,22 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 const cardTypes = [
-    { id: 'debit', name: 'Carte de débit', icon: CreditCard, color: 'bg-blue-500', description: 'Standard banking for everyday use.' },
-    { id: 'credit', name: 'Carte de crédit', icon: Zap, color: 'bg-purple-500', description: 'Financial flexibility with credit limits.' },
-    { id: 'prepaid', name: 'Carte prépayée', icon: ShoppingBag, color: 'bg-green-500', description: 'Control your spending with pre-loaded funds.' },
-    { id: 'international', name: 'Carte internationale', icon: Globe, color: 'bg-indigo-500', description: 'Seamless payments across borders.' },
-    { id: 'virtual', name: 'Carte virtuelle', icon: ShieldCheck, color: 'bg-cyan-500', description: 'Secure online shopping without physical cards.' },
-    { id: 'gold', name: 'Carte Gold', icon: Crown, color: 'bg-yellow-500', description: 'Premium benefits and higher limits.' },
-    { id: 'platinum', name: 'Carte Platinum', icon: Crown, color: 'bg-slate-900', description: 'The ultimate banking experience.' },
-    { id: 'e-shopping', name: 'Carte E-shopping', icon: ShoppingBag, color: 'bg-pink-500', description: 'Dedicated to secure digital commerce.' },
-    { id: 'young', name: 'Carte Jeune', icon: GraduationCap, color: 'bg-orange-500', description: 'Specialized banking for youth.' },
+    { id: 'debit', icon: CreditCard, color: 'bg-blue-500' },
+    { id: 'credit', icon: Zap, color: 'bg-purple-500' },
+    { id: 'prepaid', icon: ShoppingBag, color: 'bg-green-500' },
+    { id: 'international', icon: Globe, color: 'bg-indigo-500' },
+    { id: 'virtual', icon: ShieldCheck, color: 'bg-cyan-500' },
+    { id: 'gold', icon: Crown, color: 'bg-yellow-500' },
+    { id: 'platinum', icon: Crown, color: 'bg-slate-900' },
+    { id: 'e-shopping', icon: ShoppingBag, color: 'bg-pink-500' },
+    { id: 'young', icon: GraduationCap, color: 'bg-orange-500' },
 ];
 
 export default function Request({ user }) {
+    const { t } = useTranslation();
     const [step, setStep] = useState(1);
     const [selectedType, setSelectedType] = useState(null);
     const [formData, setFormData] = useState({
@@ -62,17 +64,17 @@ export default function Request({ user }) {
 
     return (
         <DashboardLayout>
-            <Head title="Request New Card - HarborBank" />
+            <Head title={`${t('cards.request.title')} - HarborBank`} />
 
             <div className="max-w-4xl mx-auto py-10">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-12">
                     <div>
                         <Link href={route('cards.index')} className="flex items-center gap-2 text-gray-400 hover:text-black transition-colors mb-4 font-bold text-sm">
-                            <ArrowLeft className="w-4 h-4" /> Back to Cards
+                            <ArrowLeft className="w-4 h-4" /> {t('cards.request.back_to_cards')}
                         </Link>
-                        <h2 className="text-3xl font-black text-gray-900">Request New Card</h2>
-                        <p className="text-sm text-gray-500 mt-1">Experience the future of payment with HarborBank.</p>
+                        <h2 className="text-3xl font-black text-gray-900">{t('cards.request.title')}</h2>
+                        <p className="text-sm text-gray-500 mt-1">{t('cards.request.desc')}</p>
                     </div>
                     <div className="hidden md:flex items-center gap-4">
                         {[1, 2, 3].map((s) => (
@@ -114,11 +116,11 @@ export default function Request({ user }) {
                                         )}>
                                             <type.icon className="w-6 h-6" />
                                         </div>
-                                        <h4 className="font-black text-sm mb-1">{type.name}</h4>
+                                        <h4 className="font-black text-sm mb-1">{t(`cards.request.types.${type.id}`)}</h4>
                                         <p className={clsx(
                                             "text-[10px] leading-relaxed",
                                             selectedType === type.id ? "text-gray-400" : "text-gray-500"
-                                        )}>{type.description}</p>
+                                        )}>{t(`cards.request.types.${type.id}_desc`)}</p>
                                     </button>
                                 ))}
                             </div>
@@ -138,44 +140,44 @@ export default function Request({ user }) {
                                     <User className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">Personal Information</h3>
-                                    <p className="text-xs text-gray-400">Please provide your details as they appear on your legal ID.</p>
+                                    <h3 className="text-xl font-black text-gray-900">{t('cards.request.step_personal')}</h3>
+                                    <p className="text-xs text-gray-400">{t('cards.request.step_personal_desc')}</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <FormInput label="Full Name" name="full_name" placeholder="John Doe" />
-                                <FormInput label="National ID (CIN)" name="cin" placeholder="AE123456" />
-                                <FormInput label="Date of Birth" name="dob" type="date" />
-                                <FormInput label="Phone Number" name="phone" placeholder="+212 6..." />
-                                <FormInput label="Email Address" name="email" type="email" placeholder="john@example.com" />
-                                <FormInput label="Home Address" name="address" placeholder="Rue de la Liberté, Casablanca" />
+                                <FormInput label={t('cards.request.full_name')} name="full_name" placeholder="John Doe" />
+                                <FormInput label={t('cards.request.cin')} name="cin" placeholder="AE123456" />
+                                <FormInput label={t('cards.request.dob')} name="dob" type="date" />
+                                <FormInput label={t('cards.request.phone')} name="phone" placeholder="+212 6..." />
+                                <FormInput label={t('cards.request.email')} name="email" type="email" placeholder="john@example.com" />
+                                <FormInput label={t('cards.request.address')} name="address" placeholder="Rue de la Liberté, Casablanca" />
                                 
                                 {!isPrepaid && (
                                     <>
-                                        <FormInput label="Bank Account (RIB/IBAN)" name="rib" placeholder="MA64 0000..." />
+                                        <FormInput label={t('cards.request.rib')} name="rib" placeholder="MA64 0000..." />
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Employment Status</label>
+                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('cards.request.employment_status')}</label>
                                             <select 
                                                 value={formData.employment_status || ''}
                                                 onChange={(e) => setFormData({ ...formData, employment_status: e.target.value })}
                                                 className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black appearance-none"
                                             >
-                                                <option value="">Select Status</option>
-                                                <option value="employed">Employed</option>
-                                                <option value="self-employed">Self-Employed</option>
-                                                <option value="student">Student</option>
-                                                <option value="retired">Retired</option>
+                                                <option value="">{t('cards.request.select_status')}</option>
+                                                <option value="employed">{t('cards.request.employed')}</option>
+                                                <option value="self-employed">{t('cards.request.self_employed')}</option>
+                                                <option value="student">{t('cards.request.student')}</option>
+                                                <option value="retired">{t('cards.request.retired')}</option>
                                             </select>
                                         </div>
-                                        <FormInput label="Monthly Income (DH)" name="monthly_income" type="number" placeholder="5000" />
+                                        <FormInput label={t('cards.request.monthly_income')} name="monthly_income" type="number" placeholder="5000" />
                                     </>
                                 )}
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">Back</button>
-                                <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">Continue to Documents</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('dashboard.common.back') || 'Back'}</button>
+                                <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">{t('cards.request.continue_to_docs') || 'Continue to Documents'}</button>
                             </div>
                         </motion.div>
                     )}
@@ -193,8 +195,8 @@ export default function Request({ user }) {
                                     <ShieldCheck className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">Verification & Documents</h3>
-                                    <p className="text-xs text-gray-400">Security is our priority. Please upload the required documents.</p>
+                                    <h3 className="text-xl font-black text-gray-900">{t('cards.request.step_documents')}</h3>
+                                    <p className="text-xs text-gray-400">{t('cards.request.step_documents_desc')}</p>
                                 </div>
                             </div>
 
@@ -202,8 +204,8 @@ export default function Request({ user }) {
                                 {/* Always required: Signature */}
                                 <div className="p-8 border-2 border-dashed border-gray-100 rounded-[32px] flex flex-col items-center justify-center text-center group hover:border-black transition-colors cursor-pointer">
                                     <PenTool className="w-10 h-10 text-gray-300 group-hover:text-black mb-4 transition-colors" />
-                                    <h4 className="font-bold text-sm text-gray-900">Digital Signature</h4>
-                                    <p className="text-[10px] text-gray-400 mt-1 uppercase font-black tracking-widest">Draw or upload your signature</p>
+                                    <h4 className="font-bold text-sm text-gray-900">{t('cards.request.digital_signature')}</h4>
+                                    <p className="text-[10px] text-gray-400 mt-1 uppercase font-black tracking-widest">{t('cards.request.signature_desc')}</p>
                                 </div>
 
                                 {/* Conditional: Income Proof for Credit Cards */}
@@ -214,8 +216,8 @@ export default function Request({ user }) {
                                                 <FileText className="w-5 h-5 text-purple-600" />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">Proof of Income</h4>
-                                                <p className="text-[9px] text-gray-400">Pay slip or Employment Certificate</p>
+                                                <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('cards.request.proof_income')}</h4>
+                                                <p className="text-[9px] text-gray-400">{t('cards.request.proof_income_desc')}</p>
                                             </div>
                                             <Upload className="w-5 h-5 text-gray-300" />
                                         </div>
@@ -224,8 +226,8 @@ export default function Request({ user }) {
                                                 <Landmark className="w-5 h-5 text-blue-600" />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">Bank Statement</h4>
-                                                <p className="text-[9px] text-gray-400">Last 3 months of activity</p>
+                                                <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('cards.request.bank_statement')}</h4>
+                                                <p className="text-[9px] text-gray-400">{t('cards.request.bank_statement_desc')}</p>
                                             </div>
                                             <Upload className="w-5 h-5 text-gray-300" />
                                         </div>
@@ -235,14 +237,14 @@ export default function Request({ user }) {
                                 <div className="p-6 bg-blue-50 rounded-3xl flex items-start gap-4">
                                     <Info className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
                                     <p className="text-[10px] leading-relaxed text-blue-700 font-medium">
-                                        By submitting this request, you agree to our terms of service and authorize HarborBank to perform a credit check if applicable. Your data is encrypted and handled securely.
+                                        {t('cards.request.terms_agreement')}
                                     </p>
                                 </div>
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">Back</button>
-                                <button className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-xl shadow-black/10">Submit Card Request</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('dashboard.common.back') || 'Back'}</button>
+                                <button className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-xl shadow-black/10">{t('cards.request.submit_request')}</button>
                             </div>
                         </motion.div>
                     )}
