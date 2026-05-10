@@ -90,4 +90,27 @@ class LoanController extends Controller
 
         return back()->with('success', 'EMI Paid successfully!');
     }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'loan_type' => 'required|string',
+            'amount' => 'required|numeric|min:100',
+            'duration' => 'required|integer|min:1',
+            'purpose' => 'required|string',
+        ]);
+
+        $loan = auth()->user()->loans()->create([
+            'type' => ucfirst($request->loan_type) . ' Loan',
+            'provider' => 'HarborBank',
+            'amount' => $request->amount,
+            'remaining_amount' => $request->amount,
+            'interest_rate' => 4.5, // Default for testing
+            'duration' => $request->duration . ' Months',
+            'monthly_payment' => $request->amount / $request->duration,
+            'status' => 'approved', // Auto-approved for demo purposes
+            'progress' => 0,
+        ]);
+
+        return redirect()->route('loans.index')->with('success', 'Loan application submitted successfully!');
+    }
 }

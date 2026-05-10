@@ -1,5 +1,5 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { 
     User, Briefcase, Landmark, FileText, 
     ArrowLeft, Check, Upload, Info, 
@@ -12,7 +12,7 @@ import clsx from 'clsx';
 
 export default function Apply({ user }) {
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState({
+    const { data, setData, post, processing, errors } = useForm({
         full_name: user.name,
         cin: '',
         dob: '',
@@ -35,6 +35,11 @@ export default function Apply({ user }) {
     const handleNext = () => setStep(step + 1);
     const handleBack = () => setStep(step - 1);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post(route('loans.store'));
+    };
+
     const handleFileChange = (name, file) => {
         setFiles(prev => ({ ...prev, [name]: file }));
     };
@@ -44,11 +49,12 @@ export default function Apply({ user }) {
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{label}</label>
             <input 
                 type={type}
-                value={formData[name]}
-                onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
+                value={data[name]}
+                onChange={(e) => setData(name, e.target.value)}
                 placeholder={placeholder}
                 className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black transition-all"
             />
+            {errors[name] && <p className="text-[10px] text-red-500 mt-1">{errors[name]}</p>}
         </div>
     );
 
@@ -220,8 +226,8 @@ export default function Apply({ user }) {
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Type of Loan</label>
                                     <select 
-                                        value={formData.loan_type}
-                                        onChange={(e) => setFormData({ ...formData, loan_type: e.target.value })}
+                                        value={data.loan_type}
+                                        onChange={(e) => setData('loan_type', e.target.value)}
                                         className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black appearance-none"
                                     >
                                         <option value="">Select Type</option>
@@ -230,6 +236,7 @@ export default function Apply({ user }) {
                                         <option value="business">Business Loan</option>
                                         <option value="student">Student Loan</option>
                                     </select>
+                                    {errors.loan_type && <p className="text-[10px] text-red-500 mt-1">{errors.loan_type}</p>}
                                 </div>
                                 <FormInput label="Loan Amount Requested (DH)" name="amount" type="number" placeholder="100000" />
                                 <FormInput label="Loan Duration (Months)" name="duration" type="number" placeholder="24" />
@@ -270,10 +277,10 @@ export default function Apply({ user }) {
                                 <DocumentUpload title="Work Contract" desc="Signed employment contract" name="work_contract" />
                                 <DocumentUpload title="Proof of Address" desc="Electricity or water bill" name="proof_address" />
                                 <DocumentUpload title="Recent Payslips" desc="Last 3 monthly payslips" name="payslips" />
-                                {formData.job_title?.toLowerCase().includes('self') && (
+                                {data.job_title?.toLowerCase().includes('self') && (
                                     <DocumentUpload title="Business Documents" desc="Company registration / status" name="business_docs" />
                                 )}
-                                {formData.loan_type === 'home' && (
+                                {data.loan_type === 'home' && (
                                     <DocumentUpload title="Property Documents" desc="Title deed or sales agreement" name="property_docs" />
                                 )}
                             </div>
@@ -287,7 +294,13 @@ export default function Apply({ user }) {
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
                                 <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">Back</button>
-                                <button className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-xl shadow-black/10">Submit Loan Application</button>
+                                <button 
+                                    onClick={handleSubmit}
+                                    disabled={processing}
+                                    className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-xl shadow-black/10 disabled:opacity-50"
+                                >
+                                    {processing ? 'Processing...' : 'Submit Loan Application'}
+                                </button>
                             </div>
                         </motion.div>
                     )}
