@@ -80,7 +80,7 @@ export default function Apply({ user }) {
                 <div className="max-w-[150px]">
                     <h4 className={clsx(
                         "text-xs font-black uppercase tracking-widest truncate",
-                        files[name] ? "text-green-700" : "text-gray-900"
+                        files[name] ? "text-green-700" : "text-gray-900 dark:text-zinc-100"
                     )}>
                         {files[name] ? files[name].name : title}
                     </h4>
@@ -103,7 +103,7 @@ export default function Apply({ user }) {
                     <Check className="w-4 h-4 text-green-600" />
                 </div>
             ) : (
-                <Upload className="w-5 h-5 text-gray-300 group-hover:text-black transition-colors" />
+                <Upload className="w-5 h-5 text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors" />
             )}
         </div>
     );
@@ -116,10 +116,10 @@ export default function Apply({ user }) {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-12">
                     <div>
-                        <Link href={route('loans.index')} className="flex items-center gap-2 text-gray-400 hover:text-black transition-colors mb-4 font-bold text-sm">
+                        <Link href={route('loans.index')} className="flex items-center gap-2 text-gray-400 hover:text-black dark:hover:text-white transition-colors mb-4 font-bold text-sm">
                             <ArrowLeft className="w-4 h-4" /> {t('loans.apply.back_to_loans')}
                         </Link>
-                        <h2 className="text-3xl font-black text-gray-900">{t('loans.apply.title')}</h2>
+                        <h2 className="text-3xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.title')}</h2>
                         <p className="text-sm text-gray-500 mt-1">{t('loans.apply.subtitle')}</p>
                     </div>
                     <div className="hidden md:flex items-center gap-4">
@@ -144,14 +144,14 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <User className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">{t('loans.apply.personal.title')}</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.personal.title')}</h3>
                                     <p className="text-xs text-gray-400">{t('loans.apply.personal.desc')}</p>
                                 </div>
                             </div>
@@ -180,14 +180,14 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <Briefcase className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">{t('loans.apply.professional.title')}</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.professional.title')}</h3>
                                     <p className="text-xs text-gray-400">{t('loans.apply.professional.desc')}</p>
                                 </div>
                             </div>
@@ -200,7 +200,7 @@ export default function Apply({ user }) {
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('loans.apply.back')}</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.apply.back')}</button>
                                 <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">{t('loans.apply.next_step')}</button>
                             </div>
                         </motion.div>
@@ -212,14 +212,14 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <Landmark className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">{t('loans.apply.details.title')}</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.details.title')}</h3>
                                     <p className="text-xs text-gray-400">{t('loans.apply.details.desc')}</p>
                                 </div>
                             </div>
@@ -248,7 +248,7 @@ export default function Apply({ user }) {
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('loans.apply.back')}</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.apply.back')}</button>
                                 <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">{t('loans.apply.continue_docs')}</button>
                             </div>
                         </motion.div>
@@ -260,14 +260,14 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <ShieldCheck className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">{t('loans.apply.documents.title')}</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.documents.title')}</h3>
                                     <p className="text-xs text-gray-400">{t('loans.apply.documents.desc')}</p>
                                 </div>
                             </div>
@@ -295,7 +295,7 @@ export default function Apply({ user }) {
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('loans.apply.back')}</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.apply.back')}</button>
                                 <button 
                                     onClick={handleSubmit}
                                     disabled={processing}

@@ -42,7 +42,7 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg overflow-hidden z-50 border border-gray-100">
+        <div className="absolute left-0 mt-2 w-32 bg-white dark:bg-zinc-900 rounded-xl shadow-lg overflow-hidden z-50 border border-gray-100 dark:border-zinc-800 transition-colors">
           <div className="py-1">
             {languages.map((lng) => (
               <button
@@ -50,8 +50,8 @@ export default function LanguageSwitcher() {
                 onClick={() => changeLanguage(lng.code)}
                 className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                   i18n.language === lng.code 
-                    ? 'bg-blue-50 text-blue-600 font-bold' 
-                    : 'text-gray-700 hover:bg-gray-50 hover:text-black'
+                    ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold' 
+                    : 'text-gray-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white'
                 }`}
               >
                 {lng.name}

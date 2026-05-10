@@ -1,9 +1,11 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/Contexts/ThemeContext';
 
 export default function BalanceHistoryChart() {
     const { t } = useTranslation();
+    const { theme } = useTheme();
 
     const data = [
         { name: t('dashboard.months.jul'), value: 300 },
@@ -16,10 +18,10 @@ export default function BalanceHistoryChart() {
     ];
 
     return (
-        <div className="bg-white p-8 rounded-[40px] shadow-sm">
+        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 transition-colors">
             <div className="flex items-center justify-between mb-10">
-                <h3 className="text-xl font-bold text-gray-900">{t('dashboard.balance_history')}</h3>
-                <button className="w-10 h-10 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center hover:border-black transition-colors text-gray-400 hover:text-black">
+                <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">{t('dashboard.balance_history')}</h3>
+                <button className="w-10 h-10 border-2 border-dashed border-gray-200 dark:border-zinc-700 rounded-xl flex items-center justify-center hover:border-black dark:hover:border-white transition-colors text-gray-400 hover:text-black dark:hover:text-white">
                     <Plus className="w-5 h-5" />
                 </button>
             </div>
@@ -27,7 +29,7 @@ export default function BalanceHistoryChart() {
             <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                     <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" className="dark:stroke-zinc-800" />
                         <XAxis 
                             dataKey="name" 
                             axisLine={false} 
@@ -43,21 +45,22 @@ export default function BalanceHistoryChart() {
                         />
                         <Tooltip 
                             contentStyle={{ 
-                                backgroundColor: '#000', 
-                                border: 'none', 
-                                borderRadius: '12px',
-                                color: '#fff' 
+                                backgroundColor: theme === 'dark' ? 'rgb(24 24 27)' : '#fff', 
+                                border: theme === 'dark' ? '1px solid rgb(39 39 42)' : '1px solid rgb(243 244 246)', 
+                                borderRadius: '16px',
+                                color: theme === 'dark' ? '#fff' : '#000',
+                                boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)'
                             }}
-                            itemStyle={{ color: '#fff' }}
-                            cursor={{ stroke: '#F3F4F6', strokeWidth: 2 }}
+                            itemStyle={{ color: theme === 'dark' ? '#fff' : '#000', fontWeight: 'bold' }}
+                            cursor={{ stroke: theme === 'dark' ? '#27272a' : '#f3f4f6', strokeWidth: 2 }}
                         />
                         <Line 
                             type="monotone" 
                             dataKey="value" 
-                            stroke="#000" 
+                            stroke="#8B5CF6" 
                             strokeWidth={4} 
                             dot={false}
-                            activeDot={{ r: 8, stroke: '#fff', strokeWidth: 4, fill: '#000' }}
+                            activeDot={{ r: 8, stroke: '#fff', strokeWidth: 4, fill: '#8B5CF6' }}
                         />
                     </LineChart>
                 </ResponsiveContainer>

@@ -24,7 +24,7 @@ const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-            className="bg-gray-50/50 p-6 rounded-[32px] border border-gray-50 group hover:bg-white hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-500 relative overflow-hidden"
+            className="bg-white dark:bg-zinc-900 p-6 rounded-[32px] border border-gray-50 dark:border-zinc-800 group hover:shadow-xl hover:shadow-gray-200/40 dark:hover:shadow-black/20 transition-all duration-500 relative overflow-hidden"
         >
             <div className="flex justify-between items-start mb-6">
                 <div className={clsx("p-3 rounded-2xl text-white shadow-lg shadow-current/10", color)}>
@@ -45,28 +45,28 @@ const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
             
             <div className="space-y-4">
                 <div>
-                    <h4 className="text-sm font-black text-gray-900">{name}</h4>
+                    <h4 className="text-sm font-black text-gray-900 dark:text-zinc-100">{name}</h4>
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{t('dashboard.monthly_budget')}</p>
                 </div>
 
                 <div className="flex justify-between items-end">
                     <div className="space-y-1">
-                        <p className="text-xl font-black text-gray-900">${Number(spent).toLocaleString()}</p>
+                        <p className="text-xl font-black text-gray-900 dark:text-zinc-100">${Number(spent).toLocaleString()}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('dashboard.spent')}</p>
                     </div>
                     <div className="text-right space-y-1">
-                        <p className="text-sm font-black text-gray-900">${Number(budget).toLocaleString()}</p>
+                        <p className="text-sm font-black text-gray-900 dark:text-zinc-100">${Number(budget).toLocaleString()}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('dashboard.limit')}</p>
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                         <motion.div 
                             initial={{ width: 0 }}
                             animate={{ width: `${percentage}%` }}
                             transition={{ duration: 1, ease: "easeOut" }}
-                            className={clsx("h-full rounded-full", percentage > 90 ? "bg-red-500" : "bg-black")}
+                            className={clsx("h-full rounded-full", percentage > 90 ? "bg-red-500" : "bg-black dark:bg-white")}
                         />
                     </div>
                     <div className="flex justify-between text-[8px] font-black uppercase tracking-widest">
@@ -170,10 +170,10 @@ export default function SpendingManagement() {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 transition-colors">
             <div className="flex justify-between items-center">
                 <div>
-                    <h3 className="text-2xl font-black text-gray-900">{t('dashboard.pricing_management')}</h3>
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-zinc-100">{t('dashboard.pricing_management')}</h3>
                     <p className="text-sm text-gray-400 mt-1">{t('dashboard.pricing_desc')}</p>
                 </div>
                 <div className="flex gap-3">
@@ -207,11 +207,11 @@ export default function SpendingManagement() {
                     ))}
                 </AnimatePresence>
                 {budgets.length === 0 && (
-                    <div className="col-span-full py-12 border-2 border-dashed border-gray-100 rounded-[40px] flex flex-col items-center justify-center text-center">
-                        <div className="bg-gray-50 p-4 rounded-2xl mb-4 text-gray-400">
+                    <div className="col-span-full py-12 border-2 border-dashed border-gray-100 dark:border-zinc-800 rounded-[40px] flex flex-col items-center justify-center text-center bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
+                        <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl mb-4 text-gray-400">
                             <Tag className="w-8 h-8" />
                         </div>
-                        <h4 className="text-sm font-black text-gray-900">{t('dashboard.no_active_budgets')}</h4>
+                        <h4 className="text-sm font-black text-gray-900 dark:text-zinc-100">{t('dashboard.no_active_budgets')}</h4>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{t('dashboard.start_creating_budget')}</p>
                     </div>
                 )}
@@ -231,11 +231,11 @@ export default function SpendingManagement() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-md rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                            className="bg-white dark:bg-zinc-900 w-full max-w-md rounded-[40px] shadow-2xl relative z-10 overflow-hidden border border-transparent dark:border-zinc-800"
                         >
-                            <div className="p-8 border-b border-gray-50 flex justify-between items-center">
-                                <h3 className="text-xl font-black text-gray-900">{t('dashboard.add_new_activity')}</h3>
-                                <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <div className="p-8 border-b border-gray-50 dark:border-zinc-800 flex justify-between items-center">
+                                <h3 className="text-xl font-black text-gray-900 dark:text-white">{t('dashboard.add_new_activity')}</h3>
+                                <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors">
                                     <X className="w-5 h-5 text-gray-400" />
                                 </button>
                             </div>
@@ -250,7 +250,7 @@ export default function SpendingManagement() {
                                             value={data.name}
                                             onChange={e => handleNameChange(e.target.value)}
                                             placeholder={t('dashboard.activity_placeholder')}
-                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-12"
+                                            className="w-full bg-gray-50 dark:bg-zinc-800 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-black dark:focus:ring-white transition-all pl-12"
                                         />
                                         <Tag className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                                     </div>
@@ -266,7 +266,7 @@ export default function SpendingManagement() {
                                             value={data.amount}
                                             onChange={e => setData('amount', e.target.value)}
                                             placeholder="0.00"
-                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-12"
+                                            className="w-full bg-gray-50 dark:bg-zinc-800 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-black dark:focus:ring-white transition-all pl-12"
                                         />
                                         <Wallet className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                                     </div>
@@ -317,7 +317,9 @@ export default function SpendingManagement() {
                                                         }}
                                                         className={clsx(
                                                             "p-4 rounded-2xl border-2 transition-all flex items-center justify-between text-left",
-                                                            data.category === cat.name ? "border-black bg-black/5" : "border-gray-50 bg-gray-50/50 hover:border-gray-200"
+                                                            data.category === cat.name 
+                                                                ? "border-black dark:border-white bg-black/5 dark:bg-white/5" 
+                                                                : "border-gray-50 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-800/50 hover:border-gray-200 dark:hover:border-zinc-700"
                                                         )}
                                                     >
                                                         <div className="flex items-center gap-3">
@@ -325,7 +327,7 @@ export default function SpendingManagement() {
                                                                 <cat.icon className="w-5 h-5" />
                                                             </div>
                                                             <div>
-                                                                <span className="text-xs font-black uppercase tracking-widest leading-tight block">{t(`dashboard.categories.${cat.name.toLowerCase()}`)}</span>
+                                                                <span className="text-xs font-black uppercase tracking-widest leading-tight block dark:text-zinc-100">{t(`dashboard.categories.${cat.name.toLowerCase()}`)}</span>
                                                                 <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">
                                                                     {isAutoMatched && data.category === cat.name ? t('dashboard.recommended_theme') : t('dashboard.theme_active')}
                                                                 </span>
@@ -333,7 +335,9 @@ export default function SpendingManagement() {
                                                         </div>
                                                         <div className={clsx(
                                                             "w-5 h-5 rounded-full border-2 flex items-center justify-center",
-                                                            data.category === cat.name ? "border-black bg-black text-white" : "border-gray-200"
+                                                            data.category === cat.name 
+                                                                ? "border-black dark:border-white bg-black dark:bg-white text-white dark:text-black" 
+                                                                : "border-gray-200 dark:border-zinc-700"
                                                         )}>
                                                             {data.category === cat.name && <CheckCircle2 className="w-3 h-3" />}
                                                         </div>
@@ -346,7 +350,7 @@ export default function SpendingManagement() {
                                 <button 
                                     type="submit"
                                     disabled={processing}
-                                    className="w-full bg-black text-white py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 mt-4 disabled:opacity-50"
+                                    className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 mt-4 disabled:opacity-50"
                                 >
                                     {processing ? t('dashboard.creating_activity') : t('dashboard.create_budget_activity')}
                                 </button>
@@ -369,16 +373,16 @@ export default function SpendingManagement() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-md rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                            className="bg-white dark:bg-zinc-900 w-full max-w-md rounded-[40px] shadow-2xl relative z-10 overflow-hidden border border-transparent dark:border-zinc-800"
                         >
-                            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-purple-50">
+                            <div className="p-8 border-b border-gray-50 dark:border-zinc-800 flex justify-between items-center bg-purple-50 dark:bg-purple-900/20">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/20">
                                         <Sparkles className="w-5 h-5 text-white" />
                                     </div>
-                                    <h3 className="text-xl font-black text-gray-900">{t('dashboard.ai_budget_planner')}</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white">{t('dashboard.ai_budget_planner')}</h3>
                                 </div>
-                                <button onClick={() => setShowAiPlanner(false)} className="p-2 hover:bg-white rounded-full transition-colors">
+                                <button onClick={() => setShowAiPlanner(false)} className="p-2 hover:bg-white dark:hover:bg-zinc-800 rounded-full transition-colors">
                                     <X className="w-5 h-5 text-gray-400" />
                                 </button>
                             </div>
@@ -392,7 +396,7 @@ export default function SpendingManagement() {
                                             value={salary}
                                             onChange={e => setSalary(e.target.value)}
                                             placeholder={t('dashboard.income_placeholder')}
-                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-purple-500 transition-all pl-12"
+                                            className="w-full bg-gray-50 dark:bg-zinc-800 border-none rounded-2xl p-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all pl-12"
                                         />
                                         <Wallet className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                                     </div>
@@ -405,20 +409,20 @@ export default function SpendingManagement() {
                                         animate={{ opacity: 1, y: 0 }}
                                         className="space-y-4"
                                     >
-                                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                        <div className="p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border border-gray-100 dark:border-zinc-700">
                                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">{t('dashboard.planned_allocation')}</p>
                                             <div className="space-y-3">
                                                 <div className="flex justify-between text-xs font-bold">
-                                                    <span className="text-gray-600">{t('dashboard.needs')} (50%)</span>
-                                                    <span className="text-black">${(salary * 0.5).toLocaleString()}</span>
+                                                    <span className="text-gray-600 dark:text-zinc-400">{t('dashboard.needs')} (50%)</span>
+                                                    <span className="text-black dark:text-white">${(salary * 0.5).toLocaleString()}</span>
                                                 </div>
                                                 <div className="flex justify-between text-xs font-bold">
-                                                    <span className="text-gray-600">{t('dashboard.wants')} (30%)</span>
-                                                    <span className="text-black">${(salary * 0.3).toLocaleString()}</span>
+                                                    <span className="text-gray-600 dark:text-zinc-400">{t('dashboard.wants')} (30%)</span>
+                                                    <span className="text-black dark:text-white">${(salary * 0.3).toLocaleString()}</span>
                                                 </div>
                                                 <div className="flex justify-between text-xs font-bold">
-                                                    <span className="text-gray-600">{t('dashboard.savings')} (20%)</span>
-                                                    <span className="text-black text-green-600">${(salary * 0.2).toLocaleString()}</span>
+                                                    <span className="text-gray-600 dark:text-zinc-400">{t('dashboard.savings')} (20%)</span>
+                                                    <span className="text-green-600 dark:text-emerald-400 font-black">${(salary * 0.2).toLocaleString()}</span>
                                                 </div>
                                             </div>
                                         </div>

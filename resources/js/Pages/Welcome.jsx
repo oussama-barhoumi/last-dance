@@ -8,6 +8,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/Components/LanguageSwitcher';
+import ThemeToggle from '@/Components/ThemeToggle';
 
 export default function Welcome({ auth }) {
     const { t } = useTranslation();
@@ -28,15 +29,15 @@ export default function Welcome({ auth }) {
     };
 
     return (
-        <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-blue-600 selection:text-white">
+        <div className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-gray-900 dark:text-zinc-100 selection:bg-blue-600 selection:text-white transition-colors duration-500">
             <Head title="HarborBank - Banking that moves with you" />
 
             <nav className="sticky top-0 z-50 bg-blue-950 text-white px-6 py-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="bg-white p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
-                                <Anchor className="w-6 h-6 text-blue-950" />
+                            <div className="bg-white dark:bg-zinc-800 p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
+                                <Anchor className="w-6 h-6 text-blue-950 dark:text-white" />
                             </div>
                             <span className="text-xl font-bold tracking-tight">HarborBank</span>
                         </Link>
@@ -48,6 +49,7 @@ export default function Welcome({ auth }) {
 
                     <div className="hidden lg:flex items-center gap-8 text-sm font-medium">
                         <div className="flex items-center gap-8">
+                            <ThemeToggle />
                             <LanguageSwitcher />
                             <Link
                                 href={route('dashboard')}
@@ -77,7 +79,7 @@ export default function Welcome({ auth }) {
                                     </Link>
                                     <Link
                                         href={route('register')}
-                                        className="bg-white text-blue-900 px-6 py-2 rounded-full hover:bg-blue-50 transition-all duration-300 font-bold"
+                                        className="bg-white dark:bg-zinc-800 text-blue-900 dark:text-zinc-100 px-6 py-2 rounded-full hover:bg-blue-50 dark:hover:bg-zinc-700 transition-all duration-300 font-bold"
                                     >
                                         {t('nav.register')}
                                     </Link>
@@ -118,7 +120,7 @@ export default function Welcome({ auth }) {
                         ) : (
                             <>
                                 <Link href={route('login')} className="px-2 py-1 text-center font-bold text-gray-400">Login</Link>
-                                <Link href={route('register')} className="px-2 py-1 bg-white text-blue-900 text-center rounded-full font-bold">Create Account</Link>
+                                <Link href={route('register')} className="px-2 py-1 bg-white dark:bg-zinc-800 text-blue-900 dark:text-zinc-100 text-center rounded-full font-bold">Create Account</Link>
                             </>
                         )}
                     </motion.div>
@@ -148,7 +150,7 @@ export default function Welcome({ auth }) {
 
                         <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-16">
                             {auth.user ? (
-                                <Link href={route('dashboard')} className="bg-white text-blue-900 px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
+                                <Link href={route('dashboard')} className="bg-white dark:bg-zinc-800 text-blue-900 dark:text-zinc-100 px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform">
                                     {t('hero.go_to_dashboard')}
                                 </Link>
                             ) : (
@@ -164,16 +166,16 @@ export default function Welcome({ auth }) {
                         </motion.div>
 
                         <motion.div variants={fadeInUp} className="grid sm:grid-cols-2 gap-6">
-                            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-blue-900/10 transition-colors">
-                                <div className="bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                                    <CreditCard className="w-6 h-6 text-blue-900" />
+                            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-zinc-900/50 border border-gray-100 dark:border-zinc-800 group hover:border-blue-900/10 dark:hover:border-zinc-700 transition-colors">
+                                <div className="bg-white dark:bg-zinc-800 w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                                    <CreditCard className="w-6 h-6 text-blue-900 dark:text-zinc-100" />
                                 </div>
                                 <h3 className="font-bold mb-2">Quick Start</h3>
                                 <p className="text-sm text-gray-500">Get started with a checking account in minutes with online verification.</p>
                             </div>
-                            <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 group hover:border-blue-900/10 transition-colors">
-                                <div className="bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                                    <ShieldCheck className="w-6 h-6 text-blue-900" />
+                            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-zinc-900/50 border border-gray-100 dark:border-zinc-800 group hover:border-blue-900/10 dark:hover:border-zinc-700 transition-colors">
+                                <div className="bg-white dark:bg-zinc-800 w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                                    <ShieldCheck className="w-6 h-6 text-blue-900 dark:text-zinc-100" />
                                 </div>
                                 <h3 className="font-bold mb-2">Secure & insured</h3>
                                 <p className="text-sm text-gray-500">FDIC-insured products and multi-layer security to protect your accounts.</p>
@@ -199,14 +201,14 @@ export default function Welcome({ auth }) {
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5, duration: 0.6 }}
-                                className="absolute bottom-8 right-8 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-xl border border-white/20 w-72"
+                                className="absolute bottom-8 right-8 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-6 rounded-3xl shadow-xl border border-white/20 dark:border-zinc-800/50 w-72"
                             >
                                 <div className="flex justify-between items-start mb-6">
                                     <div>
                                         <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1">Harbor Checking • Tailored</p>
-                                        <h4 className="text-2xl font-bold text-blue-950">$2,450.32</h4>
+                                        <h4 className="text-2xl font-bold text-blue-950 dark:text-white">$2,450.32</h4>
                                     </div>
-                                    <div className="bg-blue-900 p-1 rounded-md">
+                                    <div className="bg-blue-900 dark:bg-zinc-800 p-1 rounded-md">
                                         <Anchor className="w-4 h-4 text-white" />
                                     </div>
                                 </div>
@@ -232,11 +234,11 @@ export default function Welcome({ auth }) {
             </section>
 
             {/* 3. Services Section */}
-            <section className="bg-gray-50 py-24 px-6">
+            <section className="bg-gray-50 dark:bg-zinc-900/50 py-24 px-6 transition-colors">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-16">
-                        <h2 className="text-3xl font-bold mb-4">{t('welcome.solutions_title')}</h2>
-                        <p className="text-gray-500 max-w-2xl">{t('welcome.solutions_desc')}</p>
+                        <h2 className="text-3xl font-bold mb-4 dark:text-white">{t('welcome.solutions_title')}</h2>
+                        <p className="text-gray-500 dark:text-zinc-400 max-w-2xl">{t('welcome.solutions_desc')}</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
@@ -263,13 +265,13 @@ export default function Welcome({ auth }) {
                             <motion.div
                                 key={i}
                                 whileHover={{ y: -10 }}
-                                className="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-start"
+                                className="bg-white dark:bg-zinc-900 p-10 rounded-[32px] shadow-sm hover:shadow-xl dark:shadow-black/20 border border-transparent dark:border-zinc-800 transition-all duration-300 flex flex-col items-start"
                             >
-                                <div className="bg-gray-50 p-4 rounded-2xl mb-8">
-                                    <service.icon className="w-8 h-8 text-blue-900" />
+                                <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl mb-8">
+                                    <service.icon className="w-8 h-8 text-blue-900 dark:text-blue-400" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-4">{service.title}</h3>
-                                <p className="text-gray-500 mb-8 leading-relaxed">{service.desc}</p>
+                                <h3 className="text-xl font-bold mb-4 dark:text-white">{service.title}</h3>
+                                <p className="text-gray-500 dark:text-zinc-400 mb-8 leading-relaxed">{service.desc}</p>
                                 <Link href={service.link} className="mt-auto group flex items-center gap-2 font-bold text-sm hover:gap-4 transition-all">
                                     {t('welcome.learn_more')} <ArrowRight className="w-4 h-4" />
                                 </Link>
@@ -299,16 +301,16 @@ export default function Welcome({ auth }) {
             </section>
 
             {/* 5. Promotions Section */}
-            <section className="py-24 px-6 bg-white">
+            <section className="py-24 px-6 bg-white dark:bg-zinc-950 transition-colors">
                 <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
-                    <div className="lg:w-1/3 bg-gray-50 p-12 rounded-[40px] flex flex-col justify-center">
+                    <div className="lg:w-1/3 bg-gray-50 dark:bg-zinc-900/50 p-12 rounded-[40px] flex flex-col justify-center border border-transparent dark:border-zinc-800 transition-colors">
                         <div className="bg-blue-950 w-14 h-14 rounded-2xl flex items-center justify-center mb-8">
                             <Megaphone className="w-7 h-7 text-white" />
                         </div>
-                        <h2 className="text-3xl font-bold mb-6">{t('welcome.promotions_title')}</h2>
-                        <div className="p-6 bg-white rounded-2xl border border-gray-100">
-                            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md mb-3 inline-block">{t('welcome.featured')}</span>
-                            <p className="text-gray-900 font-medium leading-relaxed">
+                        <h2 className="text-3xl font-bold mb-6 dark:text-white">{t('welcome.promotions_title')}</h2>
+                        <div className="p-6 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 transition-colors">
+                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-md mb-3 inline-block">{t('welcome.featured')}</span>
+                            <p className="text-gray-900 dark:text-zinc-100 font-medium leading-relaxed">
                                 {t('welcome.promo_featured_desc')}
                             </p>
                         </div>
@@ -323,12 +325,12 @@ export default function Welcome({ auth }) {
                             <motion.div
                                 key={i}
                                 whileHover={{ scale: 1.02 }}
-                                className="p-8 rounded-[32px] border border-gray-100 flex flex-col hover:border-blue-600 transition-colors cursor-pointer"
+                                className="group p-8 rounded-[32px] bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 flex flex-col hover:border-blue-600 dark:hover:border-blue-400 transition-colors cursor-pointer shadow-sm"
                             >
                                 <span className="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">{promo.date}</span>
-                                <h4 className="font-bold leading-snug">{promo.title}</h4>
+                                <h4 className="font-bold leading-snug dark:text-white">{promo.title}</h4>
                                 <div className="mt-auto pt-6">
-                                    <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-colors">
+                                    <div className="w-8 h-8 rounded-full border border-gray-200 dark:border-zinc-700 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-colors">
                                         <ArrowRight className="w-4 h-4" />
                                     </div>
                                 </div>
@@ -344,8 +346,8 @@ export default function Welcome({ auth }) {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 mb-20">
                         <div className="col-span-2 lg:col-span-1">
                             <div className="flex items-center gap-2 mb-8">
-                                <div className="bg-white p-1 rounded-lg">
-                                    <Anchor className="w-5 h-5 text-blue-950" />
+                                <div className="bg-white dark:bg-zinc-800 p-1 rounded-lg">
+                                    <Anchor className="w-5 h-5 text-blue-950 dark:text-white" />
                                 </div>
                                 <span className="text-xl font-bold">HarborBank</span>
                             </div>
@@ -399,7 +401,7 @@ export default function Welcome({ auth }) {
                                         placeholder={t('welcome.footer_email_placeholder')}
                                         className="w-full bg-white/10 border-none rounded-full px-5 py-3 text-sm focus:ring-2 focus:ring-white/30"
                                     />
-                                    <button className="absolute right-1 top-1 bg-white text-blue-900 text-xs font-bold px-4 py-2 rounded-full hover:bg-blue-50 transition-colors">
+                                    <button className="absolute right-1 top-1 bg-white dark:bg-zinc-800 text-blue-900 dark:text-zinc-100 text-xs font-bold px-4 py-2 rounded-full hover:bg-blue-50 dark:hover:bg-zinc-700 transition-colors">
                                         {t('welcome.footer_subscribe')}
                                     </button>
                                 </div>

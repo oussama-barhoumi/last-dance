@@ -153,7 +153,7 @@ export default function Index({ financialData, initialMessage }) {
                             <Mic className="w-6 h-6 text-white" />
                         </motion.div>
                         <div>
-                            <h2 className="text-xl font-black text-gray-900">{t('voice_coach.title')}</h2>
+                            <h2 className="text-xl font-black text-gray-900 dark:text-white">{t('voice_coach.title')}</h2>
                             <p className="text-[10px] font-black text-green-500 uppercase tracking-widest flex items-center gap-2">
                                 <span className={clsx("w-1.5 h-1.5 rounded-full", isRecording ? "bg-red-500 animate-ping" : "bg-green-500 animate-pulse")} /> 
                                 {isRecording ? t('voice_coach.listening') : t('voice_coach.live_active')}
@@ -162,8 +162,8 @@ export default function Index({ financialData, initialMessage }) {
                     </div>
                     <div className="flex items-center gap-2">
                         <button 
-                            onClick={() => router.visit(route('voice-call.index'))}
-                            className="bg-black text-white px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2 shadow-lg shadow-black/10"
+                            onClick={toggleRecording}
+                            className="bg-black dark:bg-white text-white dark:text-black px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2 shadow-lg shadow-black/10"
                         >
                             <Volume2 className="w-4 h-4" /> {t('voice_coach.start_ai_call')}
                         </button>
@@ -174,12 +174,12 @@ export default function Index({ financialData, initialMessage }) {
                             }}
                             className={clsx(
                                 "p-3 rounded-xl transition-all",
-                                isMuted ? "bg-gray-100 text-gray-400" : "bg-red-50 text-red-500 shadow-sm"
+                                isMuted ? "bg-gray-100 dark:bg-zinc-800 text-gray-400" : "bg-red-50 dark:bg-red-900/20 text-red-500 shadow-sm"
                             )}
                         >
                             {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                         </button>
-                        <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+                        <button className="p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
                             <MoreHorizontal className="w-5 h-5 text-gray-400" />
                         </button>
                     </div>
@@ -200,15 +200,15 @@ export default function Index({ financialData, initialMessage }) {
                             >
                                 <div className={clsx(
                                     "w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0",
-                                    msg.type === 'user' ? "bg-gray-900" : "bg-red-500"
+                                    msg.type === 'user' ? "bg-gray-900 dark:bg-zinc-700" : "bg-red-500"
                                 )}>
                                     {msg.type === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
                                 </div>
                                 <div className={clsx(
                                     "p-5 rounded-3xl text-sm font-medium leading-relaxed shadow-sm",
                                     msg.type === 'user' 
-                                        ? "bg-black text-white rounded-tr-none" 
-                                        : "bg-white text-gray-800 border border-gray-50 rounded-tl-none"
+                                        ? "bg-black dark:bg-zinc-800 text-white rounded-tr-none" 
+                                        : "bg-white dark:bg-zinc-900 text-gray-800 dark:text-zinc-100 border border-gray-50 dark:border-zinc-800 rounded-tl-none"
                                 )}>
                                     {msg.text}
                                 </div>
@@ -223,10 +223,10 @@ export default function Index({ financialData, initialMessage }) {
                                 <div className="w-8 h-8 rounded-xl bg-red-500 flex items-center justify-center">
                                     <Bot className="w-4 h-4 text-white" />
                                 </div>
-                                <div className="p-5 bg-white border border-gray-50 rounded-3xl rounded-tl-none flex gap-1">
-                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
-                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
-                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
+                                <div className="p-5 bg-white dark:bg-zinc-900 border border-gray-50 dark:border-zinc-800 rounded-3xl rounded-tl-none flex gap-1 transition-colors">
+                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1.5 h-1.5 bg-gray-300 dark:bg-zinc-600 rounded-full" />
+                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-gray-300 dark:bg-zinc-600 rounded-full" />
+                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-gray-300 dark:bg-zinc-600 rounded-full" />
                                 </div>
                             </motion.div>
                         )}
@@ -238,13 +238,13 @@ export default function Index({ financialData, initialMessage }) {
                 <div className="mt-6 px-4">
                     <form onSubmit={handleSend} className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-orange-500 rounded-[32px] blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200" />
-                        <div className="relative bg-white border border-gray-100 rounded-[28px] p-2 flex items-center gap-2 shadow-xl shadow-black/5">
+                        <div className="relative bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-[28px] p-2 flex items-center gap-2 shadow-xl shadow-black/5 transition-colors">
                             <button 
                                 type="button"
                                 onClick={toggleRecording}
                                 className={clsx(
                                     "p-3 rounded-2xl transition-colors",
-                                    isRecording ? "bg-red-500 text-white" : "bg-gray-50 text-gray-400 hover:text-red-500"
+                                    isRecording ? "bg-red-500 text-white" : "bg-gray-50 dark:bg-zinc-800 text-gray-400 hover:text-red-500"
                                 )}
                             >
                                 <Mic className="w-5 h-5" />
@@ -254,12 +254,12 @@ export default function Index({ financialData, initialMessage }) {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder={isRecording ? t('voice_coach.listening_placeholder') : t('voice_coach.placeholder')}
-                                className="flex-1 border-none focus:ring-0 text-sm font-bold placeholder:text-gray-300 bg-transparent"
+                                className="flex-1 border-none focus:ring-0 text-sm font-bold placeholder:text-gray-300 dark:placeholder:text-zinc-600 bg-transparent dark:text-zinc-100"
                             />
                             <button 
                                 type="submit"
                                 disabled={!input.trim() || isThinking}
-                                className="bg-black text-white p-3 rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100"
+                                className="bg-black dark:bg-white text-white dark:text-black p-3 rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100"
                             >
                                 <Send className="w-5 h-5" />
                             </button>

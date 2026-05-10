@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, router } from '@inertiajs/react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import ThemeToggle from '@/Components/ThemeToggle';
 
 export default function Header({ user }) {
     const { t } = useTranslation();
@@ -32,12 +33,13 @@ export default function Header({ user }) {
     return (
         <header className="sticky top-0 z-40 bg-transparent/50 backdrop-blur-sm px-10 py-6 flex items-center justify-between">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">{t('header.overview')}</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-zinc-100">{t('header.overview')}</h1>
             </div>
 
             <div className="flex items-center gap-8">
-                <div className="flex items-center gap-6 text-gray-500">
-                    <button className="hover:text-black transition-colors">
+                <div className="flex items-center gap-6 text-gray-500 dark:text-zinc-400">
+                    <ThemeToggle />
+                    <button className="hover:text-black dark:hover:text-white transition-colors">
                         <Search className="w-5 h-5" />
                     </button>
 
@@ -45,13 +47,13 @@ export default function Header({ user }) {
                         <button
                             onClick={() => setShowNotifications(!showNotifications)}
                             className={clsx(
-                                "relative hover:text-black transition-colors p-2 rounded-xl",
-                                showNotifications && "bg-gray-100 text-black"
+                                "relative hover:text-black dark:hover:text-white transition-colors p-2 rounded-xl",
+                                showNotifications && "bg-gray-100 dark:bg-zinc-800 text-black dark:text-white"
                             )}
                         >
                             <Bell className="w-5 h-5" />
                             {user.unread_notifications_count > 0 && (
-                                <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-black flex items-center justify-center rounded-full border-2 border-white">
+                                <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-black flex items-center justify-center rounded-full border-2 border-white dark:border-zinc-900">
                                     {user.unread_notifications_count}
                                 </span>
                             )}
@@ -63,11 +65,11 @@ export default function Header({ user }) {
                                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute right-0 mt-4 w-96 bg-white rounded-[32px] shadow-2xl border border-gray-50 overflow-hidden"
+                                    className="absolute right-0 mt-4 w-96 bg-white dark:bg-zinc-900 rounded-[32px] shadow-2xl border border-gray-50 dark:border-zinc-800 overflow-hidden"
                                 >
-                                    <div className="p-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                                    <div className="p-6 border-b border-gray-50 dark:border-zinc-800 flex justify-between items-center bg-gray-50/50 dark:bg-zinc-800/50">
                                         <div>
-                                            <h3 className="font-black text-sm text-gray-900">{t('header.notifications')}</h3>
+                                            <h3 className="font-black text-sm text-gray-900 dark:text-white">{t('header.notifications')}</h3>
                                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">
                                                 {user.unread_notifications_count} {t('header.new_alerts')}
                                             </p>
@@ -75,7 +77,7 @@ export default function Header({ user }) {
                                         {user.unread_notifications_count > 0 && (
                                             <button
                                                 onClick={markAllRead}
-                                                className="text-[10px] font-black text-purple-600 hover:text-purple-700 uppercase tracking-widest"
+                                                className="text-[10px] font-black text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 uppercase tracking-widest"
                                             >
                                                 {t('header.mark_all_read')}
                                             </button>
@@ -89,21 +91,21 @@ export default function Header({ user }) {
                                                     key={notif.id}
                                                     onClick={() => !notif.read_at && markAsRead(notif.id)}
                                                     className={clsx(
-                                                        "p-6 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors cursor-pointer flex gap-4",
-                                                        !notif.read_at && "bg-purple-50/30"
+                                                        "p-6 border-b border-gray-50 dark:border-zinc-800 last:border-0 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer flex gap-4",
+                                                        !notif.read_at && "bg-purple-50/30 dark:bg-purple-900/10"
                                                     )}
                                                 >
                                                     <div className={clsx(
                                                         "w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0",
-                                                        notif.data.type === 'success' ? "bg-green-100 text-green-600" :
-                                                            notif.data.type === 'alert' ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"
+                                                        notif.data.type === 'success' ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400" :
+                                                            notif.data.type === 'alert' ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400" : "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
                                                     )}>
                                                         {notif.data.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> :
                                                             notif.data.type === 'alert' ? <AlertCircle className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <p className="text-xs font-bold text-gray-900 mb-1">{notif.data.title}</p>
-                                                        <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">{notif.data.message}</p>
+                                                        <p className="text-xs font-bold text-gray-900 dark:text-white mb-1">{notif.data.title}</p>
+                                                        <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">{notif.data.message}</p>
                                                         <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-2">
                                                             {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                         </p>
@@ -115,10 +117,10 @@ export default function Header({ user }) {
                                             ))
                                         ) : (
                                             <div className="py-12 px-6 text-center">
-                                                <div className="bg-gray-50 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                                    <Bell className="w-6 h-6 text-gray-300" />
+                                                <div className="bg-gray-50 dark:bg-zinc-800 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-colors">
+                                                    <Bell className="w-6 h-6 text-gray-300 dark:text-zinc-600" />
                                                 </div>
-                                                <p className="text-sm font-bold text-gray-900">{t('header.all_caught_up')}</p>
+                                                <p className="text-sm font-bold text-gray-900 dark:text-white">{t('header.all_caught_up')}</p>
                                                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{t('header.no_new_notifications')}</p>
                                             </div>
                                         )}
@@ -126,7 +128,7 @@ export default function Header({ user }) {
 
                                     <Link
                                         href="#"
-                                        className="p-4 bg-gray-50 text-center block text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors"
+                                        className="p-4 bg-gray-50 dark:bg-zinc-800 text-center block text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black dark:hover:text-white transition-colors"
                                     >
                                         {t('header.view_all')}
                                     </Link>
@@ -137,11 +139,11 @@ export default function Header({ user }) {
                 </div>
 
                 <div className="p-[1px] rounded-2xl bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500">
-                    <div className="bg-white rounded-[15px] px-6 py-2.5 flex items-center gap-3">
+                    <div className="bg-white dark:bg-zinc-900 rounded-[15px] px-6 py-2.5 flex items-center gap-3 transition-colors">
                         <div className="flex flex-col">
                             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">{t('header.my_balance')}</span>
                             <div className="flex items-center gap-2">
-                                <span className="text-lg font-black text-gray-900 leading-none">
+                                <span className="text-lg font-black text-gray-900 dark:text-white leading-none">
                                     ${parseFloat(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                 </span>
                                 <span className="text-[10px] font-bold text-gray-400">USD</span>

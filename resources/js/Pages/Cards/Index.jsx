@@ -65,12 +65,12 @@ export default function Index({ cards, totalCardBalance, recentTransactions }) {
                 {/* Header */}
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                     <div>
-                        <h2 className="text-3xl font-black text-gray-900">{t('cards.title')}</h2>
-                        <p className="text-sm text-gray-500 mt-1">{t('cards.total_combined')} <span className="text-black font-black">${totalCardBalance.toLocaleString()}</span></p>
+                        <h2 className="text-3xl font-black text-gray-900 dark:text-zinc-100">{t('cards.title')}</h2>
+                        <p className="text-sm text-gray-500 mt-1">{t('cards.total_combined')} <span className="text-gray-900 dark:text-white font-black">${totalCardBalance.toLocaleString()}</span></p>
                     </div>
                     <Link 
                         href={route('cards.request')}
-                        className="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm flex items-center gap-2 hover:scale-105 transition-transform shadow-xl shadow-black/10"
+                        className="bg-black dark:bg-white text-white dark:text-black px-8 py-3 rounded-2xl font-black text-sm flex items-center gap-2 hover:scale-105 transition-transform shadow-xl shadow-black/10"
                     >
                         <Plus className="w-5 h-5" /> {t('cards.request_new')}
                     </Link>
@@ -86,16 +86,16 @@ export default function Index({ cards, totalCardBalance, recentTransactions }) {
                                     <div className="flex gap-2">
                                         <button 
                                             onClick={() => setShowDetails(!showDetails)}
-                                            className="flex-1 bg-white border border-gray-100 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
+                                            className="flex-1 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
                                         >
-                                            {showDetails ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                            {showDetails ? t('cards.hide_details') : t('cards.show_details')}
+                                            {showDetails ? <EyeOff className="w-4 h-4 text-gray-900 dark:text-zinc-100" /> : <Eye className="w-4 h-4 text-gray-900 dark:text-zinc-100" />}
+                                            <span className="text-gray-900 dark:text-zinc-100">{showDetails ? t('cards.hide_details') : t('cards.show_details')}</span>
                                         </button>
-                                        <button className="flex-1 bg-white border border-gray-100 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
-                                            <Lock className="w-4 h-4" /> {t('cards.freeze')}
+                                        <button className="flex-1 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                                            <Lock className="w-4 h-4 text-gray-900 dark:text-zinc-100" /> <span className="text-gray-900 dark:text-zinc-100">{t('cards.freeze')}</span>
                                         </button>
-                                        <button className="bg-white border border-gray-100 p-3 rounded-2xl hover:bg-gray-50 transition-colors">
-                                            <Settings className="w-4 h-4 text-gray-400" />
+                                        <button className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                                            <Settings className="w-4 h-4 text-gray-400 dark:text-zinc-400" />
                                         </button>
                                     </div>
                                 </div>
@@ -103,26 +103,26 @@ export default function Index({ cards, totalCardBalance, recentTransactions }) {
                         </div>
 
                         {/* Card Benefits */}
-                        <div className="bg-[#FAF9F6] p-10 rounded-[40px] border border-gray-100">
-                            <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-3">
+                        <div className="bg-[#FAF9F6] dark:bg-zinc-900/50 p-10 rounded-[40px] border border-gray-100 dark:border-zinc-800 transition-colors">
+                            <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100 mb-6 flex items-center gap-3">
                                 <Crown className="w-6 h-6 text-yellow-500" /> {t('cards.exclusive_benefits')}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="flex gap-4">
-                                    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm flex-shrink-0">
-                                        <Shield className="w-6 h-6 text-purple-600" />
+                                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm flex-shrink-0">
+                                        <Shield className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-sm text-gray-900">{t('cards.purchase_protection')}</h4>
+                                        <h4 className="font-bold text-sm text-gray-900 dark:text-zinc-100">{t('cards.purchase_protection')}</h4>
                                         <p className="text-xs text-gray-400 mt-1 leading-relaxed">{t('cards.purchase_desc')}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4">
-                                    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm flex-shrink-0">
-                                        <TrendingUp className="w-6 h-6 text-green-600" />
+                                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm flex-shrink-0">
+                                        <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-sm text-gray-900">{t('cards.cashback_rewards')}</h4>
+                                        <h4 className="font-bold text-sm text-gray-900 dark:text-zinc-100">{t('cards.cashback_rewards')}</h4>
                                         <p className="text-xs text-gray-400 mt-1 leading-relaxed">{t('cards.cashback_desc')}</p>
                                     </div>
                                 </div>
@@ -132,27 +132,27 @@ export default function Index({ cards, totalCardBalance, recentTransactions }) {
 
                     {/* Sidebar Analytics */}
                     <div className="space-y-8">
-                        <div className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50">
-                            <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center justify-between">
+                        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 transition-colors">
+                            <h3 className="text-lg font-black text-gray-900 dark:text-zinc-100 mb-6 flex items-center justify-between">
                                 {t('dashboard.recent_activity')}
-                                <button className="p-2 hover:bg-gray-50 rounded-xl transition-colors"><ChevronRight className="w-4 h-4 text-gray-400" /></button>
+                                <button className="p-2 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-xl transition-colors"><ChevronRight className="w-4 h-4 text-gray-400 dark:text-zinc-500" /></button>
                             </h3>
                             <div className="space-y-6">
                                 {recentTransactions.map((tx) => (
                                     <div key={tx.id} className="flex items-center justify-between group cursor-pointer">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-900 font-bold text-xs group-hover:bg-black group-hover:text-white transition-colors">
+                                            <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-zinc-800 flex items-center justify-center text-gray-900 dark:text-zinc-100 font-bold text-xs group-hover:bg-black group-hover:text-white dark:group-hover:bg-zinc-700 transition-colors">
                                                 {tx.description.charAt(0)}
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-900">{tx.description}</p>
+                                                <p className="text-xs font-bold text-gray-900 dark:text-zinc-100">{tx.description}</p>
                                                 <p className="text-[9px] font-black text-gray-400 uppercase">{new Date(tx.date).toLocaleDateString()}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
                                             <p className={clsx(
                                                 "text-xs font-black",
-                                                tx.type === 'receive' ? "text-green-500" : "text-gray-900"
+                                                tx.type === 'receive' ? "text-green-500" : "text-gray-900 dark:text-zinc-100"
                                             )}>
                                                 {tx.type === 'receive' ? '+' : '-'}${parseFloat(tx.amount).toLocaleString()}
                                             </p>

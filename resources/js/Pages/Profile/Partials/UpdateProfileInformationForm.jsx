@@ -31,11 +31,11 @@ export default function UpdateProfileInformation({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-medium text-gray-900 dark:text-zinc-100">
                     {t('profile.info_title')}
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-sm text-gray-600 dark:text-zinc-400">
                     {t('profile.info_desc')}
                 </p>
             </header>
@@ -93,7 +93,7 @@ export default function UpdateProfileInformation({
 
                     <textarea
                         id="address"
-                        className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        className="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-md shadow-sm transition-colors"
                         value={data.address}
                         onChange={(e) => setData('address', e.target.value)}
                         required
@@ -104,13 +104,13 @@ export default function UpdateProfileInformation({
 
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
-                        <p className="mt-2 text-sm text-gray-800">
+                        <p className="mt-2 text-sm text-gray-800 dark:text-zinc-300">
                             {t('profile.unverified_email')}
                             <Link
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                className="rounded-md text-sm text-gray-600 dark:text-zinc-400 underline hover:text-gray-900 dark:hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                             >
                                 {t('profile.resend_verification')}
                             </Link>
@@ -134,7 +134,7 @@ export default function UpdateProfileInformation({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-zinc-400">
                             {t('profile.saved')}
                         </p>
                     </Transition>

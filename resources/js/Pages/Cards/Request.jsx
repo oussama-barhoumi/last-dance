@@ -70,10 +70,10 @@ export default function Request({ user }) {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-12">
                     <div>
-                        <Link href={route('cards.index')} className="flex items-center gap-2 text-gray-400 hover:text-black transition-colors mb-4 font-bold text-sm">
+                        <Link href={route('cards.index')} className="flex items-center gap-2 text-gray-400 hover:text-black dark:hover:text-white transition-colors mb-4 font-bold text-sm">
                             <ArrowLeft className="w-4 h-4" /> {t('cards.request.back_to_cards')}
                         </Link>
-                        <h2 className="text-3xl font-black text-gray-900">{t('cards.request.title')}</h2>
+                        <h2 className="text-3xl font-black text-gray-900 dark:text-zinc-100">{t('cards.request.title')}</h2>
                         <p className="text-sm text-gray-500 mt-1">{t('cards.request.desc')}</p>
                     </div>
                     <div className="hidden md:flex items-center gap-4">
@@ -140,7 +140,7 @@ export default function Request({ user }) {
                                     <User className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">{t('cards.request.step_personal')}</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('cards.request.step_personal')}</h3>
                                     <p className="text-xs text-gray-400">{t('cards.request.step_personal_desc')}</p>
                                 </div>
                             </div>
@@ -176,7 +176,7 @@ export default function Request({ user }) {
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('dashboard.common.back') || 'Back'}</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('dashboard.common.back') || 'Back'}</button>
                                 <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">{t('cards.request.continue_to_docs') || 'Continue to Documents'}</button>
                             </div>
                         </motion.div>
@@ -195,7 +195,7 @@ export default function Request({ user }) {
                                     <ShieldCheck className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">{t('cards.request.step_documents')}</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('cards.request.step_documents')}</h3>
                                     <p className="text-xs text-gray-400">{t('cards.request.step_documents_desc')}</p>
                                 </div>
                             </div>
@@ -203,8 +203,8 @@ export default function Request({ user }) {
                             <div className="space-y-8">
                                 {/* Always required: Signature */}
                                 <div className="p-8 border-2 border-dashed border-gray-100 rounded-[32px] flex flex-col items-center justify-center text-center group hover:border-black transition-colors cursor-pointer">
-                                    <PenTool className="w-10 h-10 text-gray-300 group-hover:text-black mb-4 transition-colors" />
-                                    <h4 className="font-bold text-sm text-gray-900">{t('cards.request.digital_signature')}</h4>
+                                    <PenTool className="w-10 h-10 text-gray-300 group-hover:text-black dark:group-hover:text-white mb-4 transition-colors" />
+                                    <h4 className="font-bold text-sm text-gray-900 dark:text-zinc-100">{t('cards.request.digital_signature')}</h4>
                                     <p className="text-[10px] text-gray-400 mt-1 uppercase font-black tracking-widest">{t('cards.request.signature_desc')}</p>
                                 </div>
 
@@ -216,7 +216,7 @@ export default function Request({ user }) {
                                                 <FileText className="w-5 h-5 text-purple-600" />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('cards.request.proof_income')}</h4>
+                                                <h4 className="text-xs font-black text-gray-900 dark:text-zinc-100 uppercase tracking-widest">{t('cards.request.proof_income')}</h4>
                                                 <p className="text-[9px] text-gray-400">{t('cards.request.proof_income_desc')}</p>
                                             </div>
                                             <Upload className="w-5 h-5 text-gray-300" />
@@ -226,7 +226,7 @@ export default function Request({ user }) {
                                                 <Landmark className="w-5 h-5 text-blue-600" />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('cards.request.bank_statement')}</h4>
+                                                <h4 className="text-xs font-black text-gray-900 dark:text-zinc-100 uppercase tracking-widest">{t('cards.request.bank_statement')}</h4>
                                                 <p className="text-[9px] text-gray-400">{t('cards.request.bank_statement_desc')}</p>
                                             </div>
                                             <Upload className="w-5 h-5 text-gray-300" />
@@ -243,7 +243,7 @@ export default function Request({ user }) {
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('dashboard.common.back') || 'Back'}</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('dashboard.common.back') || 'Back'}</button>
                                 <button className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-xl shadow-black/10">{t('cards.request.submit_request')}</button>
                             </div>
                         </motion.div>

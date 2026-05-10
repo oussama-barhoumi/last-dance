@@ -1,0 +1,72 @@
+resources\js\Components\Dashboard\BalanceHistoryChart.jsx:24: <button className="w-10 h-10 border-2 border-dashed border-gray-200 dark:border-zinc-700 rounded-xl flex items-center justify-center hover:border-black dark:hover:border-white transition-colors text-gray-400 hover:text-black dark:hover:text-white">
+resources\js\Components\Dashboard\RecentTransactions.jsx:71: <button className="text-gray-400 hover:text-black dark:hover:text-white transition-colors bg-gray-50 dark:bg-zinc-800 p-2 rounded-xl">
+resources\js\Components\Dashboard\SpendingManagement.jsx:40: <button className="text-gray-300 hover:text-black transition-colors bg-white/50 p-2 rounded-xl">
+resources\js\Components\Dashboard\StatsCard.jsx:13: isDark ? "border-zinc-800 bg-zinc-900 text-white" : "border-gray-50 bg-white text-gray-900"
+resources\js\Components\Dashboard\StatsCard.jsx:16: <Icon className={clsx("w-8 h-8", isDark ? "text-zinc-100" : "text-gray-900")} />
+resources\js\Components\NavLink.jsx:15: ? 'border-indigo-400 text-gray-900 focus:border-indigo-700'
+resources\js\Components\ResponsiveNavLink.jsx:15: : 'border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 focus:border-gray-300 focus:bg-gray-50 focus:text-gray-800'
+resources\js\Layouts\DashboardLayout\Header.jsx:42: <button className="hover:text-black dark:hover:text-white transition-colors">
+resources\js\Layouts\DashboardLayout\Header.jsx:50: "relative hover:text-black dark:hover:text-white transition-colors p-2 rounded-xl",
+resources\js\Layouts\DashboardLayout\Header.jsx:131: className="p-4 bg-gray-50 dark:bg-zinc-800 text-center block text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black dark:hover:text-white transition-colors"
+resources\js\Layouts\DashboardLayout\Sidebar.jsx:61: <Anchor className="w-6 h-6 text-black" />
+resources\js\Layouts\DashboardLayout\Sidebar.jsx:172: className="w-full text-sm font-bold text-gray-400 hover:text-black dark:hover:text-white transition-colors"
+resources\js\Layouts\GuestLayout.jsx:34: <Anchor className="w-8 h-8 text-blue-950" />
+resources\js\Pages\Accounts\Index.jsx:105: <button className={clsx("text-[10px] font-black uppercase tracking-widest flex items-center gap-1", isMain ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black")}>
+resources\js\Pages\Admin\KYC\Index.jsx:23: header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">KYC Review Panel</h2>}
+resources\js\Pages\Admin\KYC\Index.jsx:57: <p className="text-[10px] uppercase tracking-widest font-bold mt-1 text-black/40">{doc.type.replace('_', ' ')}</p>
+resources\js\Pages\AiAssistant\Index.jsx:269: <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors">{t('ai_assistant.legal_disclosure')}</button>
+resources\js\Pages\AiAssistant\Index.jsx:270: <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors">{t('ai_assistant.terms_of_use')}</button>
+resources\js\Pages\Auth\Login.jsx:97: className="w-full bg-white text-black font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors disabled:opacity-50"
+resources\js\Pages\Auth\Register.jsx:147: className="w-full bg-white text-black font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors disabled:opacity-50"
+resources\js\Pages\Auth\VerifyEmail.jsx:42: className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+resources\js\Pages\Cards\Index.jsx:69: <p className="text-sm text-gray-500 mt-1">{t('cards.total_combined')} <span className="text-black font-black">${totalCardBalance.toLocaleString()}</span></p>
+resources\js\Pages\Cards\Request.jsx:73: <Link href={route('cards.index')} className="flex items-center gap-2 text-gray-400 hover:text-black transition-colors mb-4 font-bold text-sm">
+resources\js\Pages\Cards\Request.jsx:179: <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('dashboard.common.back') || 'Back'}</button>
+resources\js\Pages\Cards\Request.jsx:206: <PenTool className="w-10 h-10 text-gray-300 group-hover:text-black mb-4 transition-colors" />
+resources\js\Pages\Cards\Request.jsx:246: <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('dashboard.common.back') || 'Back'}</button>
+resources\js\Pages\Investments\Index.jsx:360: <button className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-3 rounded-2xl text-gray-400 hover:text-black dark:hover:text-zinc-100 transition-colors shadow-sm">
+resources\js\Pages\Investments\Index.jsx:506: <button className="text-sm font-bold text-gray-400 hover:text-black transition-colors">{t('investments.view_all_assets')}</button>
+resources\js\Pages\KYC\Index.jsx:37: header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Identity Verification</h2>}
+resources\js\Pages\Loans\Apply.jsx:76: files[name] ? "bg-green-500 text-white" : "bg-white text-gray-400 group-hover:text-black"
+resources\js\Pages\Loans\Apply.jsx:106: <Upload className="w-5 h-5 text-gray-300 group-hover:text-black transition-colors" />
+resources\js\Pages\Loans\Apply.jsx:119: <Link href={route('loans.index')} className="flex items-center gap-2 text-gray-400 hover:text-black transition-colors mb-4 font-bold text-sm">
+resources\js\Pages\Loans\Apply.jsx:203: <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('loans.apply.back')}</button>
+resources\js\Pages\Loans\Apply.jsx:251: <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('loans.apply.back')}</button>
+resources\js\Pages\Loans\Apply.jsx:298: <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">{t('loans.apply.back')}</button>
+resources\js\Pages\Loans\Index.jsx:37: <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-colors">
+resources\js\Pages\Loans\Index.jsx:149: <button className="text-sm font-bold text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.view_all')}</button>
+resources\js\Pages\Loans\Index.jsx:234: <Link href={route('loans.apply')} className="text-xs text-black font-black uppercase mt-2 hover:underline">{t('loans.apply_first')}</Link>
+resources\js\Pages\Loans\Index.jsx:495: className="text-[10px] font-black uppercase text-gray-400 hover:text-black dark:hover:text-white transition-colors"
+resources\js\Pages\Reports\Index.jsx:48: <button className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-black dark:hover:text-white">Yearly</button>
+resources\js\Pages\Reports\Index.jsx:50: <button className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-3 rounded-2xl text-gray-400 hover:text-black dark:hover:text-white transition-colors shadow-sm">
+resources\js\Pages\Reports\Index.jsx:222: <button className="p-2 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black rounded-xl transition-all">
+resources\js\Pages\Settings\Index.jsx:94: : "text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800"
+resources\js\Pages\Settings\Index.jsx:101: : "text-gray-400 group-hover:text-black dark:group-hover:text-white"
+resources\js\Pages\Settings\Index.jsx:319: <button className="w-full py-4 rounded-2xl border-2 border-dashed border-gray-100 dark:border-zinc-700 text-gray-400 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-sm">
+resources\js\Pages\SuperAdmin\Dashboard.jsx:15: <div className="bg-white text-black p-10 flex items-center justify-between group border border-white">
+resources\js\Pages\SuperAdmin\Dashboard.jsx:44: className="fixed top-24 right-10 z-[100] bg-white text-black p-6 border border-white shadow-2xl flex items-center gap-4"
+resources\js\Pages\SuperAdmin\Dashboard.jsx:78: <button className="bg-white text-black p-3"><Plus className="w-4 h-4" /></button>
+resources\js\Pages\SuperAdmin\Dashboard.jsx:144: tx.category === 'Transfer' ? "bg-white text-black border-white" : "text-gray-500 border-white/10"
+resources\js\Pages\SuperAdmin\Dashboard.jsx:177: <div className="w-12 h-12 bg-white text-black flex items-center justify-center font-black">
+resources\js\Pages\SuperAdmin\Dashboard.jsx:198: <button className="p-3 border border-white/10 hover:bg-white hover:text-black transition-all">
+resources\js\Pages\SuperAdmin\Dashboard.jsx:213: <div className="bg-white text-black p-8 border border-white space-y-8">
+resources\js\Pages\SuperAdmin\Dashboard.jsx:269: <div className="w-8 h-8 flex items-center justify-center bg-white text-black text-[8px] font-black">+4</div>
+resources\js\Pages\SuperAdmin\Dashboard.jsx:271: <button className="bg-white p-3 text-black"><Zap className="w-4 h-4" /></button>
+resources\js\Pages\Transactions\Index.jsx:140: <span className="text-xs font-black text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors">#{tx.transaction_id}</span>
+resources\js\Pages\Transactions\Index.jsx:171: <button className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-colors text-gray-400 hover:text-black dark:hover:text-white">
+resources\js\Pages\Transactions\Index.jsx:322: className="w-full text-sm font-bold text-gray-400 mt-4 hover:text-black dark:hover:text-white transition-colors"
+resources\js\Pages\Welcome.backup.jsx:72: className="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] md:row-span-3 lg:p-10 lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+resources\js\Pages\Welcome.backup.jsx:151: className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+resources\js\Pages\Welcome.backup.jsx:198: className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+resources\js\Pages\Welcome.backup.jsx:270: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white dark:focus-visible:ring-[#FF2D20]"
+resources\js\Pages\Welcome.backup.jsx:277: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:284: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:291: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:298: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:307: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:314: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:321: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:328: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:335: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.backup.jsx:342: className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
+resources\js\Pages\Welcome.jsx:161: <Link href={route('login')} className="bg-gray-100 text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition-colors">

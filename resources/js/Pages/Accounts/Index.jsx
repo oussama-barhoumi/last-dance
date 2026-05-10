@@ -29,7 +29,7 @@ const AccountCard = ({ account }) => {
             whileHover={{ y: -5 }}
             className={clsx(
                 "p-8 rounded-[40px] shadow-sm border transition-all relative overflow-hidden group",
-                isMain ? "bg-[#0A0A0A] text-white border-black" : "bg-white text-gray-900 border-gray-50"
+                isMain ? "bg-[#0A0A0A] text-white border-black" : "bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 border-gray-50 dark:border-zinc-800"
             )}
         >
             {isMain && (
@@ -102,7 +102,7 @@ const AccountCard = ({ account }) => {
                         </>
                     )}
                 </div>
-                <button className={clsx("text-[10px] font-black uppercase tracking-widest flex items-center gap-1", isMain ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black")}>
+                <button className={clsx("text-[10px] font-black uppercase tracking-widest flex items-center gap-1 transition-colors", isMain ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black dark:hover:text-white")}>
                     {t('accounts.manage')} <ExternalLink className="w-3 h-3" />
                 </button>
             </div>
@@ -130,15 +130,15 @@ export default function Index({ accounts, totalBalance, recentTransactions }) {
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div>
-                        <h2 className="text-3xl font-black text-gray-900">{t('accounts.title')}</h2>
+                        <h2 className="text-3xl font-black text-gray-900 dark:text-zinc-100">{t('accounts.title')}</h2>
                         <p className="text-sm text-gray-500 mt-1">{t('accounts.desc')}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-[32px] shadow-sm border border-gray-50 flex items-center gap-6">
+                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-[32px] shadow-sm border border-gray-50 dark:border-zinc-800 flex items-center gap-6 transition-colors">
                         <div>
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('accounts.total_balance')}</p>
-                            <p className="text-2xl font-black text-gray-900">${totalBalance.toLocaleString()}</p>
+                            <p className="text-2xl font-black text-gray-900 dark:text-zinc-100">${totalBalance.toLocaleString()}</p>
                         </div>
-                        <button className="bg-black text-white p-4 rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-black/10">
+                        <button className="bg-black dark:bg-white text-white dark:text-black p-4 rounded-2xl hover:scale-105 transition-transform shadow-lg shadow-black/10">
                             <Plus className="w-6 h-6" />
                         </button>
                     </div>
@@ -158,13 +158,13 @@ export default function Index({ accounts, totalBalance, recentTransactions }) {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Recent Activity */}
-                    <div className="lg:col-span-2 bg-white p-10 rounded-[40px] shadow-sm border border-gray-50">
+                    <div className="lg:col-span-2 bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 transition-colors">
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-3">
-                                <div className="bg-gray-100 p-3 rounded-2xl">
-                                    <History className="w-5 h-5 text-gray-900" />
+                                <div className="bg-gray-100 dark:bg-zinc-800 p-3 rounded-2xl transition-colors">
+                                    <History className="w-5 h-5 text-gray-900 dark:text-zinc-100" />
                                 </div>
-                                <h3 className="text-xl font-black text-gray-900">{t('dashboard.recent_activity')}</h3>
+                                <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('dashboard.recent_activity')}</h3>
                             </div>
                             <button className="text-xs font-bold text-purple-500 hover:underline">{t('accounts.view_all_history')}</button>
                         </div>
@@ -174,7 +174,7 @@ export default function Index({ accounts, totalBalance, recentTransactions }) {
                                 <div className="py-12 text-center text-gray-400 font-medium">{t('accounts.no_activity')}</div>
                             ) : (
                                 recentTransactions.map((tx) => (
-                                    <div key={tx.id} className="flex items-center justify-between p-4 rounded-3xl hover:bg-gray-50 transition-colors group">
+                                    <div key={tx.id} className="flex items-center justify-between p-4 rounded-3xl hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors group">
                                         <div className="flex items-center gap-4">
                                             <div className={clsx(
                                                 "w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110",
@@ -183,14 +183,14 @@ export default function Index({ accounts, totalBalance, recentTransactions }) {
                                                 {tx.type === 'receive' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-bold text-gray-900">{tx.description}</p>
+                                                <p className="text-sm font-bold text-gray-900 dark:text-zinc-100">{tx.description}</p>
                                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{new Date(tx.date).toLocaleDateString()}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
                                             <p className={clsx(
                                                 "text-sm font-black",
-                                                tx.type === 'receive' ? "text-green-500" : "text-gray-900"
+                                                tx.type === 'receive' ? "text-green-500" : "text-gray-900 dark:text-zinc-100"
                                             )}>
                                                 {tx.type === 'receive' ? '+' : '-'}${parseFloat(tx.amount).toLocaleString()}
                                             </p>
@@ -204,22 +204,22 @@ export default function Index({ accounts, totalBalance, recentTransactions }) {
 
                     {/* Security & Linked Accounts */}
                     <div className="space-y-8">
-                        <div className="bg-[#FAF9F6] p-8 rounded-[40px] border border-gray-100">
-                            <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
+                        <div className="bg-[#FAF9F6] dark:bg-zinc-900/50 p-8 rounded-[40px] border border-gray-100 dark:border-zinc-800 transition-colors">
+                            <h3 className="text-lg font-black text-gray-900 dark:text-zinc-100 mb-6 flex items-center gap-3">
                                 <Lock className="w-5 h-5" /> {t('accounts.security_status')}
                             </h3>
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-gray-50">
+                                <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-50 dark:border-zinc-800 transition-colors">
                                     <CheckCircle2 className="w-5 h-5 text-green-500" />
                                     <div>
-                                        <p className="text-xs font-bold text-gray-900">{t('accounts.two_fa_enabled')}</p>
+                                        <p className="text-xs font-bold text-gray-900 dark:text-zinc-100">{t('accounts.two_fa_enabled')}</p>
                                         <p className="text-[10px] text-gray-400">{t('accounts.two_fa_desc')}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-gray-50 opacity-60">
+                                <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-50 dark:border-zinc-800 opacity-60 transition-colors">
                                     <AlertCircle className="w-5 h-5 text-gray-400" />
                                     <div>
-                                        <p className="text-xs font-bold text-gray-900">{t('accounts.identity_verified')}</p>
+                                        <p className="text-xs font-bold text-gray-900 dark:text-zinc-100">{t('accounts.identity_verified')}</p>
                                         <p className="text-[10px] text-gray-400">{t('accounts.identity_desc')}</p>
                                     </div>
                                 </div>

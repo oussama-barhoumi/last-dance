@@ -129,9 +129,9 @@ export default function Sidebar() {
                 </div>
 
                 <div className="flex gap-4 px-2">
-                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">{t('sidebar.privacy')}</Link>
-                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">{t('sidebar.license')}</Link>
-                    <Link href="#" className="text-[10px] text-gray-600 hover:text-gray-400">{t('sidebar.api')}</Link>
+                    <Link href="#" className="text-[10px] text-gray-400 hover:text-white transition-colors uppercase tracking-widest font-black">{t('sidebar.privacy')}</Link>
+                    <Link href="#" className="text-[10px] text-gray-400 hover:text-white transition-colors uppercase tracking-widest font-black">{t('sidebar.license')}</Link>
+                    <Link href="#" className="text-[10px] text-gray-400 hover:text-white transition-colors uppercase tracking-widest font-black">{t('sidebar.api')}</Link>
                 </div>
             </div>
 
@@ -150,13 +150,13 @@ export default function Sidebar() {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-sm rounded-[32px] shadow-2xl relative overflow-hidden p-8 text-center"
+                            className="bg-white dark:bg-zinc-900 w-full max-w-sm rounded-[32px] shadow-2xl relative overflow-hidden p-8 text-center border border-transparent dark:border-zinc-800"
                         >
-                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <LogOut className="w-8 h-8 text-red-600" />
+                            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <LogOut className="w-8 h-8 text-red-600 dark:text-red-400" />
                             </div>
-                            <h3 className="text-xl font-black text-gray-900 mb-2">{t('sidebar.confirm_logout')}</h3>
-                            <p className="text-sm text-gray-500 mb-8">{t('sidebar.logout_message')}</p>
+                            <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">{t('sidebar.confirm_logout')}</h3>
+                            <p className="text-sm text-gray-500 dark:text-zinc-400 mb-8">{t('sidebar.logout_message')}</p>
 
                             <div className="flex flex-col gap-3">
                                 <Link
@@ -169,7 +169,7 @@ export default function Sidebar() {
                                 </Link>
                                 <button
                                     onClick={() => setShowLogoutModal(false)}
-                                    className="w-full text-sm font-bold text-gray-400 hover:text-black transition-colors"
+                                    className="w-full text-sm font-bold text-gray-400 hover:text-black dark:hover:text-white transition-colors"
                                 >
                                     {t('sidebar.cancel')}
                                 </button>
