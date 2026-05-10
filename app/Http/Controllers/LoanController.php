@@ -2,77 +2,92 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Loan;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class LoanController extends Controller
 {
     public function index()
     {
+        $loans = auth()->user()->loans()->orderBy('created_at', 'desc')->get();
+        
+        $stats = [
+            'total_balance' => $loans->sum('remaining_amount'),
+            'monthly_payment' => $loans->where('status', 'approved')->sum('monthly_payment'),
+            'remaining_amount' => $loans->sum('remaining_amount'),
+            'loan_score' => 785
+        ];
+
+        $recentTransactions = Transaction::forUser(auth()->id())
+            ->where('category', 'Loan Payment')
+            ->orderBy('transaction_date', 'desc')
+            ->take(5)
+            ->get()
+            ->map(fn ($tx) => [
+                'id' => $tx->id,
+                'description' => $tx->description,
+                'amount' => $tx->amount,
+                'type' => $tx->type,
+                'date' => $tx->transaction_date->diffForHumans(),
+                'status' => $tx->status
+            ]);
+
         return Inertia::render('Loans/Index', [
-            'stats' => [
-                'total_balance' => 125400,
-                'monthly_payment' => 2450,
-                'remaining_amount' => 84200,
-                'loan_score' => 785
-            ],
-            'activeLoans' => [
-                [
-                    'id' => 1,
-                    'type' => 'Home Loan',
-                    'provider' => 'HarborBank',
-                    'amount' => 250000,
-                    'rate' => '3.5%',
-                    'duration' => '20 Years',
-                    'monthly' => 1450,
-                    'status' => 'approved',
-                    'progress' => 45
-                ],
-                [
-                    'id' => 2,
-                    'type' => 'Car Loan',
-                    'provider' => 'AutoFinance',
-                    'amount' => 35000,
-                    'rate' => '5.2%',
-                    'duration' => '5 Years',
-                    'monthly' => 650,
-                    'status' => 'pending',
-                    'progress' => 12
-                ],
-                [
-                    'id' => 3,
-                    'type' => 'Business Loan',
-                    'provider' => 'HarborBank',
-                    'amount' => 50000,
-                    'rate' => '4.8%',
-                    'duration' => '10 Years',
-                    'monthly' => 550,
-                    'status' => 'approved',
-                    'progress' => 68
-                ],
-                [
-                    'id' => 4,
-                    'type' => 'Student Loan',
-                    'provider' => 'EduFund',
-                    'amount' => 15000,
-                    'rate' => '2.1%',
-                    'duration' => '15 Years',
-                    'monthly' => 120,
-                    'status' => 'overdue',
-                    'progress' => 85
-                ]
-            ],
-            'recentTransactions' => [
-                ['id' => 1, 'description' => 'Home Loan EMI', 'amount' => 1450, 'type' => 'debit', 'date' => '2 hours ago', 'status' => 'completed'],
-                ['id' => 2, 'description' => 'Business Loan Refund', 'amount' => 250, 'type' => 'credit', 'date' => '1 day ago', 'status' => 'completed'],
-                ['id' => 3, 'description' => 'Car Loan Penalty', 'amount' => 45, 'type' => 'debit', 'date' => '3 days ago', 'status' => 'failed'],
-            ]
+            'stats' => $stats,
+            'activeLoans' => $loans,
+            'recentTransactions' => $recentTransactions
         ]);
     }
+
     public function apply()
     {
         return Inertia::render('Loans/Apply', [
             'user' => auth()->user()
         ]);
+    }
+
+    public function payEmi(Request $request)
+    {
+        $request->validate([
+            'loan_id' => 'required|exists:loans,id',
+            'amount' => 'required|numeric|min:1',
+        ]);
+
+        $user = auth()->user();
+        $loan = Loan::findOrFail($request->loan_id);
+
+        if ($user->balance < $request->amount) {
+            return back()->withErrors(['amount' => 'Insufficient balance.']);
+        }
+
+        DB::transaction(function () use ($user, $loan, $request) {
+            // Deduct from balance
+            $user->decrement('balance', $request->amount);
+
+            // Deduct from loan remaining amount
+            $loan->decrement('remaining_amount', $request->amount);
+            
+            // Update progress
+            $newProgress = round((($loan->amount - $loan->remaining_amount) / $loan->amount) * 100);
+            $loan->update(['progress' => $newProgress]);
+
+            // Create Transaction
+            Transaction::create([
+                'user_id' => $user->id,
+                'transaction_id' => 'TXN-' . strtoupper(uniqid()),
+                'description' => 'EMI Payment - ' . $loan->type,
+                'type' => 'debit',
+                'amount' => $request->amount,
+                'status' => 'completed',
+                'payment_method' => 'bank_transfer',
+                'transaction_date' => now(),
+                'category' => 'Loan Payment',
+            ]);
+        });
+
+        return back()->with('success', 'EMI Paid successfully!');
     }
 }

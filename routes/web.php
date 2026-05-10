@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     // Loan Routes
     Route::get('/loans', [\App\Http\Controllers\LoanController::class, 'index'])->name('loans.index');
     Route::get('/loans/apply', [\App\Http\Controllers\LoanController::class, 'apply'])->name('loans.apply');
+    Route::post('/loans/pay-emi', [\App\Http\Controllers\LoanController::class, 'payEmi'])->name('loans.pay');
 
     // Settings Routes
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');

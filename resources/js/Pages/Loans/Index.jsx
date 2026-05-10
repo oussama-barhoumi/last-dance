@@ -1,14 +1,16 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { 
     TrendingUp, DollarSign, Calendar, Target, 
     ArrowUpRight, ArrowDownLeft, ChevronRight, 
     Search, Bell, Calculator, Upload, FileText, 
     CreditCard, PieChart, ShieldCheck, Zap,
     Home, Car, Briefcase, GraduationCap, Info,
-    CheckCircle2, Clock, AlertCircle, Sparkles
+    CheckCircle2, Clock, AlertCircle, Sparkles,
+    X, Plus
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import { 
     LineChart, Line, AreaChart, Area, 
     XAxis, YAxis, CartesianGrid, Tooltip, 
@@ -48,6 +50,22 @@ const StatCard = ({ icon: Icon, title, value, trend, trendUp }) => (
 );
 
 export default function Index({ auth, stats, activeLoans, recentTransactions }) {
+    const [showPayModal, setShowPayModal] = useState(false);
+    const { data, setData, post, processing, errors, reset } = useForm({
+        loan_id: '',
+        amount: '',
+    });
+
+    const handlePaySubmit = (e) => {
+        e.preventDefault();
+        post(route('loans.pay'), {
+            onSuccess: () => {
+                setShowPayModal(false);
+                reset();
+            },
+        });
+    };
+
     return (
         <DashboardLayout>
             <Head title="Loan Management - HarborBank" />
@@ -81,9 +99,9 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
 
                 {/* Statistics Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <StatCard icon={DollarSign} title="Total Loan Balance" value={`$${stats.total_balance.toLocaleString()}`} trend="12.5%" trendUp={false} />
-                    <StatCard icon={Calendar} title="Monthly Payment" value={`$${stats.monthly_payment.toLocaleString()}`} trend="2.4%" trendUp={true} />
-                    <StatCard icon={Target} title="Remaining Amount" value={`$${stats.remaining_amount.toLocaleString()}`} trend="8.1%" trendUp={false} />
+                    <StatCard icon={DollarSign} title="Total Loan Balance" value={`$${Number(stats.total_balance).toLocaleString()}`} trend="12.5%" trendUp={false} />
+                    <StatCard icon={Calendar} title="Monthly Payment" value={`$${Number(stats.monthly_payment).toLocaleString()}`} trend="2.4%" trendUp={true} />
+                    <StatCard icon={Target} title="Remaining Amount" value={`$${Number(stats.remaining_amount).toLocaleString()}`} trend="8.1%" trendUp={false} />
                     <StatCard icon={TrendingUp} title="Loan Score" value={stats.loan_score} trend="+15" trendUp={true} />
                 </div>
 
@@ -102,10 +120,10 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                         <tr className="bg-gray-50/50">
                                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Loan Type</th>
                                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Provider</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Amount</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Remaining</th>
                                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
                                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Progress</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Action</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -121,7 +139,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                         </div>
                                                         <div>
                                                             <p className="text-sm font-bold text-gray-900">{loan.type}</p>
-                                                            <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{loan.rate} Rate</p>
+                                                            <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{loan.interest_rate}% Rate</p>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -130,8 +148,8 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                 </td>
                                                 <td className="px-8 py-6">
                                                     <div>
-                                                        <p className="text-sm font-black text-gray-900">${loan.amount.toLocaleString()}</p>
-                                                        <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">${loan.monthly}/mo</p>
+                                                        <p className="text-sm font-black text-gray-900">${Number(loan.remaining_amount).toLocaleString()}</p>
+                                                        <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">Total: ${Number(loan.amount).toLocaleString()}</p>
                                                     </div>
                                                 </td>
                                                 <td className="px-8 py-6">
@@ -160,13 +178,30 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-8 py-6">
-                                                    <button className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
-                                                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                                                <td className="px-8 py-6 text-right">
+                                                    <button 
+                                                        onClick={() => {
+                                                            setData('loan_id', loan.id);
+                                                            setShowPayModal(true);
+                                                        }}
+                                                        className="text-[10px] font-black uppercase tracking-widest bg-gray-50 hover:bg-black hover:text-white px-4 py-2 rounded-xl transition-all"
+                                                    >
+                                                        Pay EMI
                                                     </button>
                                                 </td>
                                             </tr>
                                         ))}
+                                        {activeLoans.length === 0 && (
+                                            <tr>
+                                                <td colSpan="6" className="px-8 py-20 text-center">
+                                                    <div className="flex flex-col items-center">
+                                                        <Info className="w-8 h-8 text-gray-200 mb-4" />
+                                                        <p className="text-sm font-bold text-gray-400">No active loans found.</p>
+                                                        <Link href={route('loans.apply')} className="text-xs text-black font-black uppercase mt-2 hover:underline">Apply for your first loan</Link>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -241,7 +276,10 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                 >
                                     <Plus className="w-5 h-5" /> Apply for Loan
                                 </Link>
-                                <button className="w-full bg-zinc-800 text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors">
+                                <button 
+                                    onClick={() => setShowPayModal(true)}
+                                    className="w-full bg-zinc-800 text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+                                >
                                     <CreditCard className="w-5 h-5" /> Pay EMI
                                 </button>
                                 <div className="grid grid-cols-2 gap-4">
@@ -319,23 +357,138 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                 "text-xs font-black",
                                                 tx.type === 'credit' ? "text-green-500" : "text-gray-900"
                                             )}>
-                                                {tx.type === 'credit' ? '+' : '-'}${tx.amount.toLocaleString()}
+                                                {tx.type === 'credit' ? '+' : '-'}${Number(tx.amount).toLocaleString()}
                                             </p>
                                             <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{tx.status}</p>
                                         </div>
                                     </div>
                                 ))}
+                                {recentTransactions.length === 0 && (
+                                    <p className="text-xs text-center text-gray-400 py-4">No recent activity.</p>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Pay EMI Modal */}
+            <AnimatePresence>
+                {showPayModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowPayModal(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="bg-white w-full max-w-lg rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                        >
+                            <div className="p-8 border-b border-gray-50 flex justify-between items-center">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-black p-2 rounded-xl text-white">
+                                        <CreditCard className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="text-xl font-black text-gray-900">Pay EMI</h3>
+                                </div>
+                                <button onClick={() => setShowPayModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                    <X className="w-5 h-5 text-gray-400" />
+                                </button>
+                            </div>
+
+                            <form onSubmit={handlePaySubmit} className="p-8 space-y-8">
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Select Loan</label>
+                                        <div className="grid grid-cols-1 gap-3">
+                                            {activeLoans.map((loan) => (
+                                                <div 
+                                                    key={loan.id}
+                                                    onClick={() => setData('loan_id', loan.id)}
+                                                    className={clsx(
+                                                        "p-4 rounded-2xl border-2 transition-all cursor-pointer flex justify-between items-center",
+                                                        data.loan_id === loan.id ? "border-black bg-gray-50" : "border-gray-100 hover:border-gray-200"
+                                                    )}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center">
+                                                            {loan.type === 'Home Loan' && <Home className="w-4 h-4 text-blue-600" />}
+                                                            {loan.type === 'Car Loan' && <Car className="w-4 h-4 text-orange-600" />}
+                                                            {loan.type === 'Business Loan' && <Briefcase className="w-4 h-4 text-purple-600" />}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs font-bold text-gray-900">{loan.type}</p>
+                                                            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">EMI: ${Number(loan.monthly_payment).toLocaleString()}</p>
+                                                        </div>
+                                                    </div>
+                                                    {data.loan_id === loan.id && <CheckCircle2 className="w-5 h-5 text-black" />}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {errors.loan_id && <p className="text-[10px] text-red-500 px-1">{errors.loan_id}</p>}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Payment Amount ($)</label>
+                                        <div className="relative">
+                                            <input 
+                                                type="number"
+                                                value={data.amount}
+                                                onChange={e => setData('amount', e.target.value)}
+                                                placeholder="0.00"
+                                                className="w-full bg-gray-50 border-none rounded-2xl p-5 text-lg font-black text-gray-900 focus:ring-2 focus:ring-black transition-all"
+                                            />
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const loan = activeLoans.find(l => l.id === data.loan_id);
+                                                        if(loan) setData('amount', loan.monthly_payment);
+                                                    }}
+                                                    className="text-[10px] font-black uppercase text-gray-400 hover:text-black transition-colors"
+                                                >
+                                                    Full EMI
+                                                </button>
+                                                <div className="h-4 w-[1px] bg-gray-200" />
+                                                <span className="text-sm font-black text-gray-900">USD</span>
+                                            </div>
+                                        </div>
+                                        {errors.amount && <p className="text-[10px] text-red-500 px-1">{errors.amount}</p>}
+                                    </div>
+                                </div>
+
+                                <div className="bg-gray-50 p-6 rounded-3xl space-y-3">
+                                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                        <span>Current Balance</span>
+                                        <span className="text-gray-900">${auth.user.balance}</span>
+                                    </div>
+                                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                        <span>Processing Fee</span>
+                                        <span className="text-green-600">FREE</span>
+                                    </div>
+                                    <div className="pt-2 border-t border-gray-200 flex justify-between text-xs font-black uppercase tracking-widest">
+                                        <span className="text-gray-900">Total Payable</span>
+                                        <span className="text-gray-900">${data.amount || '0.00'}</span>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    type="submit" 
+                                    disabled={processing}
+                                    className="w-full bg-black text-white py-5 rounded-[20px] font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 disabled:opacity-50"
+                                >
+                                    {processing ? 'Processing Payment...' : 'Confirm EMI Payment'}
+                                </button>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </DashboardLayout>
     );
 }
-
-const Plus = ({ className }) => (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-    </svg>
-);
