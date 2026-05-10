@@ -52,6 +52,7 @@ const StatCard = ({ icon: Icon, title, value, trend, trendUp }) => (
 export default function Index({ auth, stats, activeLoans, recentTransactions }) {
     const [showPayModal, setShowPayModal] = useState(false);
     const [showCalcModal, setShowCalcModal] = useState(false);
+    const [showStatementModal, setShowStatementModal] = useState(false);
     
     // EMI Calculator State
     const [calcData, setCalcData] = useState({
@@ -304,7 +305,10 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                     <CreditCard className="w-5 h-5" /> Pay EMI
                                 </button>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <button className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors">
+                                    <button 
+                                        onClick={() => setShowStatementModal(true)}
+                                        className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors"
+                                    >
                                         <FileText className="w-5 h-5 text-gray-500" />
                                         <span className="text-[10px] font-bold">Statement</span>
                                     </button>
@@ -624,6 +628,124 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                         Apply for this Loan
                                     </Link>
                                 </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Loan Statement Modal */}
+            <AnimatePresence>
+                {showStatementModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowStatementModal(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="bg-white w-full max-w-3xl rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                        >
+                            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-black p-2 rounded-xl text-white">
+                                        <FileText className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black text-gray-900">Loan Statement</h3>
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Official Activity Record</p>
+                                    </div>
+                                </div>
+                                <button onClick={() => setShowStatementModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                    <X className="w-5 h-5 text-gray-400" />
+                                </button>
+                            </div>
+
+                            <div className="p-10 space-y-10 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                                {/* Statement Header */}
+                                <div className="flex justify-between items-start">
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center">
+                                                <Zap className="w-4 h-4 text-white fill-white" />
+                                            </div>
+                                            <span className="text-xl font-black tracking-tighter">HarborBank</span>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-sm font-black text-gray-900">{auth.user.name}</p>
+                                            <p className="text-[10px] text-gray-400 font-bold">Account: **** **** {auth.user.id}42</p>
+                                            <p className="text-[10px] text-gray-400 font-bold">Period: May 2026 - Present</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right space-y-4">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Outstanding</p>
+                                            <p className="text-2xl font-black text-gray-900">${Number(stats.total_balance).toLocaleString()}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Loans</p>
+                                            <p className="text-sm font-black text-gray-900">{activeLoans.length} Portfolio Items</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Transactions Table */}
+                                <div className="space-y-4">
+                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2">Transaction History</h4>
+                                    <div className="space-y-1">
+                                        {recentTransactions.map((tx) => (
+                                            <div key={tx.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-2xl transition-colors">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-900 font-bold text-xs">
+                                                        {tx.type === 'debit' ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-gray-900">{tx.description}</p>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-[9px] font-black text-gray-400 uppercase">{tx.date}</span>
+                                                            <span className="w-1 h-1 rounded-full bg-gray-200" />
+                                                            <span className="text-[9px] font-black text-gray-400 uppercase">TXID: {tx.id}1092</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-sm font-black text-gray-900">-${Number(tx.amount).toLocaleString()}</p>
+                                                    <p className="text-[8px] font-black text-green-600 uppercase tracking-widest">SUCCESS</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {recentTransactions.length === 0 && (
+                                            <div className="py-10 text-center space-y-2">
+                                                <Info className="w-6 h-6 text-gray-200 mx-auto" />
+                                                <p className="text-xs font-bold text-gray-400">No loan transactions found for this period.</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Footer Note */}
+                                <div className="p-6 bg-gray-50 rounded-3xl space-y-2">
+                                    <p className="text-[9px] leading-relaxed text-gray-400 font-bold uppercase tracking-wide">
+                                        This statement is an official record of your loan activities at HarborBank. For any discrepancies, please contact our support team at support@harborbank.com within 30 days.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="p-8 bg-gray-50/50 flex gap-4">
+                                <button className="flex-1 bg-white text-black border border-gray-200 py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
+                                    <Upload className="w-4 h-4" /> Export CSV
+                                </button>
+                                <button 
+                                    onClick={() => window.print()}
+                                    className="flex-1 bg-black text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10"
+                                >
+                                    <FileText className="w-4 h-4" /> Download PDF
+                                </button>
                             </div>
                         </motion.div>
                     </div>
