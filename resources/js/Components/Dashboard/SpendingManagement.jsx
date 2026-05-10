@@ -1,24 +1,34 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Car, Home, Film, Utensils, Zap, Plus, MoreHorizontal, X, Wallet, Tag, Smartphone, Heart } from 'lucide-react';
+import { ShoppingBag, Car, Home, Film, Utensils, Zap, Plus, MoreHorizontal, X, Wallet, Tag, Smartphone, Heart, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import clsx from 'clsx';
 
-const BudgetItem = ({ icon: Icon, name, spent, budget, color }) => {
+const BudgetItem = ({ icon: Icon, name, spent, budget, color, onDelete }) => {
     const percentage = Math.min((spent / budget) * 100, 100);
     
     return (
         <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gray-50/50 p-6 rounded-[32px] border border-gray-50 group hover:bg-white hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-500"
+            layout
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+            className="bg-gray-50/50 p-6 rounded-[32px] border border-gray-50 group hover:bg-white hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-500 relative overflow-hidden"
         >
             <div className="flex justify-between items-start mb-6">
                 <div className={clsx("p-3 rounded-2xl text-white shadow-lg shadow-current/10", color)}>
                     <Icon className="w-5 h-5" />
                 </div>
-                <button className="text-gray-300 hover:text-black transition-colors">
-                    <MoreHorizontal className="w-4 h-4" />
-                </button>
+                <div className="flex gap-2">
+                    <button 
+                        onClick={onDelete}
+                        className="p-2 bg-red-50 text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </button>
+                    <button className="text-gray-300 hover:text-black transition-colors bg-white/50 p-2 rounded-xl">
+                        <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                </div>
             </div>
             
             <div className="space-y-4">
@@ -95,6 +105,10 @@ export default function SpendingManagement() {
         setNewActivity({ name: '', budget: '', category: 'Shopping' });
     };
 
+    const handleDelete = (index) => {
+        setBudgets(budgets.filter((_, i) => i !== index));
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex justify-between items-center">
@@ -111,9 +125,15 @@ export default function SpendingManagement() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {budgets.map((budget, idx) => (
-                    <BudgetItem key={idx} {...budget} />
-                ))}
+                <AnimatePresence mode="popLayout">
+                    {budgets.map((budget, idx) => (
+                        <BudgetItem 
+                            key={`${budget.name}-${idx}`} 
+                            {...budget} 
+                            onDelete={() => handleDelete(idx)}
+                        />
+                    ))}
+                </AnimatePresence>
             </div>
 
             <AnimatePresence>
