@@ -4,6 +4,7 @@ import BalanceHistoryChart from '@/Components/Dashboard/BalanceHistoryChart';
 import RecentTransactions from '@/Components/Dashboard/RecentTransactions';
 import QuickTransfer from '@/Components/Dashboard/QuickTransfer';
 import InvestmentList from '@/Components/Dashboard/InvestmentList';
+import SpendingManagement from '@/Components/Dashboard/SpendingManagement';
 import { Head } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Plus, X, QrCode, Scan, Camera, CheckCircle2, AlertCircle, ArrowRight, Info } from 'lucide-react';
@@ -112,11 +113,10 @@ export default function Dashboard({ auth }) {
                 {/* Row 2: Main Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     {/* Left: Balance History */}
-                    <motion.div variants={item} className="lg:col-span-2">
+                    <motion.div variants={item} className="lg:col-span-2 space-y-10">
                         <BalanceHistoryChart />
-                        <div className="mt-10">
-                            <InvestmentList />
-                        </div>
+                        <SpendingManagement />
+                        <InvestmentList />
                     </motion.div>
 
                     {/* Right: Side Panel */}
