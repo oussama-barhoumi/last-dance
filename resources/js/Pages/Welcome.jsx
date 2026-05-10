@@ -44,8 +44,6 @@ export default function Welcome({ auth }) {
                     </div>
 
                     <div className="hidden lg:flex items-center gap-8 text-sm font-medium">
-                        <Link href="#" className="hover:text-gray-300 transition-colors">Personal Banking</Link>
-                        <Link href="#" className="hover:text-gray-300 transition-colors">Business Banking</Link>
                         <div className="flex items-center gap-8">
                             <Link
                                 href={route('dashboard')}
@@ -56,7 +54,6 @@ export default function Welcome({ auth }) {
 
                             {auth.user ? (
                                 <div className="flex items-center gap-4">
-                                    <span className="text-white font-bold">{auth.user.name}</span>
                                     <Link
                                         href={route('logout')}
                                         method="post"
@@ -100,14 +97,11 @@ export default function Welcome({ auth }) {
                         animate={{ opacity: 1, height: 'auto' }}
                         className="lg:hidden mt-4 pb-4 flex flex-col gap-4 border-t border-white/10 pt-4"
                     >
-                        <Link href="#" className="px-2 py-1">Personal Banking</Link>
-                        <Link href="#" className="px-2 py-1">Business Banking</Link>
                         <Link href="#" className="px-2 py-1">Support & Resources</Link>
                         <Link href={route('dashboard')} className="px-2 py-1 text-center font-bold text-gray-400 hover:text-white transition-colors">Dashboard</Link>
 
                         {auth.user ? (
                             <div className="flex flex-col gap-4 border-t border-white/5 pt-4">
-                                <span className="px-2 py-1 text-white text-center font-bold">{auth.user.name}</span>
                                 <Link
                                     href={route('logout')}
                                     method="post"
