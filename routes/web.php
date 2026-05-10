@@ -60,6 +60,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/loans', [\App\Http\Controllers\LoanController::class, 'store'])->name('loans.store');
     Route::post('/loans/pay-emi', [\App\Http\Controllers\LoanController::class, 'payEmi'])->name('loans.pay');
 
+    // Notification Routes
+    Route::post('/notifications/{id}/mark-as-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-as-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+
     // Settings Routes
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
     
