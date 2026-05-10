@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { 
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
     TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown, Camera,
-    ShieldAlert, ShieldCheck, User as UserIcon, FileText, Landmark
+    ShieldAlert, ShieldCheck, User as UserIcon, FileText, Landmark,
+    Users, Activity, Lock, Cpu, Download
 } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -75,39 +76,51 @@ export default function Sidebar() {
                 <nav className="space-y-0">
                     {/* Role-Specific Dashboards */}
                     {role === 'super_admin' && (
-                        <NavItem 
-                            icon={ShieldAlert} 
-                            label="Super Terminal" 
-                            active={route().current('super-admin.dashboard')} 
-                            href={route('super-admin.dashboard')} 
-                            badge="ROOT" 
-                            badgeColor="bg-red-600 border-red-600"
-                        />
+                        <>
+                            <div className="px-6 mt-4 mb-2">
+                                <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Root Control</span>
+                            </div>
+                            <NavItem icon={ShieldAlert} label="Manage Admins" href="#" />
+                            <NavItem icon={Users} label="Manage Users" href={route('super-admin.dashboard')} active={route().current('super-admin.dashboard')} />
+                            <NavItem icon={BarChart} label="Bank Analytics" href={route('super-admin.dashboard')} />
+                            <NavItem icon={Activity} label="Tx Monitoring" href={route('super-admin.dashboard')} />
+                            <NavItem icon={Lock} label="Freeze Accounts" href={route('super-admin.dashboard')} />
+                            <NavItem icon={Landmark} label="Approve Loans" href={route('admin.dashboard')} />
+                            <NavItem icon={Settings} label="System Settings" href={route('settings.index')} />
+                            <NavItem icon={ShieldAlert} label="Fraud Detection" href="#" badge="ALERT" badgeColor="bg-red-600 border-red-600" />
+                            <NavItem icon={FileText} label="Logs & Alerts" href="#" />
+                            <NavItem icon={Cpu} label="AI Monitoring" href="#" badge="BETA" badgeColor="bg-white text-black" />
+                            <NavItem icon={Download} label="Reports & Exports" href="#" />
+                        </>
                     )}
                     
-                    {(role === 'admin' || role === 'super_admin') && (
-                        <NavItem 
-                            icon={ShieldCheck} 
-                            label="Admin Console" 
-                            active={route().current('admin.dashboard')} 
-                            href={route('admin.dashboard')} 
-                            badge="OPS" 
-                            badgeColor="bg-white text-black"
-                        />
+                    {role === 'admin' && (
+                        <>
+                            <div className="px-6 mt-4 mb-2">
+                                <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Ops Console</span>
+                            </div>
+                            <NavItem 
+                                icon={ShieldCheck} 
+                                label="Admin Console" 
+                                active={route().current('admin.dashboard')} 
+                                href={route('admin.dashboard')} 
+                            />
+                            <NavItem icon={Users} label="Manage Users" href="#" />
+                            <NavItem icon={Landmark} label="Loan Requests" href={route('admin.dashboard')} />
+                            <NavItem icon={FileText} label="KYC Audit" href={route('admin.kyc.index')} active={route().current('admin.kyc.index')} />
+                        </>
                     )}
-
-                    {/* Standard User Link (Home) */}
-                    <NavItem 
-                        icon={LayoutDashboard} 
-                        label="User Dashboard" 
-                        active={route().current('user.dashboard')} 
-                        href={route('user.dashboard')} 
-                    />
 
                     <div className="px-6 mt-8 mb-4">
                         <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Core Services</span>
                     </div>
 
+                    <NavItem 
+                        icon={LayoutDashboard} 
+                        label="User Dashboard" 
+                        active={route().current('dashboard')} 
+                        href={route('dashboard')} 
+                    />
                     <NavItem icon={ArrowLeftRight} label="Transactions" active={route().current('transactions.index')} href={route('transactions.index')} />
                     <NavItem icon={CreditCard} label="Cards" active={route().current('cards.index')} href={route('cards.index')} />
                     <NavItem icon={Wallet} label="Investment" active={route().current('investments.index')} href={route('investments.index')} />

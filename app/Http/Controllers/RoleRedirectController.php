@@ -11,10 +11,19 @@ class RoleRedirectController extends Controller
     {
         $role = $request->user()->role;
 
-        return match ($role) {
-            'super_admin' => Redirect::route('super-admin.dashboard'),
-            'admin'       => Redirect::route('admin.dashboard'),
-            default       => Redirect::route('dashboard'),
-        };
+        if ($role === 'super_admin') {
+            return Redirect::route('super-admin.dashboard');
+        }
+
+        if ($role === 'admin') {
+            return Redirect::route('admin.dashboard');
+        }
+
+        // Standard User: Render directly to avoid redirect loops
+        return \Inertia\Inertia::render('Dashboard', [
+            'transactions' => $request->user()->transactions()->latest()->take(5)->get(),
+            'investments' => $request->user()->investments()->get(),
+            'budgets' => $request->user()->budgets()->get(),
+        ]);
     }
 }

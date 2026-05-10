@@ -16,17 +16,8 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Role-based redirection entry point
+    // Primary Entry Point: Role-based redirection or direct render
     Route::get('/dashboard', \App\Http\Controllers\RoleRedirectController::class)->name('dashboard');
-
-    // Standard User Routes
-    Route::get('/user/dashboard', function () {
-        return Inertia::render('Dashboard', [
-            'transactions' => auth()->user()->transactions()->latest()->take(5)->get(),
-            'investments' => auth()->user()->investments()->get(),
-            'budgets' => auth()->user()->budgets()->get(),
-        ]);
-    })->name('user.dashboard');
 
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -61,12 +52,52 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/transactions/send', [\App\Http\Controllers\TransactionController::class, 'sendMoney'])->name('transactions.send');
     Route::get('/transactions/export-csv', [\App\Http\Controllers\TransactionController::class, 'exportCsv'])->name('transactions.export-csv');
     Route::get('/transactions/download-statement', [\App\Http\Controllers\TransactionController::class, 'downloadStatement'])->name('transactions.download-statement');
+    Route::get('/transactions/payment-methods', [\App\Http\Controllers\TransactionController::class, 'paymentMethods'])->name('transactions.payment-methods');
+    Route::get('/transactions/recent-activity', [\App\Http\Controllers\TransactionController::class, 'recentActivity'])->name('transactions.recent-activity');
 
     Route::get('/accounts', [\App\Http\Controllers\AccountController::class, 'index'])->name('accounts.index');
+
     Route::get('/cards', [\App\Http\Controllers\CardController::class, 'index'])->name('cards.index');
+    Route::get('/cards/request', [\App\Http\Controllers\CardController::class, 'create'])->name('cards.request');
+
     Route::get('/investments', [\App\Http\Controllers\InvestmentController::class, 'index'])->name('investments.index');
+
     Route::get('/loans', [\App\Http\Controllers\LoanController::class, 'index'])->name('loans.index');
+    Route::get('/loans/apply', [\App\Http\Controllers\LoanController::class, 'apply'])->name('loans.apply');
+    Route::post('/loans', [\App\Http\Controllers\LoanController::class, 'store'])->name('loans.store');
+    Route::post('/loans/pay-emi', [\App\Http\Controllers\LoanController::class, 'payEmi'])->name('loans.pay');
+
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
+
+    // KYC Routes (User)
+    Route::get('/kyc', [\App\Http\Controllers\KycController::class, 'index'])->name('kyc.index');
+    Route::post('/kyc', [\App\Http\Controllers\KycController::class, 'store'])->name('kyc.store');
+
+    // Trading Routes
+    Route::get('/stocks/{symbol}', [\App\Http\Controllers\TradeController::class, 'getQuote'])->name('stocks.quote');
+    Route::post('/trade/buy', [\App\Http\Controllers\TradeController::class, 'buy'])->name('trade.buy');
+    Route::post('/trade/sell', [\App\Http\Controllers\TradeController::class, 'sell'])->name('trade.sell');
+
+    // AI & Voice Assistant Routes
+    Route::get('/ai-assistant', [\App\Http\Controllers\AiAssistantController::class, 'index'])->name('ai-assistant.index');
+    Route::get('/voice-coach', [\App\Http\Controllers\VoiceCoachController::class, 'index'])->name('voice-coach.index');
+    Route::post('/voice-coach/ask', [\App\Http\Controllers\VoiceCoachController::class, 'ask'])->name('voice-coach.ask');
+    Route::get('/voice-call', [\App\Http\Controllers\VoiceCallController::class, 'index'])->name('voice-call.index');
+    Route::post('/voice-call/process', [\App\Http\Controllers\VoiceCallController::class, 'process'])->name('voice-call.process');
+
+    // Budget Routes
+    Route::post('/budgets', [\App\Http\Controllers\BudgetController::class, 'store'])->name('budgets.store');
+    Route::post('/budgets/bulk', [\App\Http\Controllers\BudgetController::class, 'bulkStore'])->name('budgets.bulk-store');
+    Route::delete('/budgets/{budget}', [\App\Http\Controllers\BudgetController::class, 'destroy'])->name('budgets.destroy');
+
+    // Notification Routes
+    Route::post('/notifications/{id}/mark-as-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-as-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+
+    // Utility Routes
+    Route::get('/users/lookup', function (Request $request) {
+        return \App\Models\User::where('email', $request->email)->firstOrFail();
+    })->name('users.lookup');
 });
 
 require __DIR__ . '/auth.php';
