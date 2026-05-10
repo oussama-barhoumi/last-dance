@@ -51,6 +51,27 @@ const StatCard = ({ icon: Icon, title, value, trend, trendUp }) => (
 
 export default function Index({ auth, stats, activeLoans, recentTransactions }) {
     const [showPayModal, setShowPayModal] = useState(false);
+    const [showCalcModal, setShowCalcModal] = useState(false);
+    
+    // EMI Calculator State
+    const [calcData, setCalcData] = useState({
+        amount: 100000,
+        rate: 4.5,
+        duration: 24
+    });
+
+    const calculateEMI = () => {
+        const p = Number(calcData.amount);
+        const r = (Number(calcData.rate) / 12) / 100;
+        const n = Number(calcData.duration);
+        const emi = p * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+        return isFinite(emi) ? emi : 0;
+    };
+
+    const emi = calculateEMI();
+    const totalPayment = emi * calcData.duration;
+    const totalInterest = totalPayment - calcData.amount;
+
     const { data, setData, post, processing, errors, reset } = useForm({
         loan_id: '',
         amount: '',
@@ -287,7 +308,10 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                         <FileText className="w-5 h-5 text-gray-500" />
                                         <span className="text-[10px] font-bold">Statement</span>
                                     </button>
-                                    <button className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors">
+                                    <button 
+                                        onClick={() => setShowCalcModal(true)}
+                                        className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors"
+                                    >
                                         <Calculator className="w-5 h-5 text-gray-500" />
                                         <span className="text-[10px] font-bold">Calculator</span>
                                     </button>
@@ -485,6 +509,122 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                     {processing ? 'Processing Payment...' : 'Confirm EMI Payment'}
                                 </button>
                             </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Loan Calculator Modal */}
+            <AnimatePresence>
+                {showCalcModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowCalcModal(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                        >
+                            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-black p-2 rounded-xl text-white">
+                                        <Calculator className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="text-xl font-black text-gray-900">Loan Calculator</h3>
+                                </div>
+                                <button onClick={() => setShowCalcModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                    <X className="w-5 h-5 text-gray-400" />
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2">
+                                <div className="p-8 space-y-6 border-r border-gray-50">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Loan Amount ($)</label>
+                                        <input 
+                                            type="number"
+                                            value={calcData.amount}
+                                            onChange={e => setCalcData({...calcData, amount: e.target.value})}
+                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Interest Rate (%)</label>
+                                        <input 
+                                            type="number"
+                                            step="0.1"
+                                            value={calcData.rate}
+                                            onChange={e => setCalcData({...calcData, rate: e.target.value})}
+                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Duration (Months)</label>
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {[12, 24, 36, 60].map(m => (
+                                                <button 
+                                                    key={m}
+                                                    type="button"
+                                                    onClick={() => setCalcData({...calcData, duration: m})}
+                                                    className={clsx(
+                                                        "py-2 rounded-xl text-[10px] font-black transition-all",
+                                                        Number(calcData.duration) === m ? "bg-black text-white" : "bg-gray-50 text-gray-400 hover:bg-gray-100"
+                                                    )}
+                                                >
+                                                    {m/12}Y
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <input 
+                                            type="number"
+                                            value={calcData.duration}
+                                            onChange={e => setCalcData({...calcData, duration: e.target.value})}
+                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all mt-2"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="p-8 bg-gray-50/30 flex flex-col justify-center space-y-8">
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Estimated Monthly EMI</p>
+                                        <h4 className="text-4xl font-black text-gray-900">${emi.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h4>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-2 h-2 rounded-full bg-black" />
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Principal</span>
+                                            </div>
+                                            <span className="text-sm font-black text-gray-900">${Number(calcData.amount).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-2 h-2 rounded-full bg-gray-300" />
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Interest</span>
+                                            </div>
+                                            <span className="text-sm font-black text-gray-900">${totalInterest.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                        <div className="pt-4 border-t border-gray-200 flex justify-between items-center">
+                                            <span className="text-xs font-black uppercase tracking-widest">Total Payable</span>
+                                            <span className="text-lg font-black text-gray-900">${totalPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                    </div>
+
+                                    <Link 
+                                        href={route('loans.apply')}
+                                        className="w-full bg-black text-white py-4 rounded-2xl font-black text-sm text-center hover:scale-[1.02] active:scale-95 transition-all"
+                                    >
+                                        Apply for this Loan
+                                    </Link>
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
                 )}
