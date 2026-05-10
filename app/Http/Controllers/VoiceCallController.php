@@ -12,7 +12,10 @@ class VoiceCallController extends Controller
 {
     public function index()
     {
-        return Inertia::render('VoiceCall/Index');
+        $user = auth()->user();
+        return Inertia::render('VoiceCall/Index', [
+            'initialGreeting' => "Welcome to Atlas Bank, I'm your virtual assistant. How can I help you today, {$user->name}?"
+        ]);
     }
 
     public function process(Request $request)
@@ -21,55 +24,58 @@ class VoiceCallController extends Controller
         $user = auth()->user();
         $q = strtolower($request->text);
 
-        // Fetch user context for the AI
+        // Fetch user context
         $now = Carbon::now();
         $startOfMonth = $now->copy()->startOfMonth();
         $income = Transaction::where('user_id', $user->id)->where('type', 'credit')->whereBetween('transaction_date', [$startOfMonth, $now])->sum('amount');
         $spent = Transaction::where('user_id', $user->id)->where('type', 'debit')->whereBetween('transaction_date', [$startOfMonth, $now])->sum('amount');
         
-        if ($income <= 0) $income = 5000; // Mock base
+        if ($income <= 0) $income = 5000;
 
-        // Simple Rule-based conversational logic (Simulating GPT with specific financial persona)
-        $response = $this->generateCallResponse($q, $income, $spent, $user);
+        // Generate Protocol-based Response
+        $response = $this->generateAtlasResponse($q, $income, $spent, $user);
 
         return response()->json([
             'response' => $response
         ]);
     }
 
-    private function generateCallResponse($q, $income, $spent, $user)
+    private function generateAtlasResponse($q, $income, $spent, $user)
     {
-        if (str_contains($q, 'hello') || str_contains($q, 'hi') || str_contains($q, 'hey')) {
-            return "Hey {$user->name}! I'm ready to help with your finances. What's on your mind?";
+        // 1. Natural number formatting (e.g. "12 thousand")
+        $spentNatural = number_format($spent) . " dirhams";
+        
+        // 2. Initial Confirmation
+        $prefix = "Got it, let me check that for you. ";
+        
+        // 3. Core Logic
+        $body = "";
+        
+        if (str_contains($q, 'balance') || str_contains($q, 'how much')) {
+            $body = "Your current balance is " . number_format($user->balance) . " dirhams. You have spent " . $spentNatural . " this month.";
         }
-
-        if (str_contains($q, 'how much') || str_contains($q, 'spent') || str_contains($q, 'spending')) {
-            return "You've spent about $" . number_format($spent, 2) . " this month. That's about " . number_format(($spent/$income)*100) . "% of your income.";
-        }
-
-        if (str_contains($q, 'loan') || str_contains($q, 'credit')) {
+        elseif (str_contains($q, 'loan') || str_contains($q, 'credit') || str_contains($q, 'borrow')) {
             $dti = ($spent / $income) * 100;
             if ($dti > 40) {
-                return "Your monthly bills are a bit high right now. I'd wait on any new loans.";
+                $body = "Based on your current bills, I would not suggest borrowing more right now. I can transfer you to a credit specialist to discuss your options.";
+            } else {
+                $body = "You are in a strong position for a loan. You could comfortably manage a repayment of " . number_format($income * 0.1) . " dirhams per month.";
             }
-            return "You're in good shape for a loan! You could comfortably handle about $" . number_format($income * 0.1) . " a month.";
+        }
+        elseif (str_contains($q, 'invest') || str_contains($q, 'save')) {
+            $body = "Since you have some room in your budget, I recommend putting " . number_format($income * 0.2) . " dirhams into a savings plan. Would you like me to show you our current rates?";
+        }
+        elseif (str_contains($q, 'thank') || str_contains($q, 'bye') || str_contains($q, 'that is all')) {
+            return "Thank you for calling Atlas Bank. Have a great day!";
+        }
+        elseif (str_contains($q, 'problem') || str_contains($q, 'complaint') || str_contains($q, 'help')) {
+            return "I'll transfer you to one of our agents who can help you better. Please hold.";
+        }
+        else {
+            return "I'm sorry, could you repeat that please? I want to make sure I help you correctly.";
         }
 
-        if (str_contains($q, 'invest') || str_contains($q, 'save')) {
-            return "Since you've spent " . number_format(($spent/$income)*100) . "% of your income, I'd put the rest into a high-yield savings account or an Index Fund.";
-        }
-
-        if (str_contains($q, 'buy') || str_contains($q, 'should i')) {
-            if ($spent > $income * 0.7) {
-                return "Your spending is already quite high this month. I'd suggest skipping that for now.";
-            }
-            return "You've been disciplined lately. If it's something you really need, you can afford it.";
-        }
-
-        if (str_contains($q, 'bye') || str_contains($q, 'end')) {
-            return "Alright, take care! Call me anytime you need financial advice.";
-        }
-
-        return "That's interesting. Tell me more about your financial goals or ask me about your spending.";
+        // 4. Closing Protocol
+        return $prefix . $body . " Is there anything else I can help you with?";
     }
 }

@@ -9,7 +9,8 @@ import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import clsx from 'clsx';
 
-export default function Index() {
+// Fix for icon reference error and speech network issues
+export default function Index({ initialGreeting }) {
     const [status, setStatus] = useState('idle'); // idle, listening, thinking, speaking
     const [isMuted, setIsMuted] = useState(false);
     const [transcription, setTranscription] = useState('');
@@ -76,7 +77,7 @@ export default function Index() {
     const startCall = () => {
         setStatus('listening');
         recognitionRef.current?.start();
-        speak("Harbor A I Assistant is active. How can I help you today?");
+        speak(initialGreeting || "Welcome to Atlas Bank, I'm your virtual assistant. How can I help you today?");
     };
 
     const endCall = () => {

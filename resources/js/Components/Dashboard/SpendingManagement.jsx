@@ -1,5 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Car, Home, Film, Utensils, Zap, Plus, MoreHorizontal, X, Wallet, Tag, Smartphone, Heart, Trash2, Info, CheckCircle2 } from 'lucide-react';
+import { 
+    ShoppingBag, Car, Home, Film, Utensils, Zap, Plus, 
+    MoreHorizontal, X, Wallet, Tag, Smartphone, Heart, 
+    Trash2, Info, CheckCircle2, Sparkles 
+} from 'lucide-react';
 import { useState } from 'react';
 import { useForm, usePage, router } from '@inertiajs/react';
 import clsx from 'clsx';
@@ -78,6 +82,8 @@ const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
 export default function SpendingManagement() {
     const { budgets } = usePage().props;
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showAiPlanner, setShowAiPlanner] = useState(false);
+    const [salary, setSalary] = useState('');
     const [isAutoMatched, setIsAutoMatched] = useState(false);
     
     const { data, setData, post, processing, reset, errors } = useForm({
@@ -87,6 +93,27 @@ export default function SpendingManagement() {
         icon: 'ShoppingBag',
         color: 'bg-pink-500'
     });
+
+    const handleAiPlan = () => {
+        if (!salary || isNaN(salary)) return;
+        
+        const sal = parseFloat(salary);
+        const plan = [
+            { name: 'Housing & Utilities', amount: sal * 0.35, category: 'Home', icon: 'Home', color: 'bg-green-600' },
+            { name: 'Groceries & Dining', amount: sal * 0.15, category: 'Dining', icon: 'Utensils', color: 'bg-orange-500' },
+            { name: 'Shopping & Style', amount: sal * 0.10, category: 'Shopping', icon: 'ShoppingBag', color: 'bg-pink-500' },
+            { name: 'Savings & Growth', amount: sal * 0.20, category: 'Tech', icon: 'Smartphone', color: 'bg-gray-900' },
+            { name: 'Health & Wellness', amount: sal * 0.10, category: 'Health', icon: 'Heart', color: 'bg-red-500' },
+            { name: 'Fun & Entertainment', amount: sal * 0.10, category: 'Entertainment', icon: 'Film', color: 'bg-purple-500' },
+        ];
+
+        router.post(route('budgets.bulk-store'), { budgets: plan }, {
+            onSuccess: () => {
+                setShowAiPlanner(false);
+                setSalary('');
+            }
+        });
+    };
 
     const categories = [
         { name: 'Shopping', iconName: 'ShoppingBag', icon: ShoppingBag, color: 'bg-pink-500', keywords: ['shop', 'clothes', 'zara', 'amazon', 'mall', 'gift'] },
@@ -146,12 +173,20 @@ export default function SpendingManagement() {
                     <h3 className="text-2xl font-black text-gray-900">Pricing Management</h3>
                     <p className="text-sm text-gray-400 mt-1">Monitor your monthly activity budgets and spending limits.</p>
                 </div>
-                <button 
-                    onClick={() => setShowAddModal(true)}
-                    className="bg-black text-white p-3 rounded-2xl shadow-xl shadow-black/10 hover:scale-105 transition-transform"
-                >
-                    <Plus className="w-5 h-5" />
-                </button>
+                <div className="flex gap-3">
+                    <button 
+                        onClick={() => setShowAiPlanner(true)}
+                        className="bg-purple-600 text-white px-5 py-3 rounded-2xl shadow-xl shadow-purple-600/20 hover:scale-105 transition-all flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
+                    >
+                        <Sparkles className="w-4 h-4" /> AI Planner
+                    </button>
+                    <button 
+                        onClick={() => setShowAddModal(true)}
+                        className="bg-black text-white p-3 rounded-2xl shadow-xl shadow-black/10 hover:scale-105 transition-transform"
+                    >
+                        <Plus className="w-5 h-5" />
+                    </button>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -313,6 +348,89 @@ export default function SpendingManagement() {
                                     {processing ? 'Creating Activity...' : 'Create Budget Activity'}
                                 </button>
                             </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {showAiPlanner && (
+                    <div className="fixed inset-0 z-[1001] flex items-center justify-center p-4">
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowAiPlanner(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="bg-white w-full max-w-md rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                        >
+                            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-purple-50">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/20">
+                                        <Sparkles className="w-5 h-5 text-white" />
+                                    </div>
+                                    <h3 className="text-xl font-black text-gray-900">AI Budget Planner</h3>
+                                </div>
+                                <button onClick={() => setShowAiPlanner(false)} className="p-2 hover:bg-white rounded-full transition-colors">
+                                    <X className="w-5 h-5 text-gray-400" />
+                                </button>
+                            </div>
+
+                            <div className="p-8 space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Monthly Salary ($)</label>
+                                    <div className="relative">
+                                        <input 
+                                            type="number" 
+                                            value={salary}
+                                            onChange={e => setSalary(e.target.value)}
+                                            placeholder="Enter your monthly income..."
+                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-purple-500 transition-all pl-12"
+                                        />
+                                        <Wallet className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                                    </div>
+                                    <p className="text-[9px] text-gray-400 font-bold italic px-1">We will use this to calculate an optimal 50/30/20 plan.</p>
+                                </div>
+
+                                {salary > 0 && (
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="space-y-4"
+                                    >
+                                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Planned Allocation</p>
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between text-xs font-bold">
+                                                    <span className="text-gray-600">Needs (50%)</span>
+                                                    <span className="text-black">${(salary * 0.5).toLocaleString()}</span>
+                                                </div>
+                                                <div className="flex justify-between text-xs font-bold">
+                                                    <span className="text-gray-600">Wants (30%)</span>
+                                                    <span className="text-black">${(salary * 0.3).toLocaleString()}</span>
+                                                </div>
+                                                <div className="flex justify-between text-xs font-bold">
+                                                    <span className="text-gray-600">Savings (20%)</span>
+                                                    <span className="text-black text-green-600">${(salary * 0.2).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                <button 
+                                    onClick={handleAiPlan}
+                                    disabled={!salary || salary <= 0}
+                                    className="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-purple-600/20 mt-4 disabled:opacity-50"
+                                >
+                                    Generate & Apply Plan
+                                </button>
+                                <p className="text-[8px] text-gray-400 text-center font-black uppercase tracking-[0.2em]">Note: This will overwrite your current activity limits</p>
+                            </div>
                         </motion.div>
                     </div>
                 )}

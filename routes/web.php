@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
     
     // Budget Routes
     Route::post('/budgets', [\App\Http\Controllers\BudgetController::class, 'store'])->name('budgets.store');
+    Route::post('/budgets/bulk', [\App\Http\Controllers\BudgetController::class, 'bulkStore'])->name('budgets.bulk-store');
     Route::delete('/budgets/{budget}', [\App\Http\Controllers\BudgetController::class, 'destroy'])->name('budgets.destroy');
 
     // Utility Routes
