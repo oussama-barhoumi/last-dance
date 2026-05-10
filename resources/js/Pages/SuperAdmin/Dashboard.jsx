@@ -23,7 +23,7 @@ const AdminStatCard = ({ label, value, type, icon: Icon }) => (
     </div>
 );
 
-export default function SuperAdminDashboard({ recentUsers, stats, chartData, blockedUsers, flash }) {
+export default function SuperAdminDashboard({ recentUsers, recentTransactions, stats, chartData, blockedUsers, flash }) {
     const handleToggleBlock = (user) => {
         if (confirm(`INITIATE PROTOCOL: ${user.is_blocked ? 'RESTORE' : 'BLOCK'} ACCESS FOR ${user.name}?`)) {
             router.post(route('super-admin.users.toggle-block', user.id));
@@ -51,7 +51,7 @@ export default function SuperAdminDashboard({ recentUsers, stats, chartData, blo
 
             <div className="mt-8 grid grid-cols-1 lg:grid-cols-4 gap-10 font-mono uppercase tracking-tighter">
                 {/* Main Content Area (3 Columns) */}
-                <div className="lg:col-span-3 space-y-10">
+                <div className="lg:col-span-3 space-y-12">
                     
                     {/* 1. Header Overview Stats */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,7 +113,61 @@ export default function SuperAdminDashboard({ recentUsers, stats, chartData, blo
                         </div>
                     </div>
 
-                    {/* 3. Recent Activity (List) */}
+                    {/* 3. Global Audit Log (Direct Transfers) */}
+                    <div className="space-y-6">
+                        <h3 className="text-xl font-black tracking-tighter">GLOBAL AUDIT LOG (DIRECT TRANSFERS)</h3>
+                        <div className="overflow-x-auto border border-white/10 bg-white/5">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="border-b border-white/10 bg-black">
+                                        <th className="px-6 py-4 text-[9px] font-black text-gray-500 uppercase tracking-widest">Protocol Reference</th>
+                                        <th className="px-6 py-4 text-[9px] font-black text-gray-500 uppercase tracking-widest">Type</th>
+                                        <th className="px-6 py-4 text-[9px] font-black text-gray-500 uppercase tracking-widest">Amount</th>
+                                        <th className="px-6 py-4 text-[9px] font-black text-gray-500 uppercase tracking-widest">Status</th>
+                                        <th className="px-6 py-4 text-[9px] font-black text-gray-500 uppercase tracking-widest text-right">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {recentTransactions.map((tx) => (
+                                        <tr key={tx.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                                            <td className="px-6 py-4">
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-[10px] font-black text-white">{tx.reference || tx.transaction_id}</span>
+                                                    <span className="text-[8px] text-gray-500 font-bold uppercase tracking-widest">
+                                                        {tx.sender?.name || 'SYSTEM'} → {tx.receiver?.name || tx.user?.name}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={clsx(
+                                                    "px-2 py-0.5 text-[8px] font-black uppercase tracking-widest border",
+                                                    tx.category === 'Transfer' ? "bg-white text-black border-white" : "text-gray-500 border-white/10"
+                                                )}>
+                                                    {tx.category || tx.type}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className="text-[10px] font-black text-white">${Number(tx.amount).toLocaleString()}</span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-none shadow-[0_0_8px_#22c55e]" />
+                                                    <span className="text-[8px] font-black uppercase tracking-widest">Completed</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <span className="text-[9px] font-black text-gray-500 uppercase">
+                                                    {new Date(tx.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* 4. Recent Node Activity (List) */}
                     <div className="space-y-6">
                         <h3 className="text-xl font-black tracking-tighter">RECENT NODE REGISTRATION</h3>
                         <div className="space-y-4">

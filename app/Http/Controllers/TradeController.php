@@ -46,21 +46,18 @@ class TradeController extends Controller
             $user->decrement('balance', $totalCost);
 
             // Update or create investment
-            $investment = Investment::updateOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'symbol' => strtoupper($request->symbol),
-                    'type' => 'stock'
-                ],
-                [
-                    'company_name' => $request->company_name,
-                    'sector' => 'Technology', // Default or fetch from profile API
-                    'return_percentage' => 0,
-                ]
-            );
+            $investment = Investment::firstOrNew([
+                'user_id' => $user->id,
+                'symbol' => strtoupper($request->symbol),
+                'type' => 'stock'
+            ]);
 
-            $investment->increment('shares', $request->shares);
-            $investment->increment('value', $totalCost);
+            $investment->company_name = $request->company_name;
+            $investment->sector = $investment->sector ?? 'Technology';
+            $investment->return_percentage = $investment->return_percentage ?? 0;
+            $investment->shares = ($investment->shares ?? 0) + $request->shares;
+            $investment->value = ($investment->value ?? 0) + $totalCost;
+            $investment->save();
 
             // Create Transaction record
             Transaction::create([

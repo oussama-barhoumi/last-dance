@@ -33,6 +33,10 @@ class SuperAdminController extends Controller
 
         return Inertia::render('SuperAdmin/Dashboard', [
             'recentUsers' => $users,
+            'recentTransactions' => \App\Models\Transaction::with(['user', 'sender', 'receiver'])
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get(),
             'stats' => [
                 'total_users' => User::count(),
                 'blocked_users' => User::where('is_blocked', true)->count(),
