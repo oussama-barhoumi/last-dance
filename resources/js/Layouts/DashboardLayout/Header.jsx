@@ -38,9 +38,9 @@ export default function Header({ user }) {
                     <button className="hover:text-black transition-colors">
                         <Search className="w-5 h-5" />
                     </button>
-                    
+
                     <div className="relative" ref={dropdownRef}>
-                        <button 
+                        <button
                             onClick={() => setShowNotifications(!showNotifications)}
                             className={clsx(
                                 "relative hover:text-black transition-colors p-2 rounded-xl",
@@ -71,7 +71,7 @@ export default function Header({ user }) {
                                             </p>
                                         </div>
                                         {user.unread_notifications_count > 0 && (
-                                            <button 
+                                            <button
                                                 onClick={markAllRead}
                                                 className="text-[10px] font-black text-purple-600 hover:text-purple-700 uppercase tracking-widest"
                                             >
@@ -83,7 +83,7 @@ export default function Header({ user }) {
                                     <div className="max-h-[400px] overflow-y-auto">
                                         {user.notifications?.length > 0 ? (
                                             user.notifications.map((notif) => (
-                                                <div 
+                                                <div
                                                     key={notif.id}
                                                     onClick={() => !notif.read_at && markAsRead(notif.id)}
                                                     className={clsx(
@@ -93,11 +93,11 @@ export default function Header({ user }) {
                                                 >
                                                     <div className={clsx(
                                                         "w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0",
-                                                        notif.data.type === 'success' ? "bg-green-100 text-green-600" : 
-                                                        notif.data.type === 'alert' ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"
+                                                        notif.data.type === 'success' ? "bg-green-100 text-green-600" :
+                                                            notif.data.type === 'alert' ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"
                                                     )}>
-                                                        {notif.data.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : 
-                                                         notif.data.type === 'alert' ? <AlertCircle className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
+                                                        {notif.data.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> :
+                                                            notif.data.type === 'alert' ? <AlertCircle className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-xs font-bold text-gray-900 mb-1">{notif.data.title}</p>
@@ -122,7 +122,7 @@ export default function Header({ user }) {
                                         )}
                                     </div>
 
-                                    <Link 
+                                    <Link
                                         href="#"
                                         className="p-4 bg-gray-50 text-center block text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-black transition-colors"
                                     >

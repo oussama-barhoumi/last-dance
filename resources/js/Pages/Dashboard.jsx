@@ -5,17 +5,33 @@ import RecentTransactions from '@/Components/Dashboard/RecentTransactions';
 import QuickTransfer from '@/Components/Dashboard/QuickTransfer';
 import InvestmentList from '@/Components/Dashboard/InvestmentList';
 import SpendingManagement from '@/Components/Dashboard/SpendingManagement';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Plus, X, QrCode, Scan, Camera, CheckCircle2, AlertCircle, ArrowRight, Info } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 
 export default function Dashboard({ auth }) {
+    const { data, setData, post, processing, errors, reset, success } = useForm({
+        email: '',
+        amount: '',
+        description: 'Direct Transfer',
+    });
+
     const [showSendModal, setShowSendModal] = useState(false);
     const [activeTab, setActiveTab] = useState('transfer'); // 'transfer' or 'qr'
     const [isScanning, setIsScanning] = useState(false);
     const videoRef = useRef(null);
+
+    const handleSendMoney = (e) => {
+        e.preventDefault();
+        post(route('transactions.send'), {
+            onSuccess: () => {
+                setShowSendModal(false);
+                reset();
+            },
+        });
+    };
 
     const startScanner = async () => {
         setIsScanning(true);
@@ -189,11 +205,12 @@ export default function Dashboard({ auth }) {
                                         </div>
 
                                         {activeTab === 'transfer' ? (
-                                            <div className="space-y-6">
+                                            <form onSubmit={handleSendMoney} className="space-y-6">
                                                 <div className="space-y-2">
                                                     <div className="flex justify-between items-center px-1">
                                                         <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Recipient</label>
                                                         <button 
+                                                            type="button"
                                                             onClick={startScanner}
                                                             className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
                                                         >
@@ -203,9 +220,13 @@ export default function Dashboard({ auth }) {
                                                     </div>
                                                     <input 
                                                         type="text" 
-                                                        placeholder="Email, Phone or Username"
+                                                        value={data.email}
+                                                        onChange={e => setData('email', e.target.value)}
+                                                        placeholder="Email address"
                                                         className="w-full bg-zinc-900 border-none rounded-2xl p-4 text-white text-sm focus:ring-2 focus:ring-purple-600 transition-all"
+                                                        required
                                                     />
+                                                    {errors.email && <p className="text-red-500 text-[10px] mt-1 font-black uppercase tracking-widest">{errors.email}</p>}
                                                 </div>
 
                                                 <div className="space-y-2">
@@ -213,17 +234,26 @@ export default function Dashboard({ auth }) {
                                                     <div className="relative">
                                                         <input 
                                                             type="number" 
+                                                            value={data.amount}
+                                                            onChange={e => setData('amount', e.target.value)}
                                                             placeholder="0.00"
                                                             className="w-full bg-zinc-900 border-none rounded-2xl p-6 text-white text-2xl font-black focus:ring-2 focus:ring-purple-600 transition-all pr-20"
+                                                            required
+                                                            min="1"
                                                         />
                                                         <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-black text-zinc-500">USD</span>
                                                     </div>
+                                                    {errors.amount && <p className="text-red-500 text-[10px] mt-1 font-black uppercase tracking-widest">{errors.amount}</p>}
                                                 </div>
 
-                                                <button className="w-full bg-white text-black py-5 rounded-[20px] font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-white/5">
-                                                    Continue Transfer <ArrowRight className="w-4 h-4" />
+                                                <button 
+                                                    type="submit"
+                                                    disabled={processing}
+                                                    className="w-full bg-white text-black py-5 rounded-[20px] font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-white/5 disabled:opacity-50"
+                                                >
+                                                    {processing ? 'Processing...' : 'Continue Transfer'} <ArrowRight className="w-4 h-4" />
                                                 </button>
-                                            </div>
+                                            </form>
                                         ) : (
                                             <div className="space-y-8 flex flex-col items-center py-4">
                                                 <div className="bg-white p-6 rounded-[40px] shadow-[0_0_50px_rgba(168,85,247,0.15)] relative group overflow-hidden">

@@ -1,18 +1,17 @@
 import { Link, useForm, usePage } from '@inertiajs/react';
 import clsx from 'clsx';
-import { 
-    LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
+import {
+    LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart,
     TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown, Camera
 } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) => (
-    <Link 
-        href={href} 
-        className={`flex items-center justify-between px-6 py-3 transition-all group ${
-            active ? 'text-white border-l-4 border-purple-500 bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'
-        }`}
+    <Link
+        href={href}
+        className={`flex items-center justify-between px-6 py-3 transition-all group ${active ? 'text-white border-l-4 border-purple-500 bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
     >
         <div className="flex items-center gap-3">
             <Icon className={`w-5 h-5 ${active ? 'text-white' : 'text-gray-400 group-hover:text-white'}`} />
@@ -84,9 +83,9 @@ export default function Sidebar() {
             <div className="p-6 mt-auto">
                 <div className="bg-[#1F2937] rounded-full p-2 flex items-center justify-between mb-6">
                     <div className="relative group/avatar cursor-pointer" onClick={handleAvatarClick}>
-                        <img 
-                            src={auth.user.profile_photo_url} 
-                            alt="User" 
+                        <img
+                            src={auth.user.profile_photo_url}
+                            alt="User"
                             className={clsx(
                                 "w-8 h-8 rounded-full transition-opacity",
                                 processing ? "opacity-50" : "group-hover/avatar:opacity-40"
@@ -95,16 +94,16 @@ export default function Sidebar() {
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
                             <Camera className="w-4 h-4 text-white" />
                         </div>
-                        <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            onChange={handleFileChange} 
-                            className="hidden" 
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            className="hidden"
                             accept="image/*"
                         />
                     </div>
                     <div className="flex gap-2 pr-2">
-                        <Link 
+                        <Link
                             href={route('settings.index')}
                             className={clsx(
                                 "transition-colors",
@@ -113,7 +112,7 @@ export default function Sidebar() {
                         >
                             <Settings className="w-4 h-4" />
                         </Link>
-                        <button 
+                        <button
                             onClick={() => setShowLogoutModal(true)}
                             className="text-red-400 hover:text-red-500 transition-colors"
                         >
@@ -139,14 +138,14 @@ export default function Sidebar() {
             <AnimatePresence>
                 {showLogoutModal && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowLogoutModal(false)}
                             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                         />
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -157,17 +156,17 @@ export default function Sidebar() {
                             </div>
                             <h3 className="text-xl font-black text-gray-900 mb-2">Confirm Logout</h3>
                             <p className="text-sm text-gray-500 mb-8">Are you sure you want to log out of your HarborBank account?</p>
-                            
+
                             <div className="flex flex-col gap-3">
-                                <Link 
-                                    href={route('logout')} 
-                                    method="post" 
-                                    as="button" 
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
                                     className="w-full bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform"
                                 >
                                     Yes, Log Out
                                 </Link>
-                                <button 
+                                <button
                                     onClick={() => setShowLogoutModal(false)}
                                     className="w-full text-sm font-bold text-gray-400 hover:text-black transition-colors"
                                 >

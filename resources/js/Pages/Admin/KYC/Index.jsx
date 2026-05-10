@@ -59,16 +59,16 @@ export default function Index({ pendingDocuments }) {
                                         </div>
 
                                         <div className="flex flex-wrap items-center gap-4">
-                                            <a 
-                                                href={`/storage/${doc.file_path}`} 
-                                                target="_blank" 
+                                            <a
+                                                href={`/storage/${doc.file_path}`}
+                                                target="_blank"
                                                 className="flex items-center gap-2 text-xs font-bold bg-gray-50 px-4 py-2 rounded-full hover:bg-gray-100 transition-colors"
                                             >
                                                 <FileText className="w-4 h-4" /> View Document
                                             </a>
 
                                             <div className="flex gap-2">
-                                                <button 
+                                                <button
                                                     onClick={() => {
                                                         setData('status', 'approved');
                                                         handleStatusUpdate(doc.id, 'approved');
@@ -79,7 +79,7 @@ export default function Index({ pendingDocuments }) {
                                                 >
                                                     <Check className="w-5 h-5" />
                                                 </button>
-                                                <button 
+                                                <button
                                                     onClick={() => setSelectedDoc(doc)}
                                                     className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
                                                     title="Reject"
@@ -99,7 +99,7 @@ export default function Index({ pendingDocuments }) {
             {/* Rejection Modal */}
             {selectedDoc && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-white w-full max-w-md rounded-[32px] p-8 shadow-2xl"
@@ -109,8 +109,8 @@ export default function Index({ pendingDocuments }) {
                             <h4 className="text-xl font-bold">Reject Document</h4>
                         </div>
                         <p className="text-sm text-gray-500 mb-6">Please provide a reason for rejecting this document. The user will be notified.</p>
-                        
-                        <textarea 
+
+                        <textarea
                             className="w-full h-32 bg-gray-50 border-gray-100 rounded-2xl p-4 text-sm focus:ring-black focus:border-black mb-6 resize-none"
                             placeholder="Reason for rejection (e.g. Blurry image, Expired ID)..."
                             value={data.rejection_reason}
@@ -118,13 +118,13 @@ export default function Index({ pendingDocuments }) {
                         />
 
                         <div className="flex gap-4">
-                            <button 
+                            <button
                                 onClick={() => setSelectedDoc(null)}
                                 className="flex-1 bg-gray-100 font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors"
                             >
                                 Cancel
                             </button>
-                            <button 
+                            <button
                                 onClick={() => {
                                     setData('status', 'rejected');
                                     handleStatusUpdate(selectedDoc.id, 'rejected');

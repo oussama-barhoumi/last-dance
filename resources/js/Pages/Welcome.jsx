@@ -47,8 +47,8 @@ export default function Welcome({ auth }) {
                         <Link href="#" className="hover:text-gray-300 transition-colors">Personal Banking</Link>
                         <Link href="#" className="hover:text-gray-300 transition-colors">Business Banking</Link>
                         <div className="flex items-center gap-8">
-                            <Link 
-                                href={route('dashboard')} 
+                            <Link
+                                href={route('dashboard')}
                                 className="hover:text-white text-gray-400 transition-colors"
                             >
                                 Dashboard
@@ -104,14 +104,14 @@ export default function Welcome({ auth }) {
                         <Link href="#" className="px-2 py-1">Business Banking</Link>
                         <Link href="#" className="px-2 py-1">Support & Resources</Link>
                         <Link href={route('dashboard')} className="px-2 py-1 text-center font-bold text-gray-400 hover:text-white transition-colors">Dashboard</Link>
-                        
+
                         {auth.user ? (
                             <div className="flex flex-col gap-4 border-t border-white/5 pt-4">
                                 <span className="px-2 py-1 text-white text-center font-bold">{auth.user.name}</span>
-                                <Link 
-                                    href={route('logout')} 
-                                    method="post" 
-                                    as="button" 
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
                                     className="px-2 py-1 bg-red-500/10 text-red-500 text-center rounded-full font-bold"
                                 >
                                     Logout

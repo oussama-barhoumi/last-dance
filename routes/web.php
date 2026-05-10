@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     // KYC Routes
     Route::get('/kyc', [\App\Http\Controllers\KycController::class, 'index'])->name('kyc.index');
     Route::post('/kyc', [\App\Http\Controllers\KycController::class, 'store'])->name('kyc.store');
-    
+
     // Transaction Routes
     Route::get('/transactions', [\App\Http\Controllers\TransactionController::class, 'index'])->name('transactions.index');
     Route::post('/transactions/send', [\App\Http\Controllers\TransactionController::class, 'sendMoney'])->name('transactions.send');
@@ -82,7 +82,7 @@ Route::middleware('auth')->group(function () {
 
     // Settings Routes
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
-    
+
     // Budget Routes
     Route::post('/budgets', [\App\Http\Controllers\BudgetController::class, 'store'])->name('budgets.store');
     Route::post('/budgets/bulk', [\App\Http\Controllers\BudgetController::class, 'bulkStore'])->name('budgets.bulk-store');
@@ -92,10 +92,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/lookup', function (Request $request) {
         return \App\Models\User::where('email', $request->email)->firstOrFail();
     })->name('users.lookup');
-    
+
     // Admin Routes (Simplified check)
     Route::get('/admin/kyc', [\App\Http\Controllers\KycController::class, 'adminIndex'])->name('admin.kyc.index');
     Route::patch('/admin/kyc/{document}', [\App\Http\Controllers\KycController::class, 'updateStatus'])->name('admin.kyc.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
