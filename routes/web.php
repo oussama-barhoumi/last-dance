@@ -54,6 +54,11 @@ Route::middleware('auth')->group(function () {
     // Report Routes
     Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
 
+    // Trading Routes
+    Route::get('/stocks/{symbol}', [\App\Http\Controllers\TradeController::class, 'getQuote'])->name('stocks.quote');
+    Route::post('/trade/buy', [\App\Http\Controllers\TradeController::class, 'buy'])->name('trade.buy');
+    Route::post('/trade/sell', [\App\Http\Controllers\TradeController::class, 'sell'])->name('trade.sell');
+
     // Loan Routes
     Route::get('/loans', [\App\Http\Controllers\LoanController::class, 'index'])->name('loans.index');
     Route::get('/loans/apply', [\App\Http\Controllers\LoanController::class, 'apply'])->name('loans.apply');

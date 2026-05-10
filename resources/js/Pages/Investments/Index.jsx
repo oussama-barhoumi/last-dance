@@ -1,16 +1,17 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm, usePage, router } from '@inertiajs/react';
 import { 
     TrendingUp, TrendingDown, Wallet, PieChart as PieIcon, 
     ArrowUpRight, ArrowDownLeft, Plus, Filter,
     Briefcase, Globe, Zap, History, ChevronRight,
     Search, AlertCircle, Info
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
     AreaChart, Area, XAxis, YAxis, CartesianGrid, 
     Tooltip, ResponsiveContainer, PieChart, Pie, Cell 
 } from 'recharts';
+import { useState, useEffect } from 'react';
 import clsx from 'clsx';
 
 const chartData = [
@@ -36,11 +37,11 @@ const AssetCard = ({ asset }) => (
                     "w-10 h-10 rounded-xl flex items-center justify-center",
                     asset.return_percentage >= 0 ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
                 )}>
-                    {asset.category === 'Crypto' ? <Zap className="w-5 h-5" /> : <Briefcase className="w-5 h-5" />}
+                    {asset.type === 'stock' ? <Briefcase className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
                 </div>
                 <div>
                     <h4 className="font-bold text-gray-900 text-sm">{asset.company_name}</h4>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{asset.sector}</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{asset.symbol || asset.sector}</p>
                 </div>
             </div>
             <div className={clsx(
@@ -55,37 +56,219 @@ const AssetCard = ({ asset }) => (
         <div className="space-y-4">
             <div className="flex justify-between items-end">
                 <div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Current Value</p>
-                    <p className="text-xl font-black text-gray-900">${parseFloat(asset.value).toLocaleString()}</p>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Holdings</p>
+                    <p className="text-xl font-black text-gray-900">{parseFloat(asset.shares || 0).toFixed(4)} Shares</p>
                 </div>
                 <div className="text-right">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Risk</p>
-                    <span className={clsx(
-                        "text-[9px] font-black px-2 py-0.5 rounded-full uppercase border",
-                        asset.risk_level === 'Low' ? "border-green-200 text-green-600 bg-green-50" : 
-                        asset.risk_level === 'Medium' ? "border-yellow-200 text-yellow-600 bg-yellow-50" : 
-                        "border-red-200 text-red-600 bg-red-50"
-                    )}>
-                        {asset.risk_level}
-                    </span>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Value</p>
+                    <p className="text-sm font-black text-gray-900">${parseFloat(asset.value).toLocaleString()}</p>
                 </div>
             </div>
             
             <div className="flex gap-2 pt-2">
-                <button className="flex-1 py-2 rounded-xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">Buy</button>
+                <button className="flex-1 py-2 rounded-xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">Buy More</button>
                 <button className="flex-1 py-2 rounded-xl bg-gray-50 text-gray-900 text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Sell</button>
             </div>
         </div>
     </motion.div>
 );
 
-export default function Index({ investments, stats, recentTransactions }) {
+const StockMarket = ({ userBalance }) => {
+    const [search, setSearch] = useState('');
+    const [quote, setQuote] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [shares, setShares] = useState(1);
+
+    const fetchQuote = async () => {
+        if (!search) return;
+        setLoading(true);
+        try {
+            const response = await fetch(`/stocks/${search}`);
+            const data = await response.json();
+            setQuote(data);
+        } catch (error) {
+            console.error('Error fetching quote:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleTrade = (type) => {
+        if (!quote || !search) return;
+        
+        router.post(route(`trade.${type}`), {
+            symbol: search.toUpperCase(),
+            shares: shares,
+            price: quote.c,
+            company_name: search.toUpperCase() // For now, use symbol as name
+        });
+    };
+
+    return (
+        <div className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 rounded-full blur-3xl -mr-32 -mt-32" />
+            
+            <div className="relative z-10">
+                <div className="flex justify-between items-center mb-8">
+                    <div>
+                        <h3 className="text-2xl font-black text-gray-900 flex items-center gap-3">
+                            <Globe className="w-6 h-6 text-blue-500" /> Stock Market
+                        </h3>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Real-time Trading Terminal</p>
+                    </div>
+                    <div className="bg-gray-50 px-4 py-2 rounded-2xl border border-gray-100">
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Available Cash</span>
+                        <span className="text-sm font-black text-gray-900">${parseFloat(userBalance).toLocaleString()}</span>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div className="space-y-6">
+                        <div className="relative">
+                            <input 
+                                type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value.toUpperCase())}
+                                onKeyPress={(e) => e.key === 'Enter' && fetchQuote()}
+                                placeholder="Enter Stock Symbol (e.g. AAPL, TSLA)"
+                                className="w-full bg-gray-50 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-14"
+                            />
+                            <Search className="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" />
+                            <button 
+                                onClick={fetchQuote}
+                                disabled={loading}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-black text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform disabled:opacity-50"
+                            >
+                                {loading ? '...' : 'Quote'}
+                            </button>
+                        </div>
+
+                        {quote && quote.c > 0 ? (
+                            <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-gray-50 rounded-[32px] p-6 border border-gray-100"
+                            >
+                                <div className="flex justify-between items-start mb-6">
+                                    <div>
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Current Price</p>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-3xl font-black text-gray-900">${quote.c}</span>
+                                            <span className={clsx(
+                                                "text-[10px] font-black",
+                                                quote.dp >= 0 ? "text-green-500" : "text-red-500"
+                                            )}>
+                                                {quote.dp >= 0 ? '+' : ''}{quote.dp.toFixed(2)}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Symbol</p>
+                                        <span className="bg-white px-3 py-1 rounded-lg text-xs font-black border border-gray-200">{search}</span>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-4 mb-8">
+                                    <div className="bg-white p-3 rounded-2xl border border-gray-100">
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">High</p>
+                                        <p className="text-xs font-black text-gray-900">${quote.h}</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-2xl border border-gray-100">
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Low</p>
+                                        <p className="text-xs font-black text-gray-900">${quote.l}</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-2xl border border-gray-100">
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Open</p>
+                                        <p className="text-xs font-black text-gray-900">${quote.o}</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shares to Trade</label>
+                                        <div className="flex items-center gap-4 bg-white rounded-xl p-1 border border-gray-200">
+                                            <button onClick={() => setShares(Math.max(1, shares - 1))} className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg transition-colors font-black">-</button>
+                                            <input 
+                                                type="number" 
+                                                value={shares} 
+                                                onChange={(e) => setShares(parseFloat(e.target.value) || 0)}
+                                                className="w-12 text-center border-none p-0 text-xs font-black focus:ring-0 bg-transparent"
+                                            />
+                                            <button onClick={() => setShares(shares + 1)} className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg transition-colors font-black">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-3">
+                                        <button 
+                                            onClick={() => handleTrade('buy')}
+                                            className="flex-1 bg-black text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10"
+                                        >
+                                            Confirm Buy Order
+                                        </button>
+                                        <button 
+                                            onClick={() => handleTrade('sell')}
+                                            className="flex-1 bg-white border border-gray-200 text-gray-900 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-50 transition-all"
+                                        >
+                                            Confirm Sell Order
+                                        </button>
+                                    </div>
+                                    <p className="text-[9px] text-gray-400 text-center font-bold">
+                                        Estimated Total: <span className="text-gray-900">${(shares * quote.c).toLocaleString()}</span>
+                                    </p>
+                                </div>
+                            </motion.div>
+                        ) : search && !loading && (
+                            <div className="py-12 text-center bg-gray-50 rounded-[32px] border border-dashed border-gray-200">
+                                <AlertCircle className="w-8 h-8 text-gray-300 mx-auto mb-3" />
+                                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Search for a symbol to begin</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="bg-purple-600 p-8 rounded-[32px] text-white shadow-xl shadow-purple-600/20">
+                            <h4 className="text-lg font-black mb-4">Trading Tips</h4>
+                            <ul className="space-y-4">
+                                <li className="flex gap-3">
+                                    <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black">1</div>
+                                    <p className="text-[11px] font-medium leading-relaxed opacity-90">Diversify your portfolio across different sectors to minimize risk exposure.</p>
+                                </li>
+                                <li className="flex gap-3">
+                                    <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black">2</div>
+                                    <p className="text-[11px] font-medium leading-relaxed opacity-90">Keep an eye on the market low/high of the day before placing large orders.</p>
+                                </li>
+                                <li className="flex gap-3">
+                                    <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black">3</div>
+                                    <p className="text-[11px] font-medium leading-relaxed opacity-90">Stock quotes are powered by Finnhub and updated in real-time.</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="p-8 rounded-[32px] border border-gray-100 bg-gray-50/50">
+                            <div className="flex justify-between items-center mb-4">
+                                <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest">Market Status</h4>
+                                <span className="flex items-center gap-1.5 text-[9px] font-black text-green-500 uppercase">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> Market Open
+                                </span>
+                            </div>
+                            <p className="text-[10px] text-gray-400 font-bold leading-relaxed uppercase tracking-widest">
+                                NYSE and NASDAQ are currently active. All trades will be executed at current market prices.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default function Index({ auth, investments, stats, recentTransactions }) {
     const pieData = investments.reduce((acc, inv) => {
-        const existing = acc.find(item => item.name === inv.category);
+        const category = inv.type === 'stock' ? 'Stocks' : (inv.category || 'Other');
+        const existing = acc.find(item => item.name === category);
         if (existing) {
             existing.value += parseFloat(inv.value);
         } else {
-            acc.push({ name: inv.category, value: parseFloat(inv.value) });
+            acc.push({ name: category, value: parseFloat(inv.value) });
         }
         return acc;
     }, []);
@@ -151,6 +334,9 @@ export default function Index({ investments, stats, recentTransactions }) {
                     </div>
                 </div>
 
+                {/* Stock Market Section */}
+                <StockMarket userBalance={auth.user.balance} />
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Performance Chart */}
                     <div className="lg:col-span-2 bg-white p-10 rounded-[40px] shadow-sm border border-gray-50">
@@ -164,7 +350,7 @@ export default function Index({ investments, stats, recentTransactions }) {
                             </div>
                         </div>
                         <div className="h-[300px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                 <AreaChart data={chartData}>
                                     <defs>
                                         <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -193,6 +379,7 @@ export default function Index({ investments, stats, recentTransactions }) {
                                         strokeWidth={4}
                                         fillOpacity={1} 
                                         fill="url(#colorValue)" 
+                                        isAnimationActive={false}
                                     />
                                 </AreaChart>
                             </ResponsiveContainer>
@@ -206,7 +393,7 @@ export default function Index({ investments, stats, recentTransactions }) {
                         </h3>
                         <div className="flex-1 flex flex-col justify-center items-center">
                             <div className="h-[200px] w-full relative">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                                     <PieChart>
                                         <Pie
                                             data={pieData}
@@ -232,7 +419,7 @@ export default function Index({ investments, stats, recentTransactions }) {
                                     <div key={i} className="flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
                                         <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{data.name}</span>
-                                        <span className="text-[10px] font-black text-gray-900 ml-auto">{((data.value / stats.totalValue) * 100).toFixed(0)}%</span>
+                                        <span className="text-[10px] font-black text-gray-900 ml-auto">{stats.totalValue > 0 ? ((data.value / stats.totalValue) * 100).toFixed(0) : 0}%</span>
                                     </div>
                                 ))}
                             </div>
@@ -289,13 +476,13 @@ export default function Index({ investments, stats, recentTransactions }) {
                                             <td className="py-4 text-center">
                                                 <span className={clsx(
                                                     "text-xs font-black",
-                                                    tx.type === 'receive' ? "text-green-500" : "text-gray-900"
+                                                    tx.type === 'credit' ? "text-green-500" : "text-gray-900"
                                                 )}>
-                                                    {tx.type === 'receive' ? '+' : '-'}${parseFloat(tx.amount).toLocaleString()}
+                                                    {tx.type === 'credit' ? '+' : '-'}${parseFloat(tx.amount).toLocaleString()}
                                                 </span>
                                             </td>
                                             <td className="py-4 text-right">
-                                                <span className="text-[10px] font-bold text-gray-400 uppercase">{new Date(tx.date).toLocaleDateString()}</span>
+                                                <span className="text-[10px] font-bold text-gray-400 uppercase">{new Date(tx.transaction_date).toLocaleDateString()}</span>
                                             </td>
                                         </tr>
                                     ))}
