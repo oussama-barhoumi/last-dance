@@ -1,9 +1,15 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Car, Home, Film, Utensils, Zap, Plus, MoreHorizontal, X, Wallet, Tag, Smartphone, Heart, Trash2 } from 'lucide-react';
+import { ShoppingBag, Car, Home, Film, Utensils, Zap, Plus, MoreHorizontal, X, Wallet, Tag, Smartphone, Heart, Trash2, Info } from 'lucide-react';
 import { useState } from 'react';
+import { useForm, usePage, router } from '@inertiajs/react';
 import clsx from 'clsx';
 
-const BudgetItem = ({ icon: Icon, name, spent, budget, color, onDelete }) => {
+const iconMap = {
+    ShoppingBag, Car, Home, Film, Utensils, Zap, Smartphone, Heart
+};
+
+const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
+    const Icon = iconMap[icon] || Tag;
     const percentage = Math.min((spent / budget) * 100, 100);
     
     return (
@@ -39,11 +45,11 @@ const BudgetItem = ({ icon: Icon, name, spent, budget, color, onDelete }) => {
 
                 <div className="flex justify-between items-end">
                     <div className="space-y-1">
-                        <p className="text-xl font-black text-gray-900">${spent.toLocaleString()}</p>
+                        <p className="text-xl font-black text-gray-900">${Number(spent).toLocaleString()}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Spent</p>
                     </div>
                     <div className="text-right space-y-1">
-                        <p className="text-sm font-black text-gray-900">${budget.toLocaleString()}</p>
+                        <p className="text-sm font-black text-gray-900">${Number(budget).toLocaleString()}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Limit</p>
                     </div>
                 </div>
@@ -70,43 +76,38 @@ const BudgetItem = ({ icon: Icon, name, spent, budget, color, onDelete }) => {
 };
 
 export default function SpendingManagement() {
+    const { budgets } = usePage().props;
     const [showAddModal, setShowAddModal] = useState(false);
-    const [budgets, setBudgets] = useState([
-        { icon: Utensils, name: "Food & Dining", spent: 850, budget: 1200, color: "bg-orange-500" },
-        { icon: Car, name: "Transport", spent: 320, budget: 500, color: "bg-blue-500" },
-        { icon: Film, name: "Entertainment", spent: 450, budget: 400, color: "bg-purple-500" },
-        { icon: Home, name: "Rent & Utilities", spent: 2100, budget: 2200, color: "bg-green-600" },
-    ]);
-
-    const [newActivity, setNewActivity] = useState({
+    
+    const { data, setData, post, processing, reset, errors } = useForm({
         name: '',
-        budget: '',
-        category: 'Shopping'
+        amount: '',
+        category: 'Shopping',
+        icon: 'ShoppingBag',
+        color: 'bg-pink-500'
     });
 
     const categories = [
-        { name: 'Shopping', icon: ShoppingBag, color: 'bg-pink-500' },
-        { name: 'Services', icon: Zap, color: 'bg-yellow-500' },
-        { name: 'Tech', icon: Smartphone, color: 'bg-gray-900' },
-        { name: 'Health', icon: Heart, color: 'bg-red-500' }
+        { name: 'Shopping', iconName: 'ShoppingBag', icon: ShoppingBag, color: 'bg-pink-500' },
+        { name: 'Services', iconName: 'Zap', icon: Zap, color: 'bg-yellow-500' },
+        { name: 'Tech', iconName: 'Smartphone', icon: Smartphone, color: 'bg-gray-900' },
+        { name: 'Health', iconName: 'Heart', icon: Heart, color: 'bg-red-500' }
     ];
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const selectedCat = categories.find(c => c.name === newActivity.category);
-        setBudgets([...budgets, {
-            name: newActivity.name,
-            spent: 0,
-            budget: Number(newActivity.budget),
-            icon: selectedCat.icon,
-            color: selectedCat.color
-        }]);
-        setShowAddModal(false);
-        setNewActivity({ name: '', budget: '', category: 'Shopping' });
+        post(route('budgets.store'), {
+            onSuccess: () => {
+                setShowAddModal(false);
+                reset();
+            }
+        });
     };
 
-    const handleDelete = (index) => {
-        setBudgets(budgets.filter((_, i) => i !== index));
+    const handleDelete = (id) => {
+        if (confirm('Are you sure you want to delete this activity?')) {
+            router.delete(route('budgets.destroy', id));
+        }
     };
 
     return (
@@ -126,14 +127,27 @@ export default function SpendingManagement() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <AnimatePresence mode="popLayout">
-                    {budgets.map((budget, idx) => (
+                    {budgets.map((budget) => (
                         <BudgetItem 
-                            key={`${budget.name}-${idx}`} 
-                            {...budget} 
-                            onDelete={() => handleDelete(idx)}
+                            key={budget.id} 
+                            name={budget.name}
+                            spent={0} // To be linked with transaction aggregation later
+                            budget={budget.amount}
+                            icon={budget.icon}
+                            color={budget.color}
+                            onDelete={() => handleDelete(budget.id)}
                         />
                     ))}
                 </AnimatePresence>
+                {budgets.length === 0 && (
+                    <div className="col-span-full py-12 border-2 border-dashed border-gray-100 rounded-[40px] flex flex-col items-center justify-center text-center">
+                        <div className="bg-gray-50 p-4 rounded-2xl mb-4 text-gray-400">
+                            <Tag className="w-8 h-8" />
+                        </div>
+                        <h4 className="text-sm font-black text-gray-900">No active budgets</h4>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Start by creating your first spending limit</p>
+                    </div>
+                )}
             </div>
 
             <AnimatePresence>
@@ -166,13 +180,14 @@ export default function SpendingManagement() {
                                         <input 
                                             type="text" 
                                             required
-                                            value={newActivity.name}
-                                            onChange={e => setNewActivity({...newActivity, name: e.target.value})}
+                                            value={data.name}
+                                            onChange={e => setData('name', e.target.value)}
                                             placeholder="e.g. Weekly Groceries"
                                             className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-12"
                                         />
                                         <Tag className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                                     </div>
+                                    {errors.name && <p className="text-[10px] text-red-500 mt-1">{errors.name}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -181,13 +196,14 @@ export default function SpendingManagement() {
                                         <input 
                                             type="number" 
                                             required
-                                            value={newActivity.budget}
-                                            onChange={e => setNewActivity({...newActivity, budget: e.target.value})}
+                                            value={data.amount}
+                                            onChange={e => setData('amount', e.target.value)}
                                             placeholder="0.00"
                                             className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-12"
                                         />
                                         <Wallet className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
                                     </div>
+                                    {errors.amount && <p className="text-[10px] text-red-500 mt-1">{errors.amount}</p>}
                                 </div>
 
                                 <div className="space-y-4">
@@ -197,16 +213,21 @@ export default function SpendingManagement() {
                                             <button 
                                                 key={cat.name}
                                                 type="button"
-                                                onClick={() => setNewActivity({...newActivity, category: cat.name})}
+                                                onClick={() => setData({
+                                                    ...data,
+                                                    category: cat.name,
+                                                    icon: cat.iconName,
+                                                    color: cat.color
+                                                })}
                                                 className={clsx(
-                                                    "p-4 rounded-2xl border-2 transition-all flex items-center gap-3",
-                                                    newActivity.category === cat.name ? "border-black bg-black/5" : "border-gray-50 bg-gray-50/50"
+                                                    "p-4 rounded-2xl border-2 transition-all flex items-center gap-3 text-left",
+                                                    data.category === cat.name ? "border-black bg-black/5" : "border-gray-50 bg-gray-50/50"
                                                 )}
                                             >
-                                                <div className={clsx("w-8 h-8 rounded-lg flex items-center justify-center text-white", cat.color)}>
+                                                <div className={clsx("w-8 h-8 rounded-lg flex items-center justify-center text-white flex-shrink-0", cat.color)}>
                                                     <cat.icon className="w-4 h-4" />
                                                 </div>
-                                                <span className="text-[10px] font-black uppercase tracking-widest">{cat.name}</span>
+                                                <span className="text-[10px] font-black uppercase tracking-widest leading-tight">{cat.name}</span>
                                             </button>
                                         ))}
                                     </div>
@@ -214,9 +235,10 @@ export default function SpendingManagement() {
 
                                 <button 
                                     type="submit"
-                                    className="w-full bg-black text-white py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 mt-4"
+                                    disabled={processing}
+                                    className="w-full bg-black text-white py-4 rounded-2xl font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 mt-4 disabled:opacity-50"
                                 >
-                                    Create Budget Activity
+                                    {processing ? 'Creating Activity...' : 'Create Budget Activity'}
                                 </button>
                             </form>
                         </motion.div>

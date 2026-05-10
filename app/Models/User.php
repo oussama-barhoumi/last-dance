@@ -74,6 +74,11 @@ class User extends Authenticatable
         return $this->hasMany(Card::class);
     }
 
+    public function budgets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Budget::class);
+    }
+
     public function loans()
     {
         return $this->hasMany(Loan::class);

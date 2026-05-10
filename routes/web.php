@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -18,6 +19,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
         'transactions' => auth()->user()->transactions()->latest()->take(5)->get(),
         'investments' => auth()->user()->investments()->get(),
+        'budgets' => auth()->user()->budgets()->get(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -60,6 +62,15 @@ Route::middleware('auth')->group(function () {
 
     // Settings Routes
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
+    
+    // Budget Routes
+    Route::post('/budgets', [\App\Http\Controllers\BudgetController::class, 'store'])->name('budgets.store');
+    Route::delete('/budgets/{budget}', [\App\Http\Controllers\BudgetController::class, 'destroy'])->name('budgets.destroy');
+
+    // Utility Routes
+    Route::get('/users/lookup', function (Request $request) {
+        return \App\Models\User::where('email', $request->email)->firstOrFail();
+    })->name('users.lookup');
     
     // Admin Routes (Simplified check)
     Route::get('/admin/kyc', [\App\Http\Controllers\KycController::class, 'adminIndex'])->name('admin.kyc.index');
