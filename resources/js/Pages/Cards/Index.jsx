@@ -5,51 +5,85 @@ import {
     TrendingUp, ArrowUpRight, ArrowDownLeft, ChevronRight,
     Settings, Globe, Zap, Crown
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useState } from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 const CardVisual = ({ card, showDetails }) => {
     const { t } = useTranslation();
-    return (
-        <motion.div 
-            whileHover={{ y: -10 }}
-            className={clsx(
-                "relative h-56 rounded-[32px] p-8 text-white shadow-2xl overflow-hidden group",
-                card.type === 'Visa' ? "bg-gradient-to-br from-gray-900 to-black" : "bg-gradient-to-br from-purple-600 to-indigo-700"
-            )}
-        >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl group-hover:bg-white/10 transition-colors" />
-            
-            <div className="relative z-10 h-full flex flex-col justify-between">
-                <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                        <p className="text-[10px] font-black text-white/50 uppercase tracking-widest">{t('accounts.available_balance')}</p>
-                        <p className="text-2xl font-black">${parseFloat(card.balance).toLocaleString()}</p>
-                    </div>
-                    <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
-                        {card.type === 'Visa' ? <Globe className="w-6 h-6" /> : <Zap className="w-6 h-6" />}
-                    </div>
-                </div>
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
 
-                <div className="space-y-4">
-                    <p className="text-lg font-medium tracking-[0.2em]">
-                        {showDetails ? card.card_number : `**** **** **** ${card.card_number.slice(-4)}`}
-                    </p>
-                    <div className="flex justify-between items-end">
-                        <div>
-                            <p className="text-[8px] font-black text-white/50 uppercase tracking-widest mb-1">{t('cards.card_holder')}</p>
-                            <p className="text-xs font-bold uppercase">{card.holder_name || 'JOHN DOE'}</p>
+    const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+    const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const xPct = mouseX / width - 0.5;
+        const yPct = mouseY / height - 0.5;
+        x.set(xPct);
+        y.set(yPct);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
+
+    return (
+        <div style={{ perspective: 1000 }} className="w-full h-56">
+            <motion.div 
+                style={{
+                    rotateX,
+                    rotateY,
+                    transformStyle: "preserve-3d",
+                }}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className={clsx(
+                    "relative w-full h-full rounded-[32px] p-8 text-white shadow-2xl overflow-hidden cursor-pointer",
+                    card.type === 'Visa' ? "bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-gray-700/50" : "bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-800 border border-purple-500/50"
+                )}
+            >
+                <div style={{ transform: "translateZ(20px)" }} className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl transition-colors pointer-events-none" />
+                
+                <div style={{ transform: "translateZ(50px)" }} className="relative z-10 h-full flex flex-col justify-between pointer-events-none">
+                    <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                            <p className="text-[10px] font-black text-white/50 uppercase tracking-widest">{t('accounts.available_balance')}</p>
+                            <p className="text-2xl font-black">${parseFloat(card.balance).toLocaleString()}</p>
                         </div>
-                        <div className="text-right">
-                            <p className="text-[8px] font-black text-white/50 uppercase tracking-widest mb-1">{t('cards.expires')}</p>
-                            <p className="text-xs font-bold">{card.expiry_date || '12/26'}</p>
+                        <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md shadow-inner">
+                            {card.type === 'Visa' ? <Globe className="w-6 h-6" /> : <Zap className="w-6 h-6" />}
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <p className="text-lg font-medium tracking-[0.2em] drop-shadow-md">
+                            {showDetails ? card.card_number : `**** **** **** ${card.card_number.slice(-4)}`}
+                        </p>
+                        <div className="flex justify-between items-end drop-shadow-sm">
+                            <div>
+                                <p className="text-[8px] font-black text-white/50 uppercase tracking-widest mb-1">{t('cards.card_holder')}</p>
+                                <p className="text-xs font-bold uppercase">{card.holder_name || 'JOHN DOE'}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[8px] font-black text-white/50 uppercase tracking-widest mb-1">{t('cards.expires')}</p>
+                                <p className="text-xs font-bold">{card.expiry_date || '12/26'}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </motion.div>
+            </motion.div>
+        </div>
     );
 };
 

@@ -6,6 +6,7 @@ import QuickTransfer from '@/Components/Dashboard/QuickTransfer';
 import InvestmentList from '@/Components/Dashboard/InvestmentList';
 import SpendingManagement from '@/Components/Dashboard/SpendingManagement';
 import OnboardingTour from '@/Components/OnboardingTour';
+import Skeleton from '@/Components/Skeleton';
 import { Head, useForm } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Plus, X, QrCode, Scan, Camera, CheckCircle2, AlertCircle, ArrowRight, Info } from 'lucide-react';
@@ -25,7 +26,18 @@ export default function Dashboard({ auth }) {
     const [showSendModal, setShowSendModal] = useState(false);
     const [activeTab, setActiveTab] = useState('transfer'); // 'transfer' or 'qr'
     const [isScanning, setIsScanning] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [displayCurrency, setDisplayCurrency] = useState('USD');
     const videoRef = useRef(null);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setIsLoading(false), 1500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const rates = { USD: 1, EUR: 0.93, MAD: 10.05 };
+    const symbols = { USD: '$', EUR: '€', MAD: 'MAD ' };
+    const convertedBalance = (Number(auth.user.balance) * rates[displayCurrency]).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     const handleSendMoney = (e) => {
         e.preventDefault();
@@ -102,8 +114,27 @@ export default function Dashboard({ auth }) {
                             </div>
                         </div>
                         <div id="tour-balance" className="relative z-10 w-full md:w-auto bg-gray-50/80 dark:bg-zinc-900/50 backdrop-blur-xl p-6 rounded-3xl border border-gray-100 dark:border-zinc-800">
-                            <p className="text-[10px] font-black text-gray-500 dark:text-zinc-500 uppercase tracking-widest mb-1">{t('dashboard.your_balance')}</p>
-                            <p className="text-3xl font-black text-gray-900 dark:text-white">${Number(auth.user.balance).toLocaleString()}</p>
+                            <div className="flex justify-between items-center mb-1">
+                                <p className="text-[10px] font-black text-gray-500 dark:text-zinc-500 uppercase tracking-widest">{t('dashboard.your_balance')}</p>
+                                <select 
+                                    className="bg-transparent border-none text-[10px] font-black text-gray-400 focus:ring-0 cursor-pointer p-0 pr-4 uppercase"
+                                    value={displayCurrency}
+                                    onChange={(e) => setDisplayCurrency(e.target.value)}
+                                >
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="MAD">MAD</option>
+                                </select>
+                            </div>
+                            
+                            {isLoading ? (
+                                <Skeleton className="w-40 h-10 mt-1" />
+                            ) : (
+                                <p className="text-3xl font-black text-gray-900 dark:text-white">
+                                    {symbols[displayCurrency]}{convertedBalance}
+                                </p>
+                            )}
+                            
                             <div className="mt-4 flex items-center gap-2">
                                 <div className="flex -space-x-2">
                                     {[1,2,3].map(i => <div key={i} className="w-6 h-6 rounded-full border-2 border-white dark:border-zinc-900 bg-gray-200 dark:bg-zinc-800" />)}
@@ -115,19 +146,27 @@ export default function Dashboard({ auth }) {
                     </motion.div>
 
                     <motion.div variants={item} className="lg:col-span-1">
-                        <StatsCard 
-                            type="spending" 
-                            label={t('dashboard.total_spending')} 
-                            value="4,850" 
-                        />
+                        {isLoading ? (
+                            <Skeleton className="w-full h-[220px] rounded-[40px]" />
+                        ) : (
+                            <StatsCard 
+                                type="spending" 
+                                label={t('dashboard.total_spending')} 
+                                value="4,850" 
+                            />
+                        )}
                     </motion.div>
                     <motion.div variants={item} className="lg:col-span-1">
-                        <StatsCard 
-                            type="investment" 
-                            label={t('dashboard.net_portfolio')} 
-                            value="124,500" 
-                            dark 
-                        />
+                        {isLoading ? (
+                            <Skeleton className="w-full h-[220px] rounded-[40px]" />
+                        ) : (
+                            <StatsCard 
+                                type="investment" 
+                                label={t('dashboard.net_portfolio')} 
+                                value="124,500" 
+                                dark 
+                            />
+                        )}
                     </motion.div>
                 </div>
 

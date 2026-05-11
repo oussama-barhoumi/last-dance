@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/Contexts/ThemeContext';
@@ -28,7 +28,13 @@ export default function BalanceHistoryChart() {
 
             <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                    <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
+                    <AreaChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
+                        <defs>
+                            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                            </linearGradient>
+                        </defs>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" className="dark:stroke-zinc-800" />
                         <XAxis 
                             dataKey="name" 
@@ -54,15 +60,16 @@ export default function BalanceHistoryChart() {
                             itemStyle={{ color: theme === 'dark' ? '#fff' : '#000', fontWeight: 'bold' }}
                             cursor={{ stroke: theme === 'dark' ? '#27272a' : '#f3f4f6', strokeWidth: 2 }}
                         />
-                        <Line 
+                        <Area 
                             type="monotone" 
                             dataKey="value" 
                             stroke="#8B5CF6" 
                             strokeWidth={4} 
-                            dot={false}
+                            fillOpacity={1} 
+                            fill="url(#colorValue)" 
                             activeDot={{ r: 8, stroke: '#fff', strokeWidth: 4, fill: '#8B5CF6' }}
                         />
-                    </LineChart>
+                    </AreaChart>
                 </ResponsiveContainer>
             </div>
         </div>
