@@ -49,6 +49,64 @@ class SuperAdminController extends Controller
         ]);
     }
 
+    public function manageAdmins()
+    {
+        return Inertia::render('SuperAdmin/Admins', [
+            'admins' => User::whereIn('role', ['admin', 'super_admin'])->get()
+        ]);
+    }
+
+    public function manageUsers()
+    {
+        return Inertia::render('SuperAdmin/Users', [
+            'users' => User::where('role', 'user')->paginate(20)
+        ]);
+    }
+
+    public function analytics()
+    {
+        return Inertia::render('SuperAdmin/Analytics');
+    }
+
+    public function transactions()
+    {
+        return Inertia::render('SuperAdmin/Transactions', [
+            'transactions' => \App\Models\Transaction::with(['user', 'sender', 'receiver'])->latest()->paginate(50)
+        ]);
+    }
+
+    public function loans()
+    {
+        return Inertia::render('SuperAdmin/Loans', [
+            'loans' => \App\Models\Loan::with('user')->latest()->get()
+        ]);
+    }
+
+    public function settings()
+    {
+        return Inertia::render('SuperAdmin/Settings');
+    }
+
+    public function fraud()
+    {
+        return Inertia::render('SuperAdmin/Fraud');
+    }
+
+    public function logs()
+    {
+        return Inertia::render('SuperAdmin/Logs');
+    }
+
+    public function aiMonitoring()
+    {
+        return Inertia::render('SuperAdmin/AiMonitoring');
+    }
+
+    public function reports()
+    {
+        return Inertia::render('SuperAdmin/Reports');
+    }
+
     public function toggleBlock(User $user)
     {
         if ($user->id === auth()->id()) {

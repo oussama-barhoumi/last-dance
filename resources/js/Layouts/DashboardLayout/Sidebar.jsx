@@ -80,17 +80,19 @@ export default function Sidebar() {
                             <div className="px-6 mt-4 mb-2">
                                 <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Root Control</span>
                             </div>
-                            <NavItem icon={ShieldAlert} label="Manage Admins" href="#" />
-                            <NavItem icon={Users} label="Manage Users" href={route('super-admin.dashboard')} active={route().current('super-admin.dashboard')} />
-                            <NavItem icon={BarChart} label="Bank Analytics" href={route('super-admin.dashboard')} />
-                            <NavItem icon={Activity} label="Tx Monitoring" href={route('super-admin.dashboard')} />
-                            <NavItem icon={Lock} label="Freeze Accounts" href={route('super-admin.dashboard')} />
-                            <NavItem icon={Landmark} label="Approve Loans" href={route('admin.dashboard')} />
-                            <NavItem icon={Settings} label="System Settings" href={route('settings.index')} />
-                            <NavItem icon={ShieldAlert} label="Fraud Detection" href="#" badge="ALERT" badgeColor="bg-red-600 border-red-600" />
-                            <NavItem icon={FileText} label="Logs & Alerts" href="#" />
-                            <NavItem icon={Cpu} label="AI Monitoring" href="#" badge="BETA" badgeColor="bg-white text-black" />
-                            <NavItem icon={Download} label="Reports & Exports" href="#" />
+                            <NavItem icon={ShieldAlert} label="Manage Admins" href={route('super-admin.admins.index')} active={route().current('super-admin.admins.index')} />
+                            <NavItem icon={Users} label="Manage Users" href={route('super-admin.users.index')} active={route().current('super-admin.users.index')} />
+                            <NavItem icon={BarChart} label="Bank Analytics" href={route('super-admin.analytics.index')} active={route().current('super-admin.analytics.index')} />
+                            <NavItem icon={Activity} label="Tx Monitoring" href={route('super-admin.transactions.index')} active={route().current('super-admin.transactions.index')} />
+                            <NavItem icon={Lock} label="Freeze Accounts" href={route('super-admin.users.index')} />
+                            <NavItem icon={Landmark} label="Approve Loans" href={route('super-admin.loans.index')} active={route().current('super-admin.loans.index')} />
+                            <NavItem icon={Settings} label="System Settings" href={route('super-admin.settings.index')} active={route().current('super-admin.settings.index')} />
+                            <NavItem icon={ShieldAlert} label="Fraud Detection" href={route('super-admin.fraud.index')} active={route().current('super-admin.fraud.index')} badge="ALERT" badgeColor="bg-red-600 border-red-600" />
+                            <NavItem icon={FileText} label="Logs & Alerts" href={route('super-admin.logs.index')} active={route().current('super-admin.logs.index')} />
+                            <NavItem icon={Cpu} label="AI Monitoring" href={route('super-admin.ai-monitoring.index')} active={route().current('super-admin.ai-monitoring.index')} badge="BETA" badgeColor="bg-white text-black" />
+                            <NavItem icon={BarChart} label="AI Assistant" href={route('ai-assistant.index')} active={route().current('ai-assistant.index')} />
+                            <NavItem icon={Globe} label="Voice Coach" href={route('voice-coach.index')} active={route().current('voice-coach.index')} />
+                            <NavItem icon={Download} label="Reports & Exports" href={route('super-admin.reports.index')} active={route().current('super-admin.reports.index')} />
                         </>
                     )}
                     
@@ -111,20 +113,28 @@ export default function Sidebar() {
                         </>
                     )}
 
-                    <div className="px-6 mt-8 mb-4">
-                        <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Core Services</span>
-                    </div>
+                    {/* Core Services Section - Only for Admins and Users */}
+                    {role !== 'super_admin' && (
+                        <>
+                            <div className="px-6 mt-8 mb-4">
+                                <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Core Services</span>
+                            </div>
 
-                    <NavItem 
-                        icon={LayoutDashboard} 
-                        label="User Dashboard" 
-                        active={route().current('dashboard')} 
-                        href={route('dashboard')} 
-                    />
-                    <NavItem icon={ArrowLeftRight} label="Transactions" active={route().current('transactions.index')} href={route('transactions.index')} />
-                    <NavItem icon={CreditCard} label="Cards" active={route().current('cards.index')} href={route('cards.index')} />
-                    <NavItem icon={Wallet} label="Investment" active={route().current('investments.index')} href={route('investments.index')} />
-                    <NavItem icon={TrendingUp} label="Loans" active={route().current('loans.index')} href={route('loans.index')} />
+                            <NavItem 
+                                icon={LayoutDashboard} 
+                                label="User Dashboard" 
+                                active={route().current('dashboard')} 
+                                href={route('dashboard')} 
+                            />
+                            <NavItem icon={Activity} label="AI Assistant" active={route().current('ai-assistant.index')} href={route('ai-assistant.index')} badge="AI" badgeColor="bg-blue-600 border-blue-600" />
+                            <NavItem icon={Globe} label="Voice Coach" active={route().current('voice-coach.index')} href={route('voice-coach.index')} badge="LIVE" badgeColor="bg-red-600 border-red-600" />
+                            <NavItem icon={Cpu} label="Voice Call" active={route().current('voice-call.index')} href={route('voice-call.index')} />
+                            <NavItem icon={ArrowLeftRight} label="Transactions" active={route().current('transactions.index')} href={route('transactions.index')} />
+                            <NavItem icon={CreditCard} label="Cards" active={route().current('cards.index')} href={route('cards.index')} />
+                            <NavItem icon={Wallet} label="Investment" active={route().current('investments.index')} href={route('investments.index')} />
+                            <NavItem icon={TrendingUp} label="Loans" active={route().current('loans.index')} href={route('loans.index')} />
+                        </>
+                    )}
                 </nav>
             </div>
 
@@ -170,9 +180,35 @@ export default function Sidebar() {
                     </div>
                 </div>
 
+                {role === 'super_admin' && (
+                    <div className="px-6 mb-8 mt-4">
+                        <div className="bg-white/5 border border-white/10 p-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[7px] font-black text-gray-500 uppercase tracking-[0.2em]">System Integrity</span>
+                                <div className="flex gap-1">
+                                    <div className="w-1 h-1 bg-green-500 animate-pulse" />
+                                    <div className="w-1 h-1 bg-green-500 animate-pulse delay-75" />
+                                    <div className="w-1 h-1 bg-green-500 animate-pulse delay-150" />
+                                </div>
+                            </div>
+                            <div className="h-0.5 bg-white/10 w-full overflow-hidden">
+                                <motion.div 
+                                    animate={{ x: ['-100%', '100%'] }} 
+                                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                    className="h-full bg-white/40 w-1/2" 
+                                />
+                            </div>
+                            <div className="flex justify-between items-center text-[6px] font-black text-gray-600 uppercase tracking-widest">
+                                <span>Core: Optimal</span>
+                                <span>Lat: 12ms</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex items-center gap-3 text-gray-600 text-[8px] font-black uppercase tracking-widest px-2 hover:text-white cursor-pointer transition-colors">
-                    <Globe className="w-3 h-3" />
-                    <span>Role: {role}</span>
+                    <ShieldCheck className="w-3 h-3 text-white" />
+                    <span>Clearance: L3_ROOT</span>
                     <ChevronDown className="w-2 h-2 ml-auto" />
                 </div>
             </div>
