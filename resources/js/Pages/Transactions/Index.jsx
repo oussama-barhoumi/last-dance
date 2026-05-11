@@ -34,6 +34,46 @@ export default function Index({ transactions, filters, recentActivity }) {
         router.get(route('transactions.index'), { search, type: filters.type, status: filters.status }, { preserveState: true });
     };
 
+    const exportToCSV = () => {
+        if (!transactions || transactions.data.length === 0) return;
+        
+        const headers = [
+            t('transactions.transaction_id'), 
+            t('transactions.description'), 
+            t('transactions.type'), 
+            t('transactions.amount'), 
+            t('transactions.status'), 
+            t('transactions.date'), 
+            t('transactions.payment_method')
+        ];
+        
+        const rows = transactions.data.map(tx => [
+            tx.transaction_id,
+            `"${tx.description.replace(/"/g, '""')}"`, // escape quotes and commas
+            tx.type,
+            tx.amount,
+            tx.status,
+            new Date(tx.date).toLocaleDateString(),
+            tx.payment_method
+        ]);
+
+        const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `HarborBank_Statement_${new Date().toISOString().slice(0, 10)}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handlePrint = () => {
+        window.print();
+    };
+
     const container = {
         hidden: { opacity: 0 },
         show: { opacity: 1, transition: { staggerChildren: 0.05 } }
@@ -56,10 +96,16 @@ export default function Index({ transactions, filters, recentActivity }) {
                         <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">{t('transactions.desc')}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        <button className="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 px-4 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-zinc-400 hover:border-black dark:hover:border-white transition-colors shadow-sm">
+                        <button 
+                            onClick={exportToCSV}
+                            className="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 px-4 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-zinc-400 hover:border-black dark:hover:border-white transition-colors shadow-sm"
+                        >
                             <FileText className="w-4 h-4" /> {t('transactions.export_csv')}
                         </button>
-                        <button className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-xl text-sm font-bold hover:scale-105 transition-all shadow-lg shadow-black/10">
+                        <button 
+                            onClick={handlePrint}
+                            className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-xl text-sm font-bold hover:scale-105 transition-all shadow-lg shadow-black/10 print:hidden"
+                        >
                             <Download className="w-4 h-4" /> {t('transactions.download_statement')}
                         </button>
                     </div>
