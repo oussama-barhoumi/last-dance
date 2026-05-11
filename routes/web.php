@@ -19,17 +19,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Primary Entry Point: Role-based redirection or direct render
     Route::get('/dashboard', \App\Http\Controllers\RoleRedirectController::class)->name('dashboard');
 
-    // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', function () {
-            return Inertia::render('Admin/Dashboard', [
-                'stats' => [
-                    'total_users' => \App\Models\User::count(),
-                    'pending_kyc' => \App\Models\KycDocument::where('status', 'pending')->count(),
-                    'total_loans' => \App\Models\Loan::count(),
-                ]
-            ]);
-        })->name('dashboard');
+        Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
         
         Route::get('/kyc', [\App\Http\Controllers\KycController::class, 'adminIndex'])->name('kyc.index');
         Route::patch('/kyc/{document}', [\App\Http\Controllers\KycController::class, 'updateStatus'])->name('kyc.update');
