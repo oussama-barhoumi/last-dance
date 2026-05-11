@@ -6,35 +6,56 @@ use App\Models\Loan;
 use App\Models\Banker;
 use App\Models\LoanRepayment;
 use App\Models\LoanAssignment;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LoanApprovalService
 {
     /**
-     * Approve a loan and trigger all downstream processes.
+     * Pre-Approve a loan and require bank booking.
      */
     public function approve(Loan $loan, ?string $adminNotes = null): void
     {
         DB::transaction(function () use ($loan, $adminNotes) {
-            // 1. Update Status
+            // 1. Update Status to Pending Booking
             $loan->update([
-                'status' => 'approved',
+                'status' => 'approved_pending_booking',
                 'admin_notes' => $adminNotes,
-                'interest_rate' => 5.5, // Standard rate for this example
+                'interest_rate' => 5.5,
+            ]);
+
+            // 2. Assign Banker (Optional at this stage, but good for tracking)
+            $this->assignBanker($loan);
+
+            // 3. Log the decision
+            Log::info('Loan Pre-Approved (Pending Booking)', [
+                'loan_id' => $loan->id,
+                'admin_id' => auth()->id()
+            ]);
+        });
+    }
+
+    /**
+     * Finalize the loan after appointment completion.
+     */
+    public function finalize(Loan $loan): void
+    {
+        DB::transaction(function () use ($loan) {
+            // 1. Update Status to Active
+            $loan->update([
+                'status' => 'active',
             ]);
 
             // 2. Generate Repayment Schedule
             $this->generateRepayments($loan);
 
-            // 3. Assign Banker
-            $this->assignBanker($loan);
-
-            // 4. Update User Balance (Disbursement)
+            // 3. Update User Balance (Actual Disbursement)
             $user = $loan->user;
             $user->increment('balance', $loan->amount);
 
-            // 5. Log Disbursement Transaction
-            \App\Models\Transaction::create([
+            // 4. Log Disbursement Transaction
+            Transaction::create([
                 'user_id' => $user->id,
                 'transaction_id' => 'DISB-' . strtoupper(uniqid()),
                 'description' => "Loan Disbursement: {$loan->type}",
@@ -45,12 +66,11 @@ class LoanApprovalService
                 'payment_method' => 'internal_transfer',
                 'transaction_date' => now(),
             ]);
+
+            Log::info('Loan Finalized and Disbursed', ['loan_id' => $loan->id]);
         });
     }
 
-    /**
-     * Generate equal monthly installments.
-     */
     private function generateRepayments(Loan $loan): void
     {
         $amount = $loan->amount;
@@ -62,7 +82,7 @@ class LoanApprovalService
                 'loan_id' => $loan->id,
                 'installment_number' => $i,
                 'amount' => $monthlyPayment,
-                'principal' => $monthlyPayment, // Simplified: no interest calc for now
+                'principal' => $monthlyPayment,
                 'interest' => 0,
                 'remaining_balance' => $amount - ($monthlyPayment * $i),
                 'due_date' => now()->addMonths($i),
@@ -73,12 +93,8 @@ class LoanApprovalService
         $loan->update(['monthly_payment' => $monthlyPayment]);
     }
 
-    /**
-     * Assign a banker to the loan.
-     */
     private function assignBanker(Loan $loan): void
     {
-        // Find an available banker with the least active loans
         $banker = Banker::where('is_available', true)
             ->orderBy('active_loans_count', 'asc')
             ->first();
@@ -91,8 +107,6 @@ class LoanApprovalService
                 'loan_id' => $loan->id,
                 'banker_id' => $banker->id,
                 'assigned_at' => now(),
-                'meeting_scheduled_at' => now()->addDays(2)->setHour(10)->setMinute(0),
-                'contact_details' => "Direct Line: {$banker->phone} | Email: {$banker->email}",
             ]);
         }
     }

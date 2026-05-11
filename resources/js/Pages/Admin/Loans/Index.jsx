@@ -26,12 +26,13 @@ const RiskBadge = ({ level, score }) => {
     );
 };
 
-export default function LoanManagement({ loans, stats, filters }) {
+export default function LoanManagement({ loans, stats, filters, auth }) {
     const [selectedLoan, setSelectedLoan] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleAction = (id, action, notes = "") => {
-        router.post(route(`admin.loans.${action}`, id), { admin_notes: notes });
+        const prefix = auth.user.role === 'super_admin' ? 'super-admin' : 'admin';
+        router.post(route(`${prefix}.loans.${action}`, id), { admin_notes: notes });
     };
 
     return (

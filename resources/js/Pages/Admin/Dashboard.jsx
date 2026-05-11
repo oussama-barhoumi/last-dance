@@ -1,12 +1,12 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Users, FileText, Landmark, ShieldCheck,
     AlertCircle, ArrowUpRight, BarChart3,
     Activity, Clock, ChevronRight, TrendingUp,
     ArrowDownRight, ShieldAlert, Zap, Search,
-    MoreHorizontal, Filter
+    MoreHorizontal, Filter, CheckCircle, XCircle
 } from 'lucide-react';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid,
@@ -279,7 +279,20 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                                 <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">${Number(loan.amount).toLocaleString()}</p>
                                             </div>
                                         </div>
-                                        <ArrowUpRight className="w-4 h-4 text-gray-700 group-hover:text-white transition-colors" />
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={(e) => { e.preventDefault(); router.post(route('admin.loans.approve', loan.id)) }}
+                                                className="p-2 bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white rounded-lg transition-all"
+                                            >
+                                                <CheckCircle className="w-3.5 h-3.5" />
+                                            </button>
+                                            <button 
+                                                onClick={(e) => { e.preventDefault(); router.post(route('admin.loans.reject', loan.id), { admin_notes: 'Rejected from dashboard' }) }}
+                                                className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-all"
+                                            >
+                                                <XCircle className="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
                                     </Link>
                                 ))}
                                 {pendingLoans.length === 0 && (

@@ -47,4 +47,9 @@ class Loan extends Model
     {
         return $this->belongsTo(Banker::class, 'assigned_banker_id');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

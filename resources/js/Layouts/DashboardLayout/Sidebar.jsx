@@ -4,7 +4,7 @@ import {
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
     TrendingUp, Settings, LogOut, Globe, Landmark, ChevronDown, 
     Cpu, MessageSquare, Mic, Bell, Search, Menu, X, User,
-    Activity, ShieldAlert, ShieldCheck, Lock
+    Activity, ShieldAlert, ShieldCheck, Lock, Calendar, MapPin
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -78,7 +78,8 @@ export default function Sidebar() {
         { icon: User, label: "Users Management", href: route('super-admin.users.index'), active: route().current('super-admin.users.index') },
         { icon: Activity, label: "Transactions Monitoring", href: route('super-admin.transactions.index'), active: route().current('super-admin.transactions.index') },
         { icon: Landmark, label: "Loan Requests", href: route('admin.loans.index'), active: route().current('admin.loans.index') },
-        { icon: CreditCard, label: "Cards Management", href: "#", active: false },
+        { icon: Calendar, label: "Bank Appointments", href: route('admin.appointments.index'), active: route().current('admin.appointments.index'), badge: "NEW" },
+        { icon: MapPin, label: "Institutional Branches", href: route('admin.branches.index'), active: route().current('admin.branches.index') },
         { icon: ShieldCheck, label: "KYC Verification", href: route('admin.kyc.index'), active: route().current('admin.kyc.index'), badge: "PENDING" },
         { icon: MessageSquare, label: "Support Tickets", href: "#", active: false },
         { icon: BarChart, label: "Reports", href: "#", active: false },
@@ -87,6 +88,7 @@ export default function Sidebar() {
 
     const superAdminItems = [
         { icon: LayoutDashboard, label: "Dashboard", href: route('super-admin.dashboard'), active: route().current('super-admin.dashboard') },
+        { icon: Calendar, label: "Appointment Flow", href: route('admin.appointments.index'), active: route().current('admin.appointments.index'), badge: "HOT" },
         { icon: ShieldCheck, label: "Admin Management", href: route('super-admin.admins.index'), active: route().current('super-admin.admins.index') },
         { icon: BarChart, label: "System Analytics", href: route('super-admin.analytics.index'), active: route().current('super-admin.analytics.index') },
         { icon: Landmark, label: "Loan Control", href: route('super-admin.loans.index'), active: route().current('super-admin.loans.index') },

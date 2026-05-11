@@ -41,7 +41,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/admin/loans', [\App\Http\Controllers\AdminLoanController::class, 'index'])->name('admin.loans.index');
         Route::post('/admin/loans/{loan}/approve', [\App\Http\Controllers\AdminLoanController::class, 'approve'])->name('admin.loans.approve');
         Route::post('/admin/loans/{loan}/reject', [\App\Http\Controllers\AdminLoanController::class, 'reject'])->name('admin.loans.reject');
+        Route::post('/admin/loans/{loan}/review', [\App\Http\Controllers\AdminLoanController::class, 'review'])->name('admin.loans.review');
         Route::post('/admin/loans/{loan}/risk', [\App\Http\Controllers\AdminLoanController::class, 'updateRisk'])->name('admin.loans.risk-update');
+
+        // Appointment Management
+        Route::get('/admin/appointments', [\App\Http\Controllers\AppointmentController::class, 'adminIndex'])->name('admin.appointments.index');
+        Route::post('/admin/appointments/{appointment}/confirm', [\App\Http\Controllers\AppointmentController::class, 'confirm'])->name('admin.appointments.confirm');
+        Route::post('/admin/appointments/{appointment}/complete', [\App\Http\Controllers\AppointmentController::class, 'complete'])->name('admin.appointments.complete');
+
+        // Branch Management
+        Route::get('/admin/branches', [\App\Http\Controllers\BranchController::class, 'index'])->name('admin.branches.index');
+        Route::post('/admin/branches', [\App\Http\Controllers\BranchController::class, 'store'])->name('admin.branches.store');
     });
 
     // Super Admin Exclusive Routes
@@ -64,7 +74,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reports', [\App\Http\Controllers\SuperAdminController::class, 'reports'])->name('reports.index');
     });
 
-    // Shared Auth Routes
+    // ... Shared Auth Routes ...
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
@@ -89,6 +99,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/loans/apply', [\App\Http\Controllers\LoanController::class, 'apply'])->name('loans.apply');
     Route::post('/loans', [\App\Http\Controllers\LoanController::class, 'store'])->name('loans.store');
     Route::post('/loans/pay-emi', [\App\Http\Controllers\LoanController::class, 'payEmi'])->name('loans.pay');
+
+    // Loan Booking
+    Route::get('/loans/{loan}/book', [\App\Http\Controllers\AppointmentController::class, 'book'])->name('loans.book');
+    Route::post('/loans/book', [\App\Http\Controllers\AppointmentController::class, 'store'])->name('loans.book.store');
 
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
 

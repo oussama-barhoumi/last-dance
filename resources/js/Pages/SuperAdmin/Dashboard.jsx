@@ -5,7 +5,8 @@ import {
     Users, ShieldAlert, ShieldCheck, Lock, Unlock,
     MoreHorizontal, ArrowUpRight, TrendingUp,
     Activity, Shield, AlertTriangle, Zap,
-    Search, Bell, Info, Plus
+    Search, Bell, Info, Plus,
+    CheckCircle, XCircle
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useState } from 'react';
@@ -237,7 +238,20 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                                             <p className="text-[8px] text-gray-500 font-bold uppercase tracking-widest">${Number(loan.amount).toLocaleString()}</p>
                                         </div>
                                     </div>
-                                    <ArrowUpRight className="w-4 h-4 text-gray-700 group-hover:text-white transition-colors" />
+                                    <div className="flex gap-2">
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); router.post(route('super-admin.loans.approve', loan.id)) }}
+                                            className="p-2 border border-white/10 hover:bg-white hover:text-black transition-all"
+                                        >
+                                            <CheckCircle className="w-3.5 h-3.5" />
+                                        </button>
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); router.post(route('super-admin.loans.reject', loan.id), { admin_notes: 'Rejected from super dashboard' }) }}
+                                            className="p-2 border border-white/10 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all"
+                                        >
+                                            <XCircle className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
                                 </Link>
                             ))}
                             {pendingLoans.length === 0 && (

@@ -4,16 +4,17 @@ import { motion } from 'framer-motion';
 import { 
     Clock, CheckCircle, XCircle, 
     ArrowRight, Shield, User,
-    Calendar, TrendingUp, Info
+    Calendar, TrendingUp, Info, MapPin
 } from 'lucide-react';
 import clsx from 'clsx';
 
-const StatusTimeline = ({ status, aiAnalysis, banker }) => {
+const StatusTimeline = ({ status, aiAnalysis }) => {
     const steps = [
         { id: 'submitted', label: 'Submitted', active: true, done: true },
         { id: 'ai', label: 'AI Protocol', active: !!aiAnalysis, done: !!aiAnalysis },
-        { id: 'review', label: 'Admin Review', active: status !== 'pending_review', done: status !== 'pending_review' && status !== 'under_review' },
-        { id: 'final', label: 'Final Decision', active: status === 'approved' || status === 'rejected', done: status === 'approved' || status === 'rejected' },
+        { id: 'approved', label: 'Approved', active: status !== 'pending_review' && status !== 'under_review', done: status !== 'pending_review' && status !== 'under_review' && status !== 'approved_pending_booking' },
+        { id: 'booking', label: 'Booking', active: status === 'approved_pending_booking' || status === 'appointment_scheduled', done: status === 'active' || status === 'completed' },
+        { id: 'active', label: 'Active Loan', active: status === 'active', done: status === 'active' },
     ];
 
     return (
@@ -23,7 +24,7 @@ const StatusTimeline = ({ status, aiAnalysis, banker }) => {
                 <div key={idx} className="relative z-10 flex flex-col items-center gap-3">
                     <div className={clsx(
                         "w-10 h-10 rounded-full flex items-center justify-center border-4 border-[#0D0D0D] transition-all duration-500",
-                        step.done ? "bg-green-500 text-black" : step.active ? "bg-orange-500 text-black scale-110" : "bg-white/5 text-gray-600"
+                        step.done ? "bg-green-500 text-black" : step.active ? "bg-orange-500 text-black scale-110 shadow-[0_0_20px_rgba(249,115,22,0.4)]" : "bg-white/5 text-gray-600"
                     )}>
                         {step.done ? <CheckCircle className="w-5 h-5" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
                     </div>
@@ -77,6 +78,36 @@ export default function LoanIndex({ activeLoans, stats }) {
 
                                         <StatusTimeline status={loan.status} aiAnalysis={loan.ai_analysis} />
 
+                                        {/* Action Section for Booking */}
+                                        {loan.status === 'approved_pending_booking' && (
+                                            <div className="bg-orange-500/10 border border-orange-500/20 rounded-[32px] p-8 space-y-6 relative overflow-hidden">
+                                                <div className="relative z-10 space-y-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <Calendar className="w-5 h-5 text-orange-500" />
+                                                        <h4 className="text-xl font-black text-white uppercase">Bank Booking Required</h4>
+                                                    </div>
+                                                    <p className="text-sm text-gray-400 font-medium leading-relaxed">Your application has been pre-approved. To finalize the protocol and disburse the funds, you must schedule a physical verification at one of our branches.</p>
+                                                    <Link 
+                                                        href={route('loans.book', loan.id)}
+                                                        className="inline-flex items-center gap-4 bg-orange-500 text-black px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all shadow-[0_10px_30px_rgba(249,115,22,0.3)]"
+                                                    >
+                                                        Schedule Appointment <ArrowRight className="w-4 h-4" />
+                                                    </Link>
+                                                </div>
+                                                <Calendar className="absolute -bottom-10 -right-10 w-48 h-48 text-orange-500/10 rotate-12" />
+                                            </div>
+                                        )}
+
+                                        {loan.status === 'appointment_scheduled' && (
+                                            <div className="bg-green-500/10 border border-green-500/20 rounded-[32px] p-8 space-y-4">
+                                                <div className="flex items-center gap-3 text-green-500">
+                                                    <CheckCircle className="w-5 h-5" />
+                                                    <h4 className="text-lg font-black uppercase">Appointment Locked</h4>
+                                                </div>
+                                                <p className="text-sm text-gray-400 font-medium">Your visit is confirmed. Please bring your original identity documents and proof of income to the selected branch.</p>
+                                            </div>
+                                        )}
+
                                         {/* AI Feedback Section */}
                                         {loan.ai_analysis && (
                                             <div className="bg-white/5 rounded-[32px] p-8 border border-white/10 space-y-4">
@@ -85,11 +116,6 @@ export default function LoanIndex({ activeLoans, stats }) {
                                                     <span className="text-[10px] font-black text-white uppercase tracking-widest">AI Protocol Feedback</span>
                                                 </div>
                                                 <p className="text-sm text-gray-400 font-medium italic">"{loan.ai_analysis.summary_feedback}"</p>
-                                                <div className="flex flex-wrap gap-2 pt-4">
-                                                    {loan.ai_analysis.reasoning.map((r, i) => (
-                                                        <span key={i} className="px-3 py-1 bg-black/40 border border-white/5 rounded-full text-[8px] font-black text-gray-500 uppercase tracking-widest">{r}</span>
-                                                    ))}
-                                                </div>
                                             </div>
                                         )}
                                     </div>
@@ -102,8 +128,8 @@ export default function LoanIndex({ activeLoans, stats }) {
                                                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Status</span>
                                                     <span className={clsx(
                                                         "px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest border",
-                                                        loan.status === 'approved' ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-orange-500/10 text-orange-500 border-orange-500/20"
-                                                    )}>{loan.status.replace('_', ' ')}</span>
+                                                        loan.status === 'active' ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-orange-500/10 text-orange-500 border-orange-500/20"
+                                                    )}>{loan.status.replace(/_/g, ' ')}</span>
                                                 </div>
 
                                                 {loan.banker && (
@@ -117,16 +143,12 @@ export default function LoanIndex({ activeLoans, stats }) {
                                                                 <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">Assigned Institutional Banker</p>
                                                             </div>
                                                         </div>
-                                                        <div className="bg-black/40 p-4 rounded-2xl border border-white/5">
-                                                            <p className="text-[8px] font-black text-purple-400 uppercase tracking-widest mb-2">Protocol Status</p>
-                                                            <p className="text-[10px] text-white font-medium">Your assigned banker will contact you within 24 hours.</p>
-                                                        </div>
                                                     </div>
                                                 )}
                                             </div>
 
-                                            {loan.status === 'approved' && (
-                                                <button className="w-full bg-white text-black py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:invert transition-all mt-8">
+                                            {loan.status === 'active' && (
+                                                <button className="w-full bg-white text-black py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:invert transition-all mt-8 shadow-[0_20px_40px_rgba(255,255,255,0.1)]">
                                                     View Repayment Schedule
                                                 </button>
                                             )}
