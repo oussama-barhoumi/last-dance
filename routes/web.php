@@ -26,22 +26,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/kyc/{document}', [\App\Http\Controllers\KycController::class, 'updateStatus'])->name('kyc.update');
     });
 
-    // Super Admin Routes
+    // Shared Admin/Super Admin Features
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/super-admin/users', [\App\Http\Controllers\UserController::class, 'index'])->name('super-admin.users.index');
+        Route::patch('/super-admin/users/{user}', [\App\Http\Controllers\UserController::class, 'update'])->name('super-admin.users.update');
+        Route::delete('/super-admin/users/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('super-admin.users.destroy');
+        Route::post('/super-admin/users/{user}/toggle-block', [\App\Http\Controllers\UserController::class, 'toggleBlock'])->name('super-admin.users.toggle-block');
+        Route::post('/super-admin/users/{user}/toggle-active', [\App\Http\Controllers\UserController::class, 'toggleActive'])->name('super-admin.users.toggle-active');
+        
+        Route::get('/super-admin/transactions', [\App\Http\Controllers\SuperAdminController::class, 'transactions'])->name('super-admin.transactions.index');
+    });
+
+    // Super Admin Exclusive Routes
     Route::middleware(['super-admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\SuperAdminController::class, 'index'])->name('dashboard');
         Route::get('/admins', [\App\Http\Controllers\SuperAdminController::class, 'manageAdmins'])->name('admins.index');
-        Route::get('/users', [\App\Http\Controllers\SuperAdminController::class, 'manageUsers'])->name('users.index');
         Route::get('/analytics', [\App\Http\Controllers\SuperAdminController::class, 'analytics'])->name('analytics.index');
-        Route::get('/transactions', [\App\Http\Controllers\SuperAdminController::class, 'transactions'])->name('transactions.index');
         Route::get('/loans', [\App\Http\Controllers\SuperAdminController::class, 'loans'])->name('loans.index');
         Route::get('/settings', [\App\Http\Controllers\SuperAdminController::class, 'settings'])->name('settings.index');
         Route::get('/fraud', [\App\Http\Controllers\SuperAdminController::class, 'fraud'])->name('fraud.index');
         Route::get('/logs', [\App\Http\Controllers\SuperAdminController::class, 'logs'])->name('logs.index');
         Route::get('/ai-monitoring', [\App\Http\Controllers\SuperAdminController::class, 'aiMonitoring'])->name('ai-monitoring.index');
         Route::get('/reports', [\App\Http\Controllers\SuperAdminController::class, 'reports'])->name('reports.index');
-        
-        Route::post('/users/{user}/toggle-block', [\App\Http\Controllers\SuperAdminController::class, 'toggleBlock'])->name('users.toggle-block');
-        Route::post('/users/{user}/freeze', [\App\Http\Controllers\SuperAdminController::class, 'toggleBlock'])->name('users.freeze');
     });
 
     // Shared Auth Routes

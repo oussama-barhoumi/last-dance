@@ -145,8 +145,8 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                 </div>
                             </div>
 
-                            <div className="h-[400px] w-full">
-                                <ResponsiveContainer width="100%" height="100%">
+                            <div className="h-[400px] w-full min-h-[400px]">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                                     {activeChart === 'revenue' ? (
                                         <AreaChart data={revenueData}>
                                             <defs>

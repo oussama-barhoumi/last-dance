@@ -71,8 +71,8 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                                     <p className="text-[9px] text-gray-500 font-black uppercase tracking-widest mt-1">Global Transaction Yield</p>
                                 </div>
                             </div>
-                            <div className="h-[250px] w-full">
-                                <ResponsiveContainer width="100%" height="100%">
+                            <div className="h-[250px] w-full min-h-[250px]">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                                     <AreaChart data={chartData}>
                                         <defs>
                                             <linearGradient id="colorVol" x1="0" y1="0" x2="0" y2="1">
