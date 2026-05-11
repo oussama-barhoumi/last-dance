@@ -35,39 +35,44 @@ export default function Index({ transactions, filters, recentActivity }) {
     };
 
     const exportToCSV = () => {
-        if (!transactions || transactions.data.length === 0) return;
-        
-        const headers = [
-            t('transactions.transaction_id'), 
-            t('transactions.description'), 
-            t('transactions.type'), 
-            t('transactions.amount'), 
-            t('transactions.status'), 
-            t('transactions.date'), 
-            t('transactions.payment_method')
-        ];
-        
-        const rows = transactions.data.map(tx => [
-            tx.transaction_id,
-            `"${tx.description.replace(/"/g, '""')}"`, // escape quotes and commas
-            tx.type,
-            tx.amount,
-            tx.status,
-            new Date(tx.date).toLocaleDateString(),
-            tx.payment_method
-        ]);
+        try {
+            if (!transactions || !transactions.data || transactions.data.length === 0) return;
+            
+            const headers = [
+                t('transactions.transaction_id'), 
+                t('transactions.description'), 
+                t('transactions.type'), 
+                t('transactions.amount'), 
+                t('transactions.status'), 
+                t('transactions.date'), 
+                t('transactions.payment_method')
+            ];
+            
+            const rows = transactions.data.map(tx => [
+                tx.transaction_id || '',
+                `"${(tx.description || '').replace(/"/g, '""')}"`,
+                tx.type || '',
+                tx.amount || 0,
+                tx.status || '',
+                tx.date ? new Date(tx.date).toLocaleDateString() : '',
+                tx.payment_method || ''
+            ]);
 
-        const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        
-        link.setAttribute("href", url);
-        link.setAttribute("download", `HarborBank_Statement_${new Date().toISOString().slice(0, 10)}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+            const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `HarborBank_Statement_${new Date().toISOString().slice(0, 10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error("CSV Export Error:", error);
+            alert("Sorry, an error occurred while exporting your transactions.");
+        }
     };
 
     const handlePrint = () => {
