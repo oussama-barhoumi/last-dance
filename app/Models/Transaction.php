@@ -37,6 +37,16 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'receiver_id');
+    }
+
     public function scopeForUser($query, $userId)
     {
         return $query->where('user_id', $userId);

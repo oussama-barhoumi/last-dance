@@ -1,6 +1,6 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
 import { Head, router, Link } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Users, ShieldAlert, ShieldCheck, Lock, Unlock, 
     MoreHorizontal, ArrowUpRight, TrendingUp,
