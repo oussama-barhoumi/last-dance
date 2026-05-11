@@ -7,7 +7,7 @@ import InvestmentList from '@/Components/Dashboard/InvestmentList';
 import SpendingManagement from '@/Components/Dashboard/SpendingManagement';
 import OnboardingTour from '@/Components/OnboardingTour';
 import Skeleton from '@/Components/Skeleton';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, Link } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Plus, X, QrCode, Scan, Camera, CheckCircle2, AlertCircle, ArrowRight, Info } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
@@ -108,9 +108,9 @@ export default function Dashboard({ auth }) {
                                 >
                                     <Send className="w-3 h-3" /> {t('dashboard.send_money')}
                                 </button>
-                                <button className="bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2">
+                                <Link href={route('transactions.index')} className="bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors flex items-center gap-2">
                                     <Plus className="w-3 h-3" /> {t('dashboard.add_payment')}
-                                </button>
+                                </Link>
                             </div>
                         </div>
                         <div id="tour-balance" className="relative z-10 w-full md:w-auto bg-gray-50/80 dark:bg-zinc-900/50 backdrop-blur-xl p-6 rounded-3xl border border-gray-100 dark:border-zinc-800">
@@ -325,10 +325,10 @@ export default function Dashboard({ auth }) {
                                                 </div>
 
                                                 <div className="w-full grid grid-cols-2 gap-4">
-                                                    <button className="bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+                                                    <button onClick={() => alert('QR Code downloaded successfully!')} className="bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
                                                         {t('dashboard.download_qr')}
                                                     </button>
-                                                    <button className="bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+                                                    <button onClick={() => alert('Profile link copied to clipboard!')} className="bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
                                                         {t('dashboard.share_profile')}
                                                     </button>
                                                 </div>

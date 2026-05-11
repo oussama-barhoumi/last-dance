@@ -21,7 +21,7 @@ export default function BalanceHistoryChart() {
         <div className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 transition-colors">
             <div className="flex items-center justify-between mb-10">
                 <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">{t('dashboard.balance_history')}</h3>
-                <button className="w-10 h-10 border-2 border-dashed border-gray-200 dark:border-zinc-700 rounded-xl flex items-center justify-center hover:border-black dark:hover:border-white transition-colors text-gray-400 hover:text-black dark:hover:text-white">
+                <button onClick={() => alert('Advanced chart settings coming soon!')} className="w-10 h-10 border-2 border-dashed border-gray-200 dark:border-zinc-700 rounded-xl flex items-center justify-center hover:border-black dark:hover:border-white transition-colors text-gray-400 hover:text-black dark:hover:text-white">
                     <Plus className="w-5 h-5" />
                 </button>
             </div>

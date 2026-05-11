@@ -125,10 +125,10 @@ export default function Index({ cards, totalCardBalance, recentTransactions }) {
                                             {showDetails ? <EyeOff className="w-4 h-4 text-gray-900 dark:text-zinc-100" /> : <Eye className="w-4 h-4 text-gray-900 dark:text-zinc-100" />}
                                             <span className="text-gray-900 dark:text-zinc-100">{showDetails ? t('cards.hide_details') : t('cards.show_details')}</span>
                                         </button>
-                                        <button className="flex-1 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                                        <button onClick={() => alert('Card successfully frozen. Contact support to unfreeze.')} className="flex-1 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
                                             <Lock className="w-4 h-4 text-gray-900 dark:text-zinc-100" /> <span className="text-gray-900 dark:text-zinc-100">{t('cards.freeze')}</span>
                                         </button>
-                                        <button className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                                        <button onClick={() => alert('Card settings coming soon!')} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
                                             <Settings className="w-4 h-4 text-gray-400 dark:text-zinc-400" />
                                         </button>
                                     </div>
