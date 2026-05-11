@@ -341,19 +341,19 @@ export default function Welcome({ auth }) {
             </section>
 
             {/* 6. Footer */}
-            <footer className="bg-blue-950 text-white pt-24 pb-12 px-6">
+            <footer className="bg-blue-950 text-white pt-8 pb-4 px-6">
                 <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 mb-20">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
                         <div className="col-span-2 lg:col-span-1">
-                            <div className="flex items-center gap-2 mb-8">
+                            <div className="flex items-center gap-2 mb-4">
                                 <div className="bg-white dark:bg-zinc-800 p-1 rounded-lg">
                                     <Anchor className="w-5 h-5 text-blue-950 dark:text-white" />
                                 </div>
-                                <span className="text-xl font-bold">HarborBank</span>
+                                <span className="text-lg font-bold">HarborBank</span>
                             </div>
-                            <div className="space-y-4 text-sm text-gray-400 leading-relaxed">
-                                <p className="flex gap-3"><MapPin className="w-5 h-5 shrink-0" /> 425 Seaside Avenue, Harbor City, CA 94000</p>
-                                <div className="flex flex-col gap-2 pt-4">
+                            <div className="space-y-2 text-xs text-gray-400 leading-relaxed">
+                                <p className="flex gap-2"><MapPin className="w-4 h-4 shrink-0" /> 425 Seaside Avenue, Harbor City</p>
+                                <div className="flex flex-col gap-1 pt-2">
                                     <Link href="#" className="hover:text-white transition-colors">Branch Locator</Link>
                                     <Link href="#" className="hover:text-white transition-colors">Contact Us</Link>
                                 </div>
@@ -361,8 +361,8 @@ export default function Welcome({ auth }) {
                         </div>
 
                         <div>
-                            <h5 className="font-bold mb-6">{t('welcome.footer_personal')}</h5>
-                            <ul className="space-y-4 text-sm text-gray-400">
+                            <h5 className="font-bold text-sm mb-3">{t('welcome.footer_personal')}</h5>
+                            <ul className="space-y-2 text-xs text-gray-400">
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_checking')}</Link></li>
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_savings')}</Link></li>
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_credit_cards')}</Link></li>
@@ -370,8 +370,8 @@ export default function Welcome({ auth }) {
                         </div>
 
                         <div>
-                            <h5 className="font-bold mb-6">{t('welcome.footer_business')}</h5>
-                            <ul className="space-y-4 text-sm text-gray-400">
+                            <h5 className="font-bold text-sm mb-3">{t('welcome.footer_business')}</h5>
+                            <ul className="space-y-2 text-xs text-gray-400">
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_business_checking')}</Link></li>
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_merchant_services')}</Link></li>
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_corporate_lending')}</Link></li>
@@ -379,8 +379,8 @@ export default function Welcome({ auth }) {
                         </div>
 
                         <div>
-                            <h5 className="font-bold mb-6">{t('welcome.footer_support')}</h5>
-                            <ul className="space-y-4 text-sm text-gray-400">
+                            <h5 className="font-bold text-sm mb-3">{t('welcome.footer_support')}</h5>
+                            <ul className="space-y-2 text-xs text-gray-400">
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_help_center')}</Link></li>
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_security_center')}</Link></li>
                                 <li><Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_privacy_legal')}</Link></li>
@@ -388,20 +388,20 @@ export default function Welcome({ auth }) {
                         </div>
 
                         <div className="col-span-2 lg:col-span-1">
-                            <h5 className="font-bold mb-6">{t('welcome.footer_stay_connected')}</h5>
-                            <div className="flex gap-4 mb-8">
-                                <Link href="#" className="bg-white/10 p-2 rounded-lg hover:bg-white/20 transition-colors"><Facebook className="w-5 h-5" /></Link>
-                                <Link href="#" className="bg-white/10 p-2 rounded-lg hover:bg-white/20 transition-colors"><Twitter className="w-5 h-5" /></Link>
-                                <Link href="#" className="bg-white/10 p-2 rounded-lg hover:bg-white/20 transition-colors"><Linkedin className="w-5 h-5" /></Link>
+                            <h5 className="font-bold text-sm mb-3">{t('welcome.footer_stay_connected')}</h5>
+                            <div className="flex gap-2 mb-4">
+                                <Link href="#" className="bg-white/10 p-1.5 rounded-md hover:bg-white/20 transition-colors"><Facebook className="w-4 h-4" /></Link>
+                                <Link href="#" className="bg-white/10 p-1.5 rounded-md hover:bg-white/20 transition-colors"><Twitter className="w-4 h-4" /></Link>
+                                <Link href="#" className="bg-white/10 p-1.5 rounded-md hover:bg-white/20 transition-colors"><Linkedin className="w-4 h-4" /></Link>
                             </div>
-                            <div className="space-y-4">
+                            <div className="space-y-2">
                                 <div className="relative">
                                     <input
                                         type="email"
                                         placeholder={t('welcome.footer_email_placeholder')}
-                                        className="w-full bg-white/10 border-none rounded-full px-5 py-3 text-sm focus:ring-2 focus:ring-white/30"
+                                        className="w-full bg-white/10 border-none rounded-full px-4 py-2 text-xs focus:ring-2 focus:ring-white/30"
                                     />
-                                    <button className="absolute right-1 top-1 bg-white dark:bg-zinc-800 text-blue-900 dark:text-zinc-100 text-xs font-bold px-4 py-2 rounded-full hover:bg-blue-50 dark:hover:bg-zinc-700 transition-colors">
+                                    <button className="absolute right-1 top-1 bg-white dark:bg-zinc-800 text-blue-900 dark:text-zinc-100 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-blue-50 dark:hover:bg-zinc-700 transition-colors">
                                         {t('welcome.footer_subscribe')}
                                     </button>
                                 </div>
@@ -410,9 +410,9 @@ export default function Welcome({ auth }) {
                         </div>
                     </div>
 
-                    <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
+                    <div className="pt-4 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-2 text-[10px] text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-widest">
                         <p>{t('welcome.footer_rights')}</p>
-                        <div className="flex gap-8">
+                        <div className="flex gap-4">
                             <Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_legal')}</Link>
                             <Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_privacy')}</Link>
                             <Link href="#" className="hover:text-white transition-colors">{t('welcome.footer_security')}</Link>
