@@ -17,6 +17,7 @@ import {
     ResponsiveContainer, BarChart, Bar 
 } from 'recharts';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 const chartData = [
     { name: 'Jan', payment: 2400 },
@@ -30,26 +31,37 @@ const chartData = [
 const StatCard = ({ icon: Icon, title, value, trend, trendUp }) => (
     <motion.div 
         whileHover={{ y: -5 }}
-        className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50 group transition-all"
+        className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 group transition-all"
     >
         <div className="flex justify-between items-start mb-6">
-            <div className="bg-gray-50 p-4 rounded-2xl group-hover:bg-black group-hover:text-white transition-colors">
+            <div className="bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-colors">
                 <Icon className="w-6 h-6" />
             </div>
             <div className={clsx(
                 "flex items-center gap-1 text-[10px] font-black px-2 py-1 rounded-full",
-                trendUp ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+                trendUp ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400" : "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
             )}>
                 {trendUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownLeft className="w-3 h-3" />}
                 {trend}
             </div>
         </div>
         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{title}</p>
-        <h4 className="text-2xl font-black text-gray-900">{value}</h4>
+        <h4 className="text-2xl font-black text-gray-900 dark:text-white">{value}</h4>
     </motion.div>
 );
 
+const getLoanTypeKey = (type) => {
+    const map = {
+        'Home Loan': 'home',
+        'Car Loan': 'car',
+        'Business Loan': 'business',
+        'Student Loan': 'student'
+    };
+    return map[type] || type;
+};
+
 export default function Index({ auth, stats, activeLoans, recentTransactions }) {
+    const { t } = useTranslation();
     const [showPayModal, setShowPayModal] = useState(false);
     const [showCalcModal, setShowCalcModal] = useState(false);
     const [showStatementModal, setShowStatementModal] = useState(false);
@@ -90,22 +102,22 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
 
     return (
         <DashboardLayout>
-            <Head title="Loan Management - HarborBank" />
+            <Head title={`${t('loans.title')} - HarborBank`} />
 
             <div className="space-y-10 mt-8">
                 {/* Header Section */}
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                     <div>
-                        <h2 className="text-3xl font-black text-gray-900">Loan Management</h2>
-                        <p className="text-sm text-gray-500 mt-1">Manage your debts and financial growth with AI insights.</p>
+                        <h2 className="text-3xl font-black text-gray-900 dark:text-white">{t('loans.title')}</h2>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">{t('loans.desc')}</p>
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="relative hidden md:block">
                             <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                             <input 
                                 type="text" 
-                                placeholder="Search loans..." 
-                                className="bg-white border-none rounded-2xl pl-11 pr-6 py-3 text-sm shadow-sm focus:ring-2 focus:ring-black w-64 transition-all"
+                                placeholder={t('loans.search_placeholder')}
+                                className="bg-white dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-500 border-none rounded-2xl pl-11 pr-6 py-3 text-sm shadow-sm focus:ring-2 focus:ring-black dark:focus:ring-white w-64 transition-all"
                             />
                         </div>
                         <button className="bg-white p-3 rounded-2xl shadow-sm hover:bg-gray-50 transition-colors relative">
@@ -121,66 +133,66 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
 
                 {/* Statistics Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <StatCard icon={DollarSign} title="Total Loan Balance" value={`$${Number(stats.total_balance).toLocaleString()}`} trend="12.5%" trendUp={false} />
-                    <StatCard icon={Calendar} title="Monthly Payment" value={`$${Number(stats.monthly_payment).toLocaleString()}`} trend="2.4%" trendUp={true} />
-                    <StatCard icon={Target} title="Remaining Amount" value={`$${Number(stats.remaining_amount).toLocaleString()}`} trend="8.1%" trendUp={false} />
-                    <StatCard icon={TrendingUp} title="Loan Score" value={stats.loan_score} trend="+15" trendUp={true} />
+                    <StatCard icon={DollarSign} title={t('loans.total_balance')} value={`$${Number(stats.total_balance).toLocaleString()}`} trend="12.5%" trendUp={false} />
+                    <StatCard icon={Calendar} title={t('loans.monthly_payment')} value={`$${Number(stats.monthly_payment).toLocaleString()}`} trend="2.4%" trendUp={true} />
+                    <StatCard icon={Target} title={t('loans.remaining_amount')} value={`$${Number(stats.remaining_amount).toLocaleString()}`} trend="8.1%" trendUp={false} />
+                    <StatCard icon={TrendingUp} title={t('loans.loan_score')} value={stats.loan_score} trend="+15" trendUp={true} />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     {/* Main Content Area */}
                     <div className="lg:col-span-2 space-y-10">
                         {/* Active Loans Table */}
-                        <div className="bg-white rounded-[40px] shadow-sm border border-gray-50 overflow-hidden">
-                            <div className="p-8 border-b border-gray-50 flex justify-between items-center">
-                                <h3 className="text-xl font-black text-gray-900">Active Loans</h3>
-                                <button className="text-sm font-bold text-gray-400 hover:text-black transition-colors">View All</button>
+                        <div className="bg-white dark:bg-zinc-900 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 overflow-hidden transition-colors">
+                            <div className="p-8 border-b border-gray-50 dark:border-zinc-800 flex justify-between items-center">
+                                <h3 className="text-xl font-black text-gray-900 dark:text-white">{t('loans.active_loans')}</h3>
+                                <button className="text-sm font-bold text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.view_all')}</button>
                             </div>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left">
                                     <thead>
                                         <tr className="bg-gray-50/50">
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Loan Type</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Provider</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Remaining</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Progress</th>
-                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Action</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.type')}</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.provider')}</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.remaining')}</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.status')}</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.progress')}</th>
+                                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">{t('loans.action')}</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-50">
+                                    <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
                                         {activeLoans.map((loan) => (
-                                            <tr key={loan.id} className="hover:bg-gray-50/30 transition-colors">
+                                            <tr key={loan.id} className="hover:bg-gray-50/30 dark:hover:bg-zinc-800/40 transition-colors">
                                                 <td className="px-8 py-6">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                                                            {loan.type === 'Home Loan' && <Home className="w-5 h-5 text-blue-600" />}
-                                                            {loan.type === 'Car Loan' && <Car className="w-5 h-5 text-orange-600" />}
-                                                            {loan.type === 'Business Loan' && <Briefcase className="w-5 h-5 text-purple-600" />}
-                                                            {loan.type === 'Student Loan' && <GraduationCap className="w-5 h-5 text-green-600" />}
+                                                        <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-zinc-800 flex items-center justify-center transition-colors">
+                                                            {loan.type === 'Home Loan' && <Home className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
+                                                            {loan.type === 'Car Loan' && <Car className="w-5 h-5 text-orange-600 dark:text-orange-400" />}
+                                                            {loan.type === 'Business Loan' && <Briefcase className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
+                                                            {loan.type === 'Student Loan' && <GraduationCap className="w-5 h-5 text-green-600 dark:text-green-400" />}
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-bold text-gray-900">{loan.type}</p>
-                                                            <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{loan.interest_rate}% Rate</p>
+                                                            <p className="text-sm font-bold text-gray-900 dark:text-zinc-100">{t(`loans.types.${getLoanTypeKey(loan.type)}`)}</p>
+                                                            <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{loan.interest_rate}% {t('loans.rate')}</p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-8 py-6">
-                                                    <span className="text-sm font-bold text-gray-900">{loan.provider}</span>
+                                                    <span className="text-sm font-bold text-gray-900 dark:text-zinc-100">{loan.provider}</span>
                                                 </td>
                                                 <td className="px-8 py-6">
                                                     <div>
-                                                        <p className="text-sm font-black text-gray-900">${Number(loan.remaining_amount).toLocaleString()}</p>
-                                                        <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">Total: ${Number(loan.amount).toLocaleString()}</p>
+                                                        <p className="text-sm font-black text-gray-900 dark:text-zinc-100">${Number(loan.remaining_amount).toLocaleString()}</p>
+                                                        <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">{t('loans.total')}: ${Number(loan.amount).toLocaleString()}</p>
                                                     </div>
                                                 </td>
                                                 <td className="px-8 py-6">
                                                     <span className={clsx(
                                                         "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
-                                                        loan.status === 'approved' ? "bg-green-100 text-green-600" : 
-                                                        loan.status === 'pending' ? "bg-orange-100 text-orange-600" : "bg-red-100 text-red-600"
+                                                        loan.status === 'approved' ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400" : 
+                                                        loan.status === 'pending' ? "bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400" : "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
                                                     )}>
-                                                        {loan.status}
+                                                        {t(`common.status.${loan.status}`)}
                                                     </span>
                                                 </td>
                                                 <td className="px-8 py-6">
@@ -188,13 +200,13 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                         <div className="flex justify-between text-[8px] font-black uppercase tracking-widest mb-1">
                                                             <span>{loan.progress}%</span>
                                                         </div>
-                                                        <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+                                                        <div className="h-1 bg-gray-100 dark:bg-zinc-700 rounded-full overflow-hidden">
                                                             <motion.div 
                                                                 initial={{ width: 0 }} 
                                                                 animate={{ width: `${loan.progress}%` }} 
                                                                 className={clsx(
                                                                     "h-full rounded-full",
-                                                                    loan.status === 'approved' ? "bg-black" : "bg-gray-400"
+                                                                    loan.status === 'approved' ? "bg-black dark:bg-white" : "bg-gray-400"
                                                                 )} 
                                                             />
                                                         </div>
@@ -206,9 +218,9 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                             setData('loan_id', loan.id);
                                                             setShowPayModal(true);
                                                         }}
-                                                        className="text-[10px] font-black uppercase tracking-widest bg-gray-50 hover:bg-black hover:text-white px-4 py-2 rounded-xl transition-all"
+                                                        className="text-[10px] font-black uppercase tracking-widest bg-gray-50 dark:bg-zinc-800 dark:text-zinc-300 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black px-4 py-2 rounded-xl transition-all"
                                                     >
-                                                        Pay EMI
+                                                        {t('loans.pay_emi')}
                                                     </button>
                                                 </td>
                                             </tr>
@@ -218,8 +230,8 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                 <td colSpan="6" className="px-8 py-20 text-center">
                                                     <div className="flex flex-col items-center">
                                                         <Info className="w-8 h-8 text-gray-200 mb-4" />
-                                                        <p className="text-sm font-bold text-gray-400">No active loans found.</p>
-                                                        <Link href={route('loans.apply')} className="text-xs text-black font-black uppercase mt-2 hover:underline">Apply for your first loan</Link>
+                                                        <p className="text-sm font-bold text-gray-400">{t('loans.no_active_loans')}</p>
+                                                        <Link href={route('loans.apply')} className="text-xs text-black dark:text-white font-black uppercase mt-2 hover:underline">{t('loans.apply_first')}</Link>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -230,15 +242,15 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                         </div>
 
                         {/* Analytics Chart */}
-                        <div className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50">
+                        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 transition-colors">
                             <div className="flex justify-between items-center mb-10">
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">Payment Analytics</h3>
-                                    <p className="text-xs text-gray-400 mt-1">Monthly repayment history over the last 6 months.</p>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white">{t('loans.analytics')}</h3>
+                                    <p className="text-xs text-gray-400 mt-1">{t('loans.analytics_desc')}</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button className="px-4 py-2 bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-widest">Monthly</button>
-                                    <button className="px-4 py-2 bg-gray-50 text-gray-400 rounded-xl text-[10px] font-black uppercase tracking-widest">Yearly</button>
+                                    <button className="px-4 py-2 bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-widest">{t('loans.monthly')}</button>
+                                    <button className="px-4 py-2 bg-gray-50 text-gray-400 rounded-xl text-[10px] font-black uppercase tracking-widest">{t('loans.yearly')}</button>
                                 </div>
                             </div>
                             <div className="h-[300px] w-full">
@@ -289,62 +301,62 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                     {/* Quick Action & Info Panel */}
                     <div className="space-y-10">
                         {/* Quick Actions */}
-                        <div className="bg-[#0A0A0A] p-8 rounded-[40px] text-white">
-                            <h3 className="text-xl font-bold mb-8">Quick Actions</h3>
+                        <div className="bg-white dark:bg-[#0A0A0A] border border-gray-100 dark:border-zinc-800 p-8 rounded-[40px] text-gray-900 dark:text-white transition-colors">
+                            <h3 className="text-xl font-bold mb-8">{t('loans.quick_actions')}</h3>
                             <div className="grid grid-cols-1 gap-4">
                                 <Link 
                                     href={route('loans.apply')}
-                                    className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform"
+                                    className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform shadow-xl shadow-black/10 dark:shadow-white/5"
                                 >
-                                    <Plus className="w-5 h-5" /> Apply for Loan
+                                    <Plus className="w-5 h-5" /> {t('loans.apply_loan')}
                                 </Link>
                                 <button 
                                     onClick={() => setShowPayModal(true)}
-                                    className="w-full bg-zinc-800 text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+                                    className="w-full bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
                                 >
-                                    <CreditCard className="w-5 h-5" /> Pay EMI
+                                    <CreditCard className="w-5 h-5" /> {t('loans.pay_emi')}
                                 </button>
                                 <div className="grid grid-cols-2 gap-4">
                                     <button 
                                         onClick={() => setShowStatementModal(true)}
-                                        className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors"
+                                        className="bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
                                     >
                                         <FileText className="w-5 h-5 text-gray-500" />
-                                        <span className="text-[10px] font-bold">Statement</span>
+                                        <span className="text-[10px] font-bold">{t('loans.statement')}</span>
                                     </button>
                                     <button 
                                         onClick={() => setShowCalcModal(true)}
-                                        className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors"
+                                        className="bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
                                     >
                                         <Calculator className="w-5 h-5 text-gray-500" />
-                                        <span className="text-[10px] font-bold">Calculator</span>
+                                        <span className="text-[10px] font-bold">{t('loans.calculator')}</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         {/* Loan Eligibility Widget */}
-                        <div className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50">
-                            <h3 className="text-lg font-black text-gray-900 mb-6">Eligibility Score</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 transition-colors">
+                            <h3 className="text-lg font-black text-gray-900 dark:text-white mb-6">{t('loans.eligibility')}</h3>
                             <div className="flex flex-col items-center justify-center py-4">
                                 <div className="relative w-40 h-40">
                                     <svg className="w-full h-full transform -rotate-90">
-                                        <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100" />
-                                        <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray="440" strokeDashoffset="440" strokeLinecap="round" className="text-black" style={{ strokeDashoffset: 440 - (440 * 85) / 100 }} />
+                                        <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100 dark:text-zinc-700" />
+                                        <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray="440" strokeDashoffset="440" strokeLinecap="round" className="text-black dark:text-white" style={{ strokeDashoffset: 440 - (440 * 85) / 100 }} />
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-3xl font-black">85%</span>
-                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Excellent</span>
+                                        <span className="text-3xl font-black dark:text-white">85%</span>
+                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{t('loans.excellent')}</span>
                                     </div>
                                 </div>
                                 <div className="mt-8 grid grid-cols-2 gap-8 w-full">
                                     <div className="text-center">
-                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Max Amount</p>
-                                        <p className="text-sm font-black text-gray-900">$2.5M</p>
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('loans.max_amount')}</p>
+                                        <p className="text-sm font-black text-gray-900 dark:text-zinc-100">$2.5M</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Interest</p>
-                                        <p className="text-sm font-black text-gray-900">3.2%</p>
+                                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('loans.interest')}</p>
+                                        <p className="text-sm font-black text-gray-900 dark:text-zinc-100">3.2%</p>
                                     </div>
                                 </div>
                             </div>
@@ -355,44 +367,44 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-colors" />
                             <div className="flex items-center gap-3 mb-4">
                                 <Sparkles className="w-5 h-5 text-purple-200" />
-                                <h3 className="text-lg font-bold">Harbor AI Insight</h3>
+                                <h3 className="text-lg font-bold">{t('loans.ai_insight')}</h3>
                             </div>
                             <p className="text-sm leading-relaxed text-purple-100 mb-6">
-                                Based on your student loan repayment speed, you're eligible for a 0.5% rate reduction on your next Home Loan request.
+                                {t('loans.ai_desc')}
                             </p>
                             <button className="bg-white/20 hover:bg-white/30 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors backdrop-blur-md">
-                                Explore Offer
+                                {t('loans.explore_offer')}
                             </button>
                         </div>
 
                         {/* Recent Transactions */}
-                        <div className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50">
-                            <h3 className="text-lg font-black text-gray-900 mb-6">Recent Loan Activity</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-8 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 transition-colors">
+                            <h3 className="text-lg font-black text-gray-900 dark:text-white mb-6">{t('loans.recent_activity')}</h3>
                             <div className="space-y-6">
                                 {recentTransactions.map((tx) => (
                                     <div key={tx.id} className="flex items-center justify-between group cursor-pointer">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-900 font-bold text-xs group-hover:bg-black group-hover:text-white transition-colors">
+                                            <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-zinc-800 flex items-center justify-center text-gray-900 dark:text-zinc-100 font-bold text-xs group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-colors">
                                                 {tx.type === 'debit' ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-gray-900">{tx.description}</p>
+                                                <p className="text-xs font-bold text-gray-900 dark:text-zinc-100">{tx.description}</p>
                                                 <p className="text-[9px] font-black text-gray-400 uppercase">{tx.date}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
                                             <p className={clsx(
                                                 "text-xs font-black",
-                                                tx.type === 'credit' ? "text-green-500" : "text-gray-900"
+                                                tx.type === 'credit' ? "text-green-500" : "text-gray-900 dark:text-zinc-100"
                                             )}>
                                                 {tx.type === 'credit' ? '+' : '-'}${Number(tx.amount).toLocaleString()}
                                             </p>
-                                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{tx.status}</p>
+                                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{t(`common.status.${tx.status}`)}</p>
                                         </div>
                                     </div>
                                 ))}
                                 {recentTransactions.length === 0 && (
-                                    <p className="text-xs text-center text-gray-400 py-4">No recent activity.</p>
+                                    <p className="text-xs text-center text-gray-400 py-4">{t('loans.no_activity')}</p>
                                 )}
                             </div>
                         </div>
@@ -415,16 +427,16 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-lg rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                            className="bg-white dark:bg-zinc-900 w-full max-w-lg rounded-[40px] shadow-2xl relative z-10 overflow-hidden border border-transparent dark:border-zinc-800"
                         >
-                            <div className="p-8 border-b border-gray-50 flex justify-between items-center">
+                            <div className="p-8 border-b border-gray-50 dark:border-zinc-800 flex justify-between items-center">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-black p-2 rounded-xl text-white">
+                                    <div className="bg-black dark:bg-white p-2 rounded-xl text-white dark:text-black">
                                         <CreditCard className="w-5 h-5" />
                                     </div>
-                                    <h3 className="text-xl font-black text-gray-900">Pay EMI</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white">{t('loans.pay_emi')}</h3>
                                 </div>
-                                <button onClick={() => setShowPayModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <button onClick={() => setShowPayModal(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors">
                                     <X className="w-5 h-5 text-gray-400" />
                                 </button>
                             </div>
@@ -432,7 +444,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                             <form onSubmit={handlePaySubmit} className="p-8 space-y-8">
                                 <div className="space-y-4">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Select Loan</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.select_loan')}</label>
                                         <div className="grid grid-cols-1 gap-3">
                                             {activeLoans.map((loan) => (
                                                 <div 
@@ -440,21 +452,23 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                     onClick={() => setData('loan_id', loan.id)}
                                                     className={clsx(
                                                         "p-4 rounded-2xl border-2 transition-all cursor-pointer flex justify-between items-center",
-                                                        data.loan_id === loan.id ? "border-black bg-gray-50" : "border-gray-100 hover:border-gray-200"
+                                                        data.loan_id === loan.id 
+                                                            ? "border-black dark:border-white bg-gray-50 dark:bg-zinc-800" 
+                                                            : "border-gray-100 dark:border-zinc-700 hover:border-gray-200 dark:hover:border-zinc-600"
                                                     )}
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center">
+                                                        <div className="w-8 h-8 rounded-lg bg-white dark:bg-zinc-700 shadow-sm flex items-center justify-center">
                                                             {loan.type === 'Home Loan' && <Home className="w-4 h-4 text-blue-600" />}
                                                             {loan.type === 'Car Loan' && <Car className="w-4 h-4 text-orange-600" />}
                                                             {loan.type === 'Business Loan' && <Briefcase className="w-4 h-4 text-purple-600" />}
                                                         </div>
                                                         <div>
-                                                            <p className="text-xs font-bold text-gray-900">{loan.type}</p>
+                                                            <p className="text-xs font-bold text-gray-900 dark:text-zinc-100">{t(`loans.types.${getLoanTypeKey(loan.type)}`)}</p>
                                                             <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">EMI: ${Number(loan.monthly_payment).toLocaleString()}</p>
                                                         </div>
                                                     </div>
-                                                    {data.loan_id === loan.id && <CheckCircle2 className="w-5 h-5 text-black" />}
+                                                    {data.loan_id === loan.id && <CheckCircle2 className="w-5 h-5 text-black dark:text-white" />}
                                                 </div>
                                             ))}
                                         </div>
@@ -462,14 +476,14 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Payment Amount ($)</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.payment_amount')}</label>
                                         <div className="relative">
                                             <input 
                                                 type="number"
                                                 value={data.amount}
                                                 onChange={e => setData('amount', e.target.value)}
-                                                placeholder="0.00"
-                                                className="w-full bg-gray-50 border-none rounded-2xl p-5 text-lg font-black text-gray-900 focus:ring-2 focus:ring-black transition-all"
+                                                placeholder={t('loans.amount_placeholder')}
+                                                className="w-full bg-gray-50 dark:bg-zinc-800 dark:text-zinc-100 border-none rounded-2xl p-5 text-lg font-black text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-black dark:focus:ring-white transition-all"
                                             />
                                             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                                                 <button 
@@ -478,30 +492,30 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                         const loan = activeLoans.find(l => l.id === data.loan_id);
                                                         if(loan) setData('amount', loan.monthly_payment);
                                                     }}
-                                                    className="text-[10px] font-black uppercase text-gray-400 hover:text-black transition-colors"
+                                                    className="text-[10px] font-black uppercase text-gray-400 hover:text-black dark:hover:text-white transition-colors"
                                                 >
-                                                    Full EMI
+                                                    {t('loans.full_emi')}
                                                 </button>
-                                                <div className="h-4 w-[1px] bg-gray-200" />
-                                                <span className="text-sm font-black text-gray-900">USD</span>
+                                                <div className="h-4 w-[1px] bg-gray-200 dark:bg-zinc-700" />
+                                                <span className="text-sm font-black text-gray-900 dark:text-zinc-100">USD</span>
                                             </div>
                                         </div>
                                         {errors.amount && <p className="text-[10px] text-red-500 px-1">{errors.amount}</p>}
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 p-6 rounded-3xl space-y-3">
+                                <div className="bg-gray-50 dark:bg-zinc-800 p-6 rounded-3xl space-y-3 transition-colors">
                                     <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                        <span>Current Balance</span>
-                                        <span className="text-gray-900">${auth.user.balance}</span>
+                                        <span>{t('loans.current_balance')}</span>
+                                        <span className="text-gray-900 dark:text-zinc-100">${auth.user.balance}</span>
                                     </div>
                                     <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                        <span>Processing Fee</span>
-                                        <span className="text-green-600">FREE</span>
+                                        <span>{t('loans.processing_fee')}</span>
+                                        <span className="text-green-600">{t('loans.free')}</span>
                                     </div>
-                                    <div className="pt-2 border-t border-gray-200 flex justify-between text-xs font-black uppercase tracking-widest">
-                                        <span className="text-gray-900">Total Payable</span>
-                                        <span className="text-gray-900">${data.amount || '0.00'}</span>
+                                    <div className="pt-2 border-t border-gray-200 dark:border-zinc-700 flex justify-between text-xs font-black uppercase tracking-widest">
+                                        <span className="text-gray-900 dark:text-zinc-100">{t('loans.total_payable')}</span>
+                                        <span className="text-gray-900 dark:text-zinc-100">${data.amount || '0.00'}</span>
                                     </div>
                                 </div>
 
@@ -510,7 +524,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                     disabled={processing}
                                     className="w-full bg-black text-white py-5 rounded-[20px] font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 disabled:opacity-50"
                                 >
-                                    {processing ? 'Processing Payment...' : 'Confirm EMI Payment'}
+                                    {processing ? t('loans.processing_payment') : t('loans.confirm_payment')}
                                 </button>
                             </form>
                         </motion.div>
@@ -533,43 +547,43 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                            className="bg-white dark:bg-zinc-900 w-full max-w-2xl rounded-[40px] shadow-2xl relative z-10 overflow-hidden border border-gray-50 dark:border-zinc-800"
                         >
-                            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                            <div className="p-8 border-b border-gray-50 dark:border-zinc-800 flex justify-between items-center bg-gray-50/50 dark:bg-zinc-800/50">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-black p-2 rounded-xl text-white">
+                                    <div className="bg-black dark:bg-white p-2 rounded-xl text-white dark:text-black">
                                         <Calculator className="w-5 h-5" />
                                     </div>
-                                    <h3 className="text-xl font-black text-gray-900">Loan Calculator</h3>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.loan_calculator')}</h3>
                                 </div>
-                                <button onClick={() => setShowCalcModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <button onClick={() => setShowCalcModal(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors">
                                     <X className="w-5 h-5 text-gray-400" />
                                 </button>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2">
-                                <div className="p-8 space-y-6 border-r border-gray-50">
+                                <div className="p-8 space-y-6 border-r border-gray-50 dark:border-zinc-800">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Loan Amount ($)</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.loan_amount')}</label>
                                         <input 
                                             type="number"
                                             value={calcData.amount}
                                             onChange={e => setCalcData({...calcData, amount: e.target.value})}
-                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all"
+                                            className="w-full bg-gray-50 dark:bg-zinc-800 border-none rounded-2xl p-4 text-lg font-black text-gray-900 dark:text-white focus:ring-2 focus:ring-black dark:focus:ring-white transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Interest Rate (%)</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.interest_rate')}</label>
                                         <input 
                                             type="number"
                                             step="0.1"
                                             value={calcData.rate}
                                             onChange={e => setCalcData({...calcData, rate: e.target.value})}
-                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all"
+                                            className="w-full bg-gray-50 dark:bg-zinc-800 border-none rounded-2xl p-4 text-lg font-black text-gray-900 dark:text-white focus:ring-2 focus:ring-black dark:focus:ring-white transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Duration (Months)</label>
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.duration')}</label>
                                         <div className="grid grid-cols-4 gap-2">
                                             {[12, 24, 36, 60].map(m => (
                                                 <button 
@@ -578,7 +592,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                     onClick={() => setCalcData({...calcData, duration: m})}
                                                     className={clsx(
                                                         "py-2 rounded-xl text-[10px] font-black transition-all",
-                                                        Number(calcData.duration) === m ? "bg-black text-white" : "bg-gray-50 text-gray-400 hover:bg-gray-100"
+                                                        Number(calcData.duration) === m ? "bg-black dark:bg-white text-white dark:text-black" : "bg-gray-50 dark:bg-zinc-800 text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-700"
                                                     )}
                                                 >
                                                     {m/12}Y
@@ -589,43 +603,43 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                             type="number"
                                             value={calcData.duration}
                                             onChange={e => setCalcData({...calcData, duration: e.target.value})}
-                                            className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all mt-2"
+                                            className="w-full bg-gray-50 dark:bg-zinc-800 border-none rounded-2xl p-4 text-lg font-black text-gray-900 dark:text-white focus:ring-2 focus:ring-black dark:focus:ring-white transition-all mt-2"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="p-8 bg-gray-50/30 flex flex-col justify-center space-y-8">
+                                <div className="p-8 bg-gray-50/30 dark:bg-zinc-900/30 flex flex-col justify-center space-y-8">
                                     <div className="text-center">
                                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Estimated Monthly EMI</p>
-                                        <h4 className="text-4xl font-black text-gray-900">${emi.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h4>
+                                        <h4 className="text-4xl font-black text-gray-900 dark:text-zinc-100">${emi.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h4>
                                     </div>
 
                                     <div className="space-y-4">
-                                        <div className="flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                        <div className="flex justify-between items-center p-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-700">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-2 h-2 rounded-full bg-black" />
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Principal</span>
+                                                <div className="w-2 h-2 rounded-full bg-black dark:bg-white" />
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.principal')}</span>
                                             </div>
-                                            <span className="text-sm font-black text-gray-900">${Number(calcData.amount).toLocaleString()}</span>
+                                            <span className="text-sm font-black text-gray-900 dark:text-zinc-100">${Number(calcData.amount).toLocaleString()}</span>
                                         </div>
-                                        <div className="flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                        <div className="flex justify-between items-center p-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-700">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-2 h-2 rounded-full bg-gray-300" />
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Interest</span>
+                                                <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-600" />
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.total_interest')}</span>
                                             </div>
-                                            <span className="text-sm font-black text-gray-900">${totalInterest.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                            <span className="text-sm font-black text-gray-900 dark:text-zinc-100">${totalInterest.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                         </div>
-                                        <div className="pt-4 border-t border-gray-200 flex justify-between items-center">
-                                            <span className="text-xs font-black uppercase tracking-widest">Total Payable</span>
-                                            <span className="text-lg font-black text-gray-900">${totalPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        <div className="pt-4 border-t border-gray-200 dark:border-zinc-700 flex justify-between items-center">
+                                            <span className="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-zinc-100">{t('loans.total_payable')}</span>
+                                            <span className="text-lg font-black text-gray-900 dark:text-zinc-100">${totalPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                         </div>
                                     </div>
 
                                     <Link 
                                         href={route('loans.apply')}
-                                        className="w-full bg-black text-white py-4 rounded-2xl font-black text-sm text-center hover:scale-[1.02] active:scale-95 transition-all"
+                                        className="w-full bg-black dark:bg-white text-white dark:text-black py-4 rounded-2xl font-black text-sm text-center hover:scale-[1.02] active:scale-95 transition-all"
                                     >
-                                        Apply for this Loan
+                                        {t('loans.apply_this_loan')}
                                     </Link>
                                 </div>
                             </div>
@@ -649,19 +663,19 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-lg rounded-[40px] shadow-2xl relative z-10 overflow-hidden"
+                            className="bg-white dark:bg-zinc-900 w-full max-w-lg rounded-[40px] shadow-2xl relative z-10 overflow-hidden border border-gray-50 dark:border-zinc-800"
                         >
-                            <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                            <div className="p-8 border-b border-gray-50 dark:border-zinc-800 flex justify-between items-center bg-gray-50/50 dark:bg-zinc-800/50">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-black p-2 rounded-xl text-white">
+                                    <div className="bg-black dark:bg-white p-2 rounded-xl text-white dark:text-black">
                                         <FileText className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-black text-gray-900">Loan Statement</h3>
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Official Activity Record</p>
+                                        <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.loan_statement')}</h3>
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.activity_record')}</p>
                                     </div>
                                 </div>
-                                <button onClick={() => setShowStatementModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <button onClick={() => setShowStatementModal(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors">
                                     <X className="w-5 h-5 text-gray-400" />
                                 </button>
                             </div>
@@ -677,51 +691,51 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                             <span className="text-xl font-black tracking-tighter">HarborBank</span>
                                         </div>
                                         <div className="space-y-1">
-                                            <p className="text-sm font-black text-gray-900">{auth.user.name}</p>
+                                            <p className="text-sm font-black text-gray-900 dark:text-zinc-100">{auth.user.name}</p>
                                             <p className="text-[10px] text-gray-400 font-bold">Account: **** **** {auth.user.id}42</p>
-                                            <p className="text-[10px] text-gray-400 font-bold">Period: May 2026 - Present</p>
+                                            <p className="text-[10px] text-gray-400 font-bold">{t('loans.period')}: May 2026 - Present</p>
                                         </div>
                                     </div>
                                     <div className="text-right space-y-4">
                                         <div className="space-y-1">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Outstanding</p>
-                                            <p className="text-2xl font-black text-gray-900">${Number(stats.total_balance).toLocaleString()}</p>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.outstanding')}</p>
+                                            <p className="text-2xl font-black text-gray-900 dark:text-zinc-100">${Number(stats.total_balance).toLocaleString()}</p>
                                         </div>
                                         <div className="space-y-1">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Loans</p>
-                                            <p className="text-sm font-black text-gray-900">{activeLoans.length} Portfolio Items</p>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t('loans.active_loans')}</p>
+                                            <p className="text-sm font-black text-gray-900 dark:text-zinc-100">{t('loans.portfolio_items', { count: activeLoans.length })}</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Transactions Table */}
                                 <div className="space-y-4">
-                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2">Transaction History</h4>
+                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 dark:border-zinc-800 pb-2">{t('loans.history')}</h4>
                                     <div className="space-y-1">
                                         {recentTransactions.map((tx) => (
-                                            <div key={tx.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-2xl transition-colors">
+                                            <div key={tx.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-2xl transition-colors">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-900 font-bold text-xs">
+                                                    <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-zinc-700 flex items-center justify-center text-gray-900 dark:text-zinc-100 font-bold text-xs">
                                                         {tx.type === 'debit' ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-gray-900">{tx.description}</p>
+                                                        <p className="text-sm font-bold text-gray-900 dark:text-zinc-100">{tx.description}</p>
                                                         <div className="flex items-center gap-2">
                                                             <span className="text-[9px] font-black text-gray-400 uppercase">{tx.date}</span>
-                                                            <span className="w-1 h-1 rounded-full bg-gray-200" />
-                                                            <span className="text-[9px] font-black text-gray-400 uppercase">TXID: {tx.id}1092</span>
+                                                            <span className="w-1 h-1 rounded-full bg-gray-200 dark:bg-zinc-700" />
+                                                            <span className="text-[9px] font-black text-gray-400 uppercase">{t('loans.txid')}: {tx.id}1092</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="text-sm font-black text-gray-900">-${Number(tx.amount).toLocaleString()}</p>
-                                                    <p className="text-[8px] font-black text-green-600 uppercase tracking-widest">SUCCESS</p>
+                                                    <p className="text-sm font-black text-gray-900 dark:text-zinc-100">-${Number(tx.amount).toLocaleString()}</p>
+                                                    <p className="text-[8px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">{t('loans.success')}</p>
                                                 </div>
                                             </div>
                                         ))}
                                         {recentTransactions.length === 0 && (
                                             <div className="py-10 text-center space-y-2">
-                                                <Info className="w-6 h-6 text-gray-200 mx-auto" />
+                                                <Info className="w-6 h-6 text-gray-200 dark:text-zinc-700 mx-auto" />
                                                 <p className="text-xs font-bold text-gray-400">No loan transactions found for this period.</p>
                                             </div>
                                         )}
@@ -729,22 +743,22 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                 </div>
 
                                 {/* Footer Note */}
-                                <div className="p-6 bg-gray-50 rounded-3xl space-y-2">
+                                <div className="p-6 bg-gray-50 dark:bg-zinc-800/50 rounded-3xl space-y-2">
                                     <p className="text-[9px] leading-relaxed text-gray-400 font-bold uppercase tracking-wide">
-                                        This statement is an official record of your loan activities at HarborBank. For any discrepancies, please contact our support team at support@harborbank.com within 30 days.
+                                        {t('loans.statement_note')}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="p-8 bg-gray-50/50 flex gap-4">
-                                <button className="flex-1 bg-white text-black border border-gray-200 py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
-                                    <Upload className="w-4 h-4" /> Export CSV
+                            <div className="p-8 bg-gray-50/50 dark:bg-zinc-900 border-t border-gray-50 dark:border-zinc-800 flex gap-4">
+                                <button className="flex-1 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white border border-gray-200 dark:border-zinc-700 py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
+                                    <Upload className="w-4 h-4" /> {t('loans.export_csv')}
                                 </button>
                                 <button 
                                     onClick={() => window.print()}
-                                    className="flex-1 bg-black text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10"
+                                    className="flex-1 bg-black dark:bg-white text-white dark:text-black py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 dark:shadow-white/5"
                                 >
-                                    <FileText className="w-4 h-4" /> Download PDF
+                                    <FileText className="w-4 h-4" /> {t('loans.download_pdf')}
                                 </button>
                             </div>
                         </motion.div>

@@ -4,12 +4,14 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
     className = '',
 }) {
+    const { t } = useTranslation();
     const user = usePage().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
@@ -29,18 +31,18 @@ export default function UpdateProfileInformation({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Profile Information
+                <h2 className="text-lg font-medium text-gray-900 dark:text-zinc-100">
+                    {t('profile.info_title')}
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
+                <p className="mt-1 text-sm text-gray-600 dark:text-zinc-400">
+                    {t('profile.info_desc')}
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value={t('profile.name')} />
 
                     <TextInput
                         id="name"
@@ -56,7 +58,7 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value={t('profile.email')} />
 
                     <TextInput
                         id="email"
@@ -72,7 +74,7 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="phone" value="Phone Number" />
+                    <InputLabel htmlFor="phone" value={t('profile.phone')} />
 
                     <TextInput
                         id="phone"
@@ -87,11 +89,11 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="address" value="Residential Address" />
+                    <InputLabel htmlFor="address" value={t('profile.address')} />
 
                     <textarea
                         id="address"
-                        className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        className="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-md shadow-sm transition-colors"
                         value={data.address}
                         onChange={(e) => setData('address', e.target.value)}
                         required
@@ -102,29 +104,28 @@ export default function UpdateProfileInformation({
 
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
-                        <p className="mt-2 text-sm text-gray-800">
-                            Your email address is unverified.
+                        <p className="mt-2 text-sm text-gray-800 dark:text-zinc-300">
+                            {t('profile.unverified_email')}
                             <Link
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                className="rounded-md text-sm text-gray-600 dark:text-zinc-400 underline hover:text-gray-900 dark:hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                             >
-                                Click here to re-send the verification email.
+                                {t('profile.resend_verification')}
                             </Link>
                         </p>
 
                         {status === 'verification-link-sent' && (
                             <div className="mt-2 text-sm font-medium text-green-600">
-                                A new verification link has been sent to your
-                                email address.
+                                {t('profile.verification_sent')}
                             </div>
                         )}
                     </div>
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>{t('profile.save')}</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -133,8 +134,8 @@ export default function UpdateProfileInformation({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">
-                            Saved.
+                        <p className="text-sm text-gray-600 dark:text-zinc-400">
+                            {t('profile.saved')}
                         </p>
                     </Transition>
                 </div>

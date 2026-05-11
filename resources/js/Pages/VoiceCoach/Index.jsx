@@ -9,8 +9,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 export default function Index({ financialData, initialMessage }) {
+    const { t, i18n } = useTranslation();
     const [messages, setMessages] = useState([
         { id: 1, type: 'bot', text: initialMessage }
     ]);
@@ -28,14 +30,12 @@ export default function Index({ financialData, initialMessage }) {
             recognitionRef.current = new SpeechRecognition();
             recognitionRef.current.continuous = false;
             recognitionRef.current.interimResults = false;
-            recognitionRef.current.lang = 'en-US';
+            recognitionRef.current.lang = i18n.language === 'fr' ? 'fr-FR' : i18n.language === 'ar' ? 'ar-SA' : 'en-US';
 
             recognitionRef.current.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 setInput(transcript);
                 setIsRecording(false);
-                // Optionally auto-send
-                // handleSend({ preventDefault: () => {} }, transcript);
             };
 
             recognitionRef.current.onerror = (event) => {
@@ -47,7 +47,7 @@ export default function Index({ financialData, initialMessage }) {
                 setIsRecording(false);
             };
         }
-    }, []);
+    }, [i18n.language]);
 
     const toggleRecording = () => {
         if (isRecording) {
@@ -66,16 +66,19 @@ export default function Index({ financialData, initialMessage }) {
     const speak = (text) => {
         if (isMuted || !window.speechSynthesis) return;
         
-        // Cancel any ongoing speech
         window.speechSynthesis.cancel();
         
         const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = i18n.language === 'fr' ? 'fr-FR' : i18n.language === 'ar' ? 'ar-SA' : 'en-US';
         utterance.rate = 1;
         utterance.pitch = 1;
         
-        // Try to find a nice female/natural voice
         const voices = window.speechSynthesis.getVoices();
-        const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Female'));
+        const preferredVoice = voices.find(v => 
+            (i18n.language === 'fr' && v.lang.includes('fr')) ||
+            (i18n.language === 'ar' && v.lang.includes('ar')) ||
+            (i18n.language === 'en' && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Female')))
+        );
         if (preferredVoice) utterance.voice = preferredVoice;
 
         window.speechSynthesis.speak(utterance);
@@ -86,7 +89,6 @@ export default function Index({ financialData, initialMessage }) {
     }, [messages, isThinking]);
 
     useEffect(() => {
-        // Speak initial message on mount
         const timer = setTimeout(() => speak(initialMessage), 1000);
         return () => {
             clearTimeout(timer);
@@ -95,17 +97,18 @@ export default function Index({ financialData, initialMessage }) {
     }, []);
 
     const handleSend = async (e) => {
-        e.preventDefault();
-        if (!input.trim() || isThinking) return;
+        const textToSend = typeof e === 'string' ? e : input;
+        if (e && e.preventDefault) e.preventDefault();
+        if (!textToSend.trim() || isThinking) return;
 
-        const userMsg = { id: Date.now(), type: 'user', text: input };
+        const userMsg = { id: Date.now(), type: 'user', text: textToSend };
         setMessages(prev => [...prev, userMsg]);
         setInput('');
         setIsThinking(true);
 
         try {
             const response = await axios.post(route('voice-coach.ask'), {
-                question: input
+                question: textToSend
             });
             
             const botText = response.data.response;
@@ -118,7 +121,7 @@ export default function Index({ financialData, initialMessage }) {
             speak(botText);
         } catch (error) {
             console.error('Error asking coach:', error);
-            const errorText = "I'm sorry, I'm having a little trouble connecting right now. Can you try asking me again in a moment?";
+            const errorText = t('voice_coach.error_connecting');
             setMessages(prev => [...prev, {
                 id: Date.now() + 1,
                 type: 'bot',
@@ -132,7 +135,7 @@ export default function Index({ financialData, initialMessage }) {
 
     return (
         <DashboardLayout>
-            <Head title="Voice Financial Coach - HarborBank" />
+            <Head title={`${t('voice_coach.title')} - HarborBank`} />
 
             <div className="max-w-4xl mx-auto h-[85vh] flex flex-col py-8">
                 {/* Header */}
@@ -150,19 +153,19 @@ export default function Index({ financialData, initialMessage }) {
                             <Mic className="w-6 h-6 text-white" />
                         </motion.div>
                         <div>
-                            <h2 className="text-xl font-black text-gray-900">Voice Coach</h2>
+                            <h2 className="text-xl font-black text-gray-900 dark:text-white">{t('voice_coach.title')}</h2>
                             <p className="text-[10px] font-black text-green-500 uppercase tracking-widest flex items-center gap-2">
                                 <span className={clsx("w-1.5 h-1.5 rounded-full", isRecording ? "bg-red-500 animate-ping" : "bg-green-500 animate-pulse")} /> 
-                                {isRecording ? "Listening..." : "Live Analysis Active"}
+                                {isRecording ? t('voice_coach.listening') : t('voice_coach.live_active')}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
                         <button 
-                            onClick={() => router.visit(route('voice-call.index'))}
-                            className="bg-black text-white px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2 shadow-lg shadow-black/10"
+                            onClick={toggleRecording}
+                            className="bg-black dark:bg-white text-white dark:text-black px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2 shadow-lg shadow-black/10"
                         >
-                            <Volume2 className="w-4 h-4" /> Start AI Call
+                            <Volume2 className="w-4 h-4" /> {t('voice_coach.start_ai_call')}
                         </button>
                         <button 
                             onClick={() => {
@@ -171,12 +174,12 @@ export default function Index({ financialData, initialMessage }) {
                             }}
                             className={clsx(
                                 "p-3 rounded-xl transition-all",
-                                isMuted ? "bg-gray-100 text-gray-400" : "bg-red-50 text-red-500 shadow-sm"
+                                isMuted ? "bg-gray-100 dark:bg-zinc-800 text-gray-400" : "bg-red-50 dark:bg-red-900/20 text-red-500 shadow-sm"
                             )}
                         >
                             {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                         </button>
-                        <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+                        <button className="p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
                             <MoreHorizontal className="w-5 h-5 text-gray-400" />
                         </button>
                     </div>
@@ -197,15 +200,15 @@ export default function Index({ financialData, initialMessage }) {
                             >
                                 <div className={clsx(
                                     "w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0",
-                                    msg.type === 'user' ? "bg-gray-900" : "bg-red-500"
+                                    msg.type === 'user' ? "bg-gray-900 dark:bg-zinc-700" : "bg-red-500"
                                 )}>
                                     {msg.type === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
                                 </div>
                                 <div className={clsx(
                                     "p-5 rounded-3xl text-sm font-medium leading-relaxed shadow-sm",
                                     msg.type === 'user' 
-                                        ? "bg-black text-white rounded-tr-none" 
-                                        : "bg-white text-gray-800 border border-gray-50 rounded-tl-none"
+                                        ? "bg-black dark:bg-zinc-800 text-white rounded-tr-none" 
+                                        : "bg-white dark:bg-zinc-900 text-gray-800 dark:text-zinc-100 border border-gray-50 dark:border-zinc-800 rounded-tl-none"
                                 )}>
                                     {msg.text}
                                 </div>
@@ -220,10 +223,10 @@ export default function Index({ financialData, initialMessage }) {
                                 <div className="w-8 h-8 rounded-xl bg-red-500 flex items-center justify-center">
                                     <Bot className="w-4 h-4 text-white" />
                                 </div>
-                                <div className="p-5 bg-white border border-gray-50 rounded-3xl rounded-tl-none flex gap-1">
-                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
-                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
-                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
+                                <div className="p-5 bg-white dark:bg-zinc-900 border border-gray-50 dark:border-zinc-800 rounded-3xl rounded-tl-none flex gap-1 transition-colors">
+                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1.5 h-1.5 bg-gray-300 dark:bg-zinc-600 rounded-full" />
+                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-gray-300 dark:bg-zinc-600 rounded-full" />
+                                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-gray-300 dark:bg-zinc-600 rounded-full" />
                                 </div>
                             </motion.div>
                         )}
@@ -235,13 +238,13 @@ export default function Index({ financialData, initialMessage }) {
                 <div className="mt-6 px-4">
                     <form onSubmit={handleSend} className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-orange-500 rounded-[32px] blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200" />
-                        <div className="relative bg-white border border-gray-100 rounded-[28px] p-2 flex items-center gap-2 shadow-xl shadow-black/5">
+                        <div className="relative bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-[28px] p-2 flex items-center gap-2 shadow-xl shadow-black/5 transition-colors">
                             <button 
                                 type="button"
                                 onClick={toggleRecording}
                                 className={clsx(
                                     "p-3 rounded-2xl transition-colors",
-                                    isRecording ? "bg-red-500 text-white" : "bg-gray-50 text-gray-400 hover:text-red-500"
+                                    isRecording ? "bg-red-500 text-white" : "bg-gray-50 dark:bg-zinc-800 text-gray-400 hover:text-red-500"
                                 )}
                             >
                                 <Mic className="w-5 h-5" />
@@ -250,22 +253,22 @@ export default function Index({ financialData, initialMessage }) {
                                 type="text" 
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder={isRecording ? "Listening to you..." : "Ask about your spending, saving, or credit..."}
-                                className="flex-1 border-none focus:ring-0 text-sm font-bold placeholder:text-gray-300 bg-transparent"
+                                placeholder={isRecording ? t('voice_coach.listening_placeholder') : t('voice_coach.placeholder')}
+                                className="flex-1 border-none focus:ring-0 text-sm font-bold placeholder:text-gray-300 dark:placeholder:text-zinc-600 bg-transparent dark:text-zinc-100"
                             />
                             <button 
                                 type="submit"
                                 disabled={!input.trim() || isThinking}
-                                className="bg-black text-white p-3 rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100"
+                                className="bg-black dark:bg-white text-white dark:text-black p-3 rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100"
                             >
                                 <Send className="w-5 h-5" />
                             </button>
                         </div>
                     </form>
                     <div className="mt-4 flex justify-center gap-6">
-                        <button onClick={() => setInput('How much did I spend this month?')} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">Spending Stats</button>
-                        <button onClick={() => setInput('How can I save more?')} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">Saving Plan</button>
-                        <button onClick={() => setInput('Can I take a credit?')} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">Credit Check</button>
+                        <button onClick={() => handleSend(t('voice_coach.prompt_spending'))} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">{t('voice_coach.spending_stats')}</button>
+                        <button onClick={() => handleSend(t('voice_coach.prompt_saving'))} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">{t('voice_coach.saving_plan')}</button>
+                        <button onClick={() => handleSend(t('voice_coach.prompt_credit'))} className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">{t('voice_coach.credit_check')}</button>
                     </div>
                 </div>
             </div>

@@ -9,8 +9,10 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 export default function Apply({ user }) {
+    const { t } = useTranslation();
     const [step, setStep] = useState(1);
     const { data, setData, post, processing, errors } = useForm({
         full_name: user.name,
@@ -78,7 +80,7 @@ export default function Apply({ user }) {
                 <div className="max-w-[150px]">
                     <h4 className={clsx(
                         "text-xs font-black uppercase tracking-widest truncate",
-                        files[name] ? "text-green-700" : "text-gray-900"
+                        files[name] ? "text-green-700" : "text-gray-900 dark:text-zinc-100"
                     )}>
                         {files[name] ? files[name].name : title}
                     </h4>
@@ -101,24 +103,24 @@ export default function Apply({ user }) {
                     <Check className="w-4 h-4 text-green-600" />
                 </div>
             ) : (
-                <Upload className="w-5 h-5 text-gray-300 group-hover:text-black transition-colors" />
+                <Upload className="w-5 h-5 text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors" />
             )}
         </div>
     );
 
     return (
         <DashboardLayout>
-            <Head title="Apply for Loan - HarborBank" />
+            <Head title={`${t('loans.apply.title')} - HarborBank`} />
 
             <div className="max-w-4xl mx-auto py-10">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-12">
                     <div>
-                        <Link href={route('loans.index')} className="flex items-center gap-2 text-gray-400 hover:text-black transition-colors mb-4 font-bold text-sm">
-                            <ArrowLeft className="w-4 h-4" /> Back to Loans
+                        <Link href={route('loans.index')} className="flex items-center gap-2 text-gray-400 hover:text-black dark:hover:text-white transition-colors mb-4 font-bold text-sm">
+                            <ArrowLeft className="w-4 h-4" /> {t('loans.apply.back_to_loans')}
                         </Link>
-                        <h2 className="text-3xl font-black text-gray-900">Loan Application</h2>
-                        <p className="text-sm text-gray-500 mt-1">Fill out the form below to start your financial journey.</p>
+                        <h2 className="text-3xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.title')}</h2>
+                        <p className="text-sm text-gray-500 mt-1">{t('loans.apply.subtitle')}</p>
                     </div>
                     <div className="hidden md:flex items-center gap-4">
                         {[1, 2, 3, 4].map((s) => (
@@ -142,32 +144,32 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <User className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">Personal Information</h3>
-                                    <p className="text-xs text-gray-400">Basic details for your application.</p>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.personal.title')}</h3>
+                                    <p className="text-xs text-gray-400">{t('loans.apply.personal.desc')}</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <FormInput label="Full Name" name="full_name" placeholder="John Doe" />
-                                <FormInput label="National ID (CIN)" name="cin" placeholder="AE123456" />
-                                <FormInput label="Date of Birth" name="dob" type="date" />
-                                <FormInput label="Phone Number" name="phone" placeholder="+212 6..." />
-                                <FormInput label="Email Address" name="email" type="email" placeholder="john@example.com" />
-                                <FormInput label="City" name="city" placeholder="Casablanca" />
+                                <FormInput label={t('loans.apply.personal.full_name')} name="full_name" placeholder="John Doe" />
+                                <FormInput label={t('loans.apply.personal.cin')} name="cin" placeholder="AE123456" />
+                                <FormInput label={t('loans.apply.personal.dob')} name="dob" type="date" />
+                                <FormInput label={t('loans.apply.personal.phone')} name="phone" placeholder="+212 6..." />
+                                <FormInput label={t('loans.apply.personal.email')} name="email" type="email" placeholder="john@example.com" />
+                                <FormInput label={t('loans.apply.personal.city')} name="city" placeholder="Casablanca" />
                                 <div className="md:col-span-2">
-                                    <FormInput label="Home Address" name="address" placeholder="Rue de la Liberté, No. 12" />
+                                    <FormInput label={t('loans.apply.personal.address')} name="address" placeholder="Rue de la Liberté, No. 12" />
                                 </div>
                             </div>
 
                             <div className="flex justify-end pt-8 border-t border-gray-50">
-                                <button onClick={handleNext} className="bg-black text-white px-10 py-4 rounded-2xl font-black text-sm hover:scale-[1.02] transition-transform">Next Step</button>
+                                <button onClick={handleNext} className="bg-black text-white px-10 py-4 rounded-2xl font-black text-sm hover:scale-[1.02] transition-transform">{t('loans.apply.next_step')}</button>
                             </div>
                         </motion.div>
                     )}
@@ -178,28 +180,28 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <Briefcase className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">Professional & Bank</h3>
-                                    <p className="text-xs text-gray-400">Employment and financial details.</p>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.professional.title')}</h3>
+                                    <p className="text-xs text-gray-400">{t('loans.apply.professional.desc')}</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <FormInput label="Job Title / Profession" name="job_title" placeholder="Software Engineer" />
-                                <FormInput label="Employer Name" name="employer" placeholder="Tech Solutions Inc." />
-                                <FormInput label="Monthly Salary (DH)" name="salary" type="number" placeholder="15000" />
-                                <FormInput label="Bank Account Number (RIB)" name="rib" placeholder="MA64 0000..." />
+                                <FormInput label={t('loans.apply.professional.job_title')} name="job_title" placeholder="Software Engineer" />
+                                <FormInput label={t('loans.apply.professional.employer')} name="employer" placeholder="Tech Solutions Inc." />
+                                <FormInput label={t('loans.apply.professional.salary')} name="salary" type="number" placeholder="15000" />
+                                <FormInput label={t('loans.apply.professional.rib')} name="rib" placeholder="MA64 0000..." />
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">Back</button>
-                                <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">Next Step</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.apply.back')}</button>
+                                <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">{t('loans.apply.next_step')}</button>
                             </div>
                         </motion.div>
                     )}
@@ -210,44 +212,44 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <Landmark className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">Loan Details</h3>
-                                    <p className="text-xs text-gray-400">Information about the loan you need.</p>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.details.title')}</h3>
+                                    <p className="text-xs text-gray-400">{t('loans.apply.details.desc')}</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Type of Loan</label>
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">{t('loans.apply.details.type')}</label>
                                     <select 
                                         value={data.loan_type}
                                         onChange={(e) => setData('loan_type', e.target.value)}
                                         className="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-black appearance-none"
                                     >
-                                        <option value="">Select Type</option>
-                                        <option value="home">Home Loan</option>
-                                        <option value="car">Car Loan</option>
-                                        <option value="business">Business Loan</option>
-                                        <option value="student">Student Loan</option>
+                                        <option value="">{t('loans.apply.details.select_type')}</option>
+                                        <option value="home">{t('loans.types.home')}</option>
+                                        <option value="car">{t('loans.types.car')}</option>
+                                        <option value="business">{t('loans.types.business')}</option>
+                                        <option value="student">{t('loans.types.student')}</option>
                                     </select>
                                     {errors.loan_type && <p className="text-[10px] text-red-500 mt-1">{errors.loan_type}</p>}
                                 </div>
-                                <FormInput label="Loan Amount Requested (DH)" name="amount" type="number" placeholder="100000" />
-                                <FormInput label="Loan Duration (Months)" name="duration" type="number" placeholder="24" />
+                                <FormInput label={t('loans.apply.details.amount')} name="amount" type="number" placeholder="100000" />
+                                <FormInput label={t('loans.apply.details.duration')} name="duration" type="number" placeholder="24" />
                                 <div className="md:col-span-2">
-                                    <FormInput label="Purpose of Loan" name="purpose" placeholder="e.g., Buying a new apartment" />
+                                    <FormInput label={t('loans.apply.details.purpose')} name="purpose" placeholder={t('loans.apply.details.purpose_placeholder')} />
                                 </div>
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">Back</button>
-                                <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">Continue to Documents</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.apply.back')}</button>
+                                <button onClick={handleNext} className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform">{t('loans.apply.continue_docs')}</button>
                             </div>
                         </motion.div>
                     )}
@@ -258,48 +260,48 @@ export default function Apply({ user }) {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 space-y-10"
+                            className="bg-white dark:bg-zinc-900 p-10 rounded-[40px] shadow-sm border border-gray-50 dark:border-zinc-800 space-y-10 transition-colors"
                         >
                             <div className="flex items-center gap-4 border-b border-gray-50 pb-8">
                                 <div className="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white">
                                     <ShieldCheck className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-black text-gray-900">Supporting Documents</h3>
-                                    <p className="text-xs text-gray-400">Required files to process your request.</p>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100">{t('loans.apply.documents.title')}</h3>
+                                    <p className="text-xs text-gray-400">{t('loans.apply.documents.desc')}</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <DocumentUpload title="Copy of CIN" desc="Both sides of your national ID" name="cin_copy" />
-                                <DocumentUpload title="Salary Certificate" desc="Recent certificate from employer" name="salary_cert" />
-                                <DocumentUpload title="Bank Statements" desc="Last 3–6 months of activity" name="bank_statements" />
-                                <DocumentUpload title="Work Contract" desc="Signed employment contract" name="work_contract" />
-                                <DocumentUpload title="Proof of Address" desc="Electricity or water bill" name="proof_address" />
-                                <DocumentUpload title="Recent Payslips" desc="Last 3 monthly payslips" name="payslips" />
+                                <DocumentUpload title={t('loans.apply.documents.cin_copy')} desc={t('loans.apply.documents.cin_desc')} name="cin_copy" />
+                                <DocumentUpload title={t('loans.apply.documents.salary_cert')} desc={t('loans.apply.documents.salary_desc')} name="salary_cert" />
+                                <DocumentUpload title={t('loans.apply.documents.bank_statements')} desc={t('loans.apply.documents.bank_desc')} name="bank_statements" />
+                                <DocumentUpload title={t('loans.apply.documents.work_contract')} desc={t('loans.apply.documents.work_desc')} name="work_contract" />
+                                <DocumentUpload title={t('loans.apply.documents.proof_address')} desc={t('loans.apply.documents.proof_desc')} name="proof_address" />
+                                <DocumentUpload title={t('loans.apply.documents.payslips')} desc={t('loans.apply.documents.payslips_desc')} name="payslips" />
                                 {data.job_title?.toLowerCase().includes('self') && (
-                                    <DocumentUpload title="Business Documents" desc="Company registration / status" name="business_docs" />
+                                    <DocumentUpload title={t('loans.apply.documents.business_docs')} desc={t('loans.apply.documents.business_desc')} name="business_docs" />
                                 )}
                                 {data.loan_type === 'home' && (
-                                    <DocumentUpload title="Property Documents" desc="Title deed or sales agreement" name="property_docs" />
+                                    <DocumentUpload title={t('loans.apply.documents.property_docs')} desc={t('loans.apply.documents.property_desc')} name="property_docs" />
                                 )}
                             </div>
 
                             <div className="p-6 bg-blue-50 rounded-3xl flex items-start gap-4">
                                 <Info className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
                                 <p className="text-[10px] leading-relaxed text-blue-700 font-medium font-bold">
-                                    By submitting this application, you confirm that all provided information is accurate. HarborBank will perform a credit check and review your documents. This process may take up to 3 business days.
+                                    {t('loans.apply.documents.legal_note')}
                                 </p>
                             </div>
 
                             <div className="flex gap-4 pt-8 border-t border-gray-50">
-                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black transition-colors">Back</button>
+                                <button onClick={handleBack} className="px-8 py-4 rounded-2xl font-black text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors">{t('loans.apply.back')}</button>
                                 <button 
                                     onClick={handleSubmit}
                                     disabled={processing}
                                     className="flex-1 bg-black text-white font-black py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-xl shadow-black/10 disabled:opacity-50"
                                 >
-                                    {processing ? 'Processing...' : 'Submit Loan Application'}
+                                    {processing ? t('loans.apply.processing') : t('loans.apply.submit')}
                                 </button>
                             </div>
                         </motion.div>
