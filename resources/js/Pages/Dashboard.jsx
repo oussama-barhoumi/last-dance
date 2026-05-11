@@ -5,6 +5,7 @@ import RecentTransactions from '@/Components/Dashboard/RecentTransactions';
 import QuickTransfer from '@/Components/Dashboard/QuickTransfer';
 import InvestmentList from '@/Components/Dashboard/InvestmentList';
 import SpendingManagement from '@/Components/Dashboard/SpendingManagement';
+import OnboardingTour from '@/Components/OnboardingTour';
 import { Head, useForm } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Plus, X, QrCode, Scan, Camera, CheckCircle2, AlertCircle, ArrowRight, Info } from 'lucide-react';
@@ -74,6 +75,7 @@ export default function Dashboard({ auth }) {
     return (
         <DashboardLayout>
             <Head title="Dashboard - HarborBank" />
+            <OnboardingTour />
 
             <motion.div 
                 variants={container}
@@ -99,7 +101,7 @@ export default function Dashboard({ auth }) {
                                 </button>
                             </div>
                         </div>
-                        <div className="relative z-10 w-full md:w-auto bg-gray-50/80 dark:bg-zinc-900/50 backdrop-blur-xl p-6 rounded-3xl border border-gray-100 dark:border-zinc-800">
+                        <div id="tour-balance" className="relative z-10 w-full md:w-auto bg-gray-50/80 dark:bg-zinc-900/50 backdrop-blur-xl p-6 rounded-3xl border border-gray-100 dark:border-zinc-800">
                             <p className="text-[10px] font-black text-gray-500 dark:text-zinc-500 uppercase tracking-widest mb-1">{t('dashboard.your_balance')}</p>
                             <p className="text-3xl font-black text-gray-900 dark:text-white">${Number(auth.user.balance).toLocaleString()}</p>
                             <div className="mt-4 flex items-center gap-2">
@@ -141,7 +143,9 @@ export default function Dashboard({ auth }) {
                     {/* Right: Side Panel */}
                     <motion.div variants={item} className="space-y-10">
                         <RecentTransactions />
-                        <QuickTransfer />
+                        <div id="tour-transfer">
+                            <QuickTransfer />
+                        </div>
                     </motion.div>
                 </div>
             </motion.div>

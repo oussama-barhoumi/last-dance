@@ -54,7 +54,7 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A192F] flex flex-col z-50">
+        <aside id="tour-sidebar" className="fixed left-0 top-0 h-screen w-[240px] bg-[#0A192F] flex flex-col z-50">
             <div className="p-8 pb-4 flex justify-between items-center">
                 <Link href="/" className="flex items-center gap-3 group">
                     <div className="bg-white p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
