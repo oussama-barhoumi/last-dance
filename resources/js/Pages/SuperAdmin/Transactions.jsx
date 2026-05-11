@@ -1,15 +1,15 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    Search, Filter, Download, ArrowUpRight, 
+import {
+    Search, Filter, Download, ArrowUpRight,
     ArrowDownRight, ShieldAlert, AlertTriangle,
     CheckCircle, Clock, ChevronRight, Activity,
     Calendar, DollarSign, Users, ExternalLink,
     FilterX, MoreHorizontal, ShieldCheck
 } from 'lucide-react';
-import { 
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, 
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid,
     Tooltip, ResponsiveContainer, BarChart, Bar, Cell,
     PieChart, Pie
 } from 'recharts';
@@ -69,14 +69,14 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                     </div>
 
                     <div className="flex flex-wrap gap-4">
-                        <a 
-                            href={route('super-admin.transactions.export')} 
+                        <a
+                            href={route('super-admin.transactions.export')}
                             className="bg-white text-black px-8 py-4 rounded-2xl flex items-center gap-3 text-[10px] font-black uppercase tracking-widest hover:invert transition-all"
                         >
                             <Download className="w-4 h-4" />
                             Export CSV
                         </a>
-                        <button 
+                        <button
                             onClick={() => setShowFilters(!showFilters)}
                             className={clsx(
                                 "px-8 py-4 rounded-2xl flex items-center gap-3 text-[10px] font-black uppercase tracking-widest border transition-all",
@@ -107,13 +107,13 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                                 <AreaChart data={analytics.volume_over_time}>
                                     <defs>
                                         <linearGradient id="colorVol" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.2}/>
-                                            <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0}/>
+                                            <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.2} />
+                                            <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} />
-                                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 10, fontWeight: 900}} />
-                                    <Tooltip contentStyle={{backgroundColor: '#000', border: '1px solid #333', borderRadius: '20px'}} itemStyle={{color: '#FFF', fontSize: '10px', fontWeight: 'bold'}} />
+                                    <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 10, fontWeight: 900 }} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '20px' }} itemStyle={{ color: '#FFF', fontSize: '10px', fontWeight: 'bold' }} />
                                     <Area type="monotone" dataKey="total" stroke="#FFFFFF" strokeWidth={3} fillOpacity={1} fill="url(#colorVol)" />
                                 </AreaChart>
                             </ResponsiveContainer>
@@ -133,14 +133,14 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                                             <span className="text-[10px] font-black">{count} NODES</span>
                                         </div>
                                         <div className="h-1 bg-black/5 w-full rounded-full overflow-hidden">
-                                            <motion.div 
+                                            <motion.div
                                                 initial={{ width: 0 }}
                                                 animate={{ width: `${percentage}%` }}
                                                 className={clsx(
                                                     "h-full transition-all",
                                                     level === 'critical' ? 'bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]' :
-                                                    level === 'high' ? 'bg-orange-500' :
-                                                    level === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                                                        level === 'high' ? 'bg-orange-500' :
+                                                            level === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
                                                 )}
                                             />
                                         </div>
@@ -156,7 +156,7 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                 {/* Active Filtering System */}
                 <AnimatePresence>
                     {showFilters && (
-                        <motion.div 
+                        <motion.div
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
@@ -167,7 +167,7 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                                     <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Protocol Search</label>
                                     <form onSubmit={handleSearch} className="relative">
                                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                                        <input 
+                                        <input
                                             type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
                                             placeholder="Ref / Entity / Email..."
                                             className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-xs text-white focus:border-white transition-all"
@@ -176,7 +176,7 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                                 </div>
                                 <div className="space-y-3">
                                     <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Status Pipe</label>
-                                    <select 
+                                    <select
                                         onChange={e => updateFilter('status', e.target.value)} value={localFilters.status || 'all'}
                                         className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-xs text-white appearance-none cursor-pointer"
                                     >
@@ -189,7 +189,7 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                                 </div>
                                 <div className="space-y-3">
                                     <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Protocol Type</label>
-                                    <select 
+                                    <select
                                         onChange={e => updateFilter('type', e.target.value)} value={localFilters.type || 'all'}
                                         className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-xs text-white appearance-none cursor-pointer"
                                     >
@@ -201,7 +201,7 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                                     </select>
                                 </div>
                                 <div className="flex items-end pb-1">
-                                    <button 
+                                    <button
                                         onClick={clearFilters}
                                         className="w-full bg-white/5 text-gray-500 hover:text-white border border-white/10 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
                                     >
@@ -235,12 +235,12 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                                                 <div className={clsx(
                                                     "w-10 h-10 rounded-xl flex items-center justify-center border",
                                                     tx.type === 'deposit' ? "bg-green-500/10 border-green-500/20 text-green-500" :
-                                                    tx.type === 'withdrawal' ? "bg-red-500/10 border-red-500/20 text-red-500" :
-                                                    "bg-white/5 border-white/10 text-white"
+                                                        tx.type === 'withdrawal' ? "bg-red-500/10 border-red-500/20 text-red-500" :
+                                                            "bg-white/5 border-white/10 text-white"
                                                 )}>
-                                                    {tx.type === 'deposit' ? <ArrowDownRight className="w-5 h-5" /> : 
-                                                     tx.type === 'withdrawal' ? <ArrowUpRight className="w-5 h-5" /> : 
-                                                     <Activity className="w-5 h-5" />}
+                                                    {tx.type === 'deposit' ? <ArrowDownRight className="w-5 h-5" /> :
+                                                        tx.type === 'withdrawal' ? <ArrowUpRight className="w-5 h-5" /> :
+                                                            <Activity className="w-5 h-5" />}
                                                 </div>
                                                 <div>
                                                     <p className="text-[11px] font-black text-white">{tx.transaction_id || tx.reference}</p>
@@ -299,7 +299,7 @@ export default function TransactionMonitoring({ transactions, analytics, filters
                         </p>
                         <div className="flex gap-2">
                             {transactions.links.map((link, idx) => (
-                                <Link 
+                                <Link
                                     key={idx}
                                     href={link.url || '#'}
                                     className={clsx(

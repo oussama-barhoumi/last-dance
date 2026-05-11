@@ -1,8 +1,8 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
 import { Head, router, Link } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    Users, ShieldAlert, ShieldCheck, Lock, Unlock, 
+import {
+    Users, ShieldAlert, ShieldCheck, Lock, Unlock,
     MoreHorizontal, ArrowUpRight, TrendingUp,
     Activity, Shield, AlertTriangle, Zap,
     Search, Bell, Info, Plus
@@ -37,7 +37,7 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
             {/* Protocol Alerts (Flash Messages) */}
             <AnimatePresence>
                 {flash?.success && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
@@ -52,7 +52,7 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
             <div className="mt-8 grid grid-cols-1 lg:grid-cols-4 gap-10 font-mono uppercase tracking-tighter">
                 {/* Main Content Area (3 Columns) */}
                 <div className="lg:col-span-3 space-y-12">
-                    
+
                     {/* 1. Header Overview Stats */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <AdminStatCard label="Total Nodes" value={stats.total_users} icon={Users} />
@@ -76,13 +76,13 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                                     <AreaChart data={chartData}>
                                         <defs>
                                             <linearGradient id="colorVol" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
-                                                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                                                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                                        <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 10, fontWeight: 900}} />
-                                        <Tooltip contentStyle={{backgroundColor: '#000', border: '1px solid #333', borderRadius: '0px'}} itemStyle={{color: '#FFF', fontSize: '10px', fontWeight: 'bold'}} />
+                                        <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 10, fontWeight: 900 }} />
+                                        <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '0px' }} itemStyle={{ color: '#FFF', fontSize: '10px', fontWeight: 'bold' }} />
                                         <Area type="monotone" dataKey="volume" stroke="#8B5CF6" strokeWidth={4} fillOpacity={1} fill="url(#colorVol)" />
                                     </AreaChart>
                                 </ResponsiveContainer>
@@ -190,7 +190,7 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                                             <p className="text-[8px] text-gray-500 font-black mt-1">CAPITAL ASSETS</p>
                                         </div>
                                         <div className="flex gap-2">
-                                            <button 
+                                            <button
                                                 onClick={() => handleToggleBlock(user)}
                                                 className="p-3 border border-white/10 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all group/btn"
                                                 title="Initiate Block Protocol"
@@ -210,14 +210,14 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
 
                 {/* Right Sidebar (1 Column) */}
                 <div className="space-y-10">
-                    
+
                     {/* 4. Suspended Protocols (Blocked Users) */}
                     <div className="bg-white text-black p-8 border border-white space-y-8">
                         <div className="flex justify-between items-center">
                             <h3 className="text-sm font-black tracking-tighter">SUSPENDED NODES</h3>
                             <MoreHorizontal className="w-4 h-4" />
                         </div>
-                        
+
                         <div className="space-y-6">
                             {blockedUsers.length > 0 ? blockedUsers.map(user => (
                                 <div key={user.id} className="flex items-center justify-between border-b border-black/10 pb-4 last:border-0">
@@ -230,7 +230,7 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                                             <p className="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Blocked</p>
                                         </div>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={() => handleToggleBlock(user)}
                                         className="p-2 hover:bg-black hover:text-white transition-all"
                                     >
@@ -250,14 +250,14 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                     {/* 5. System Actions */}
                     <div className="bg-black border border-white/20 p-8 space-y-8">
                         <h3 className="text-sm font-black tracking-tighter">ADMIN ACTIONS</h3>
-                        
+
                         <div className="space-y-4">
                             <div className="p-6 bg-white/5 border border-white/10 hover:border-white transition-colors cursor-pointer group">
                                 <Shield className="w-6 h-6 mb-4 group-hover:scale-110 transition-transform" />
                                 <p className="text-[10px] font-black uppercase tracking-widest mb-1">Global Audit</p>
                                 <p className="text-[8px] text-gray-500 leading-relaxed font-bold">Initiate full system check of all transaction logs.</p>
                             </div>
-                            
+
                             <div className="p-6 bg-white/5 border border-white/10 hover:border-white transition-colors cursor-pointer group">
                                 <AlertTriangle className="w-6 h-6 mb-4 text-red-500" />
                                 <p className="text-[10px] font-black uppercase tracking-widest mb-1 text-red-500">Emergency Lock</p>
@@ -267,7 +267,7 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
 
                         <div className="pt-6 border-t border-white/10 flex items-center justify-between">
                             <div className="flex gap-2">
-                                {[1,2,3].map(i => <div key={i} className="w-8 h-8 bg-white/10 border border-white/20" />)}
+                                {[1, 2, 3].map(i => <div key={i} className="w-8 h-8 bg-white/10 border border-white/20" />)}
                                 <div className="w-8 h-8 flex items-center justify-center bg-white text-black text-[8px] font-black">+4</div>
                             </div>
                             <button className="bg-white p-3 text-black"><Zap className="w-4 h-4" /></button>

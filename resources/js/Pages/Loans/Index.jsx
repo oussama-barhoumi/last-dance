@@ -1,9 +1,9 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { 
-    TrendingUp, DollarSign, Calendar, Target, 
-    ArrowUpRight, ArrowDownLeft, ChevronRight, 
-    Search, Bell, Calculator, Upload, FileText, 
+import {
+    TrendingUp, DollarSign, Calendar, Target,
+    ArrowUpRight, ArrowDownLeft, ChevronRight,
+    Search, Bell, Calculator, Upload, FileText,
     CreditCard, PieChart, ShieldCheck, Zap,
     Home, Car, Briefcase, GraduationCap, Info,
     CheckCircle2, Clock, AlertCircle, Sparkles,
@@ -11,10 +11,10 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { 
-    LineChart, Line, AreaChart, Area, 
-    XAxis, YAxis, CartesianGrid, Tooltip, 
-    ResponsiveContainer, BarChart, Bar 
+import {
+    LineChart, Line, AreaChart, Area,
+    XAxis, YAxis, CartesianGrid, Tooltip,
+    ResponsiveContainer, BarChart, Bar
 } from 'recharts';
 import clsx from 'clsx';
 
@@ -28,7 +28,7 @@ const chartData = [
 ];
 
 const StatCard = ({ icon: Icon, title, value, trend, trendUp }) => (
-    <motion.div 
+    <motion.div
         whileHover={{ y: -5 }}
         className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50 group transition-all"
     >
@@ -53,7 +53,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
     const [showPayModal, setShowPayModal] = useState(false);
     const [showCalcModal, setShowCalcModal] = useState(false);
     const [showStatementModal, setShowStatementModal] = useState(false);
-    
+
     // EMI Calculator State
     const [calcData, setCalcData] = useState({
         amount: 100000,
@@ -102,9 +102,9 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                     <div className="flex items-center gap-4">
                         <div className="relative hidden md:block">
                             <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                            <input 
-                                type="text" 
-                                placeholder="Search loans..." 
+                            <input
+                                type="text"
+                                placeholder="Search loans..."
                                 className="bg-white border-none rounded-2xl pl-11 pr-6 py-3 text-sm shadow-sm focus:ring-2 focus:ring-black w-64 transition-all"
                             />
                         </div>
@@ -177,8 +177,8 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                 <td className="px-8 py-6">
                                                     <span className={clsx(
                                                         "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
-                                                        loan.status === 'approved' ? "bg-green-100 text-green-600" : 
-                                                        loan.status === 'pending' ? "bg-orange-100 text-orange-600" : "bg-red-100 text-red-600"
+                                                        loan.status === 'approved' ? "bg-green-100 text-green-600" :
+                                                            loan.status === 'pending' ? "bg-orange-100 text-orange-600" : "bg-red-100 text-red-600"
                                                     )}>
                                                         {loan.status}
                                                     </span>
@@ -189,19 +189,19 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                             <span>{loan.progress}%</span>
                                                         </div>
                                                         <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
-                                                            <motion.div 
-                                                                initial={{ width: 0 }} 
-                                                                animate={{ width: `${loan.progress}%` }} 
+                                                            <motion.div
+                                                                initial={{ width: 0 }}
+                                                                animate={{ width: `${loan.progress}%` }}
                                                                 className={clsx(
                                                                     "h-full rounded-full",
                                                                     loan.status === 'approved' ? "bg-black" : "bg-gray-400"
-                                                                )} 
+                                                                )}
                                                             />
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-8 py-6 text-right">
-                                                    <button 
+                                                    <button
                                                         onClick={() => {
                                                             setData('loan_id', loan.id);
                                                             setShowPayModal(true);
@@ -246,39 +246,39 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                     <AreaChart data={chartData}>
                                         <defs>
                                             <linearGradient id="colorPayment" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#000" stopOpacity={0.1}/>
-                                                <stop offset="95%" stopColor="#000" stopOpacity={0}/>
+                                                <stop offset="5%" stopColor="#000" stopOpacity={0.1} />
+                                                <stop offset="95%" stopColor="#000" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                                        <XAxis 
-                                            dataKey="name" 
-                                            axisLine={false} 
-                                            tickLine={false} 
+                                        <XAxis
+                                            dataKey="name"
+                                            axisLine={false}
+                                            tickLine={false}
                                             tick={{ fontSize: 10, fontWeight: 700, fill: '#9CA3AF' }}
                                             dy={10}
                                         />
-                                        <YAxis 
-                                            axisLine={false} 
-                                            tickLine={false} 
+                                        <YAxis
+                                            axisLine={false}
+                                            tickLine={false}
                                             tick={{ fontSize: 10, fontWeight: 700, fill: '#9CA3AF' }}
                                         />
-                                        <Tooltip 
-                                            contentStyle={{ 
-                                                borderRadius: '20px', 
-                                                border: 'none', 
+                                        <Tooltip
+                                            contentStyle={{
+                                                borderRadius: '20px',
+                                                border: 'none',
                                                 boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
                                                 fontSize: '12px',
                                                 fontWeight: 'bold'
-                                            }} 
+                                            }}
                                         />
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="payment" 
-                                            stroke="#000" 
-                                            strokeWidth={3} 
-                                            fillOpacity={1} 
-                                            fill="url(#colorPayment)" 
+                                        <Area
+                                            type="monotone"
+                                            dataKey="payment"
+                                            stroke="#000"
+                                            strokeWidth={3}
+                                            fillOpacity={1}
+                                            fill="url(#colorPayment)"
                                         />
                                     </AreaChart>
                                 </ResponsiveContainer>
@@ -292,27 +292,27 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                         <div className="bg-[#0A0A0A] p-8 rounded-[40px] text-white">
                             <h3 className="text-xl font-bold mb-8">Quick Actions</h3>
                             <div className="grid grid-cols-1 gap-4">
-                                <Link 
+                                <Link
                                     href={route('loans.apply')}
                                     className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform"
                                 >
                                     <Plus className="w-5 h-5" /> Apply for Loan
                                 </Link>
-                                <button 
+                                <button
                                     onClick={() => setShowPayModal(true)}
                                     className="w-full bg-zinc-800 text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
                                 >
                                     <CreditCard className="w-5 h-5" /> Pay EMI
                                 </button>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <button 
+                                    <button
                                         onClick={() => setShowStatementModal(true)}
                                         className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors"
                                     >
                                         <FileText className="w-5 h-5 text-gray-500" />
                                         <span className="text-[10px] font-bold">Statement</span>
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={() => setShowCalcModal(true)}
                                         className="bg-zinc-900 p-4 rounded-2xl flex flex-col items-center gap-2 hover:bg-zinc-800 transition-colors"
                                     >
@@ -404,14 +404,14 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
             <AnimatePresence>
                 {showPayModal && (
                     <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowPayModal(false)}
                             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                         />
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -435,7 +435,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Select Loan</label>
                                         <div className="grid grid-cols-1 gap-3">
                                             {activeLoans.map((loan) => (
-                                                <div 
+                                                <div
                                                     key={loan.id}
                                                     onClick={() => setData('loan_id', loan.id)}
                                                     className={clsx(
@@ -464,7 +464,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Payment Amount ($)</label>
                                         <div className="relative">
-                                            <input 
+                                            <input
                                                 type="number"
                                                 value={data.amount}
                                                 onChange={e => setData('amount', e.target.value)}
@@ -472,11 +472,11 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                 className="w-full bg-gray-50 border-none rounded-2xl p-5 text-lg font-black text-gray-900 focus:ring-2 focus:ring-black transition-all"
                                             />
                                             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                                <button 
+                                                <button
                                                     type="button"
                                                     onClick={() => {
                                                         const loan = activeLoans.find(l => l.id === data.loan_id);
-                                                        if(loan) setData('amount', loan.monthly_payment);
+                                                        if (loan) setData('amount', loan.monthly_payment);
                                                     }}
                                                     className="text-[10px] font-black uppercase text-gray-400 hover:text-black transition-colors"
                                                 >
@@ -505,8 +505,8 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                     </div>
                                 </div>
 
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     disabled={processing}
                                     className="w-full bg-black text-white py-5 rounded-[20px] font-black text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 disabled:opacity-50"
                                 >
@@ -522,14 +522,14 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
             <AnimatePresence>
                 {showCalcModal && (
                     <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowCalcModal(false)}
                             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                         />
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -551,20 +551,20 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                 <div className="p-8 space-y-6 border-r border-gray-50">
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Loan Amount ($)</label>
-                                        <input 
+                                        <input
                                             type="number"
                                             value={calcData.amount}
-                                            onChange={e => setCalcData({...calcData, amount: e.target.value})}
+                                            onChange={e => setCalcData({ ...calcData, amount: e.target.value })}
                                             className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all"
                                         />
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Interest Rate (%)</label>
-                                        <input 
+                                        <input
                                             type="number"
                                             step="0.1"
                                             value={calcData.rate}
-                                            onChange={e => setCalcData({...calcData, rate: e.target.value})}
+                                            onChange={e => setCalcData({ ...calcData, rate: e.target.value })}
                                             className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all"
                                         />
                                     </div>
@@ -572,23 +572,23 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Duration (Months)</label>
                                         <div className="grid grid-cols-4 gap-2">
                                             {[12, 24, 36, 60].map(m => (
-                                                <button 
+                                                <button
                                                     key={m}
                                                     type="button"
-                                                    onClick={() => setCalcData({...calcData, duration: m})}
+                                                    onClick={() => setCalcData({ ...calcData, duration: m })}
                                                     className={clsx(
                                                         "py-2 rounded-xl text-[10px] font-black transition-all",
                                                         Number(calcData.duration) === m ? "bg-black text-white" : "bg-gray-50 text-gray-400 hover:bg-gray-100"
                                                     )}
                                                 >
-                                                    {m/12}Y
+                                                    {m / 12}Y
                                                 </button>
                                             ))}
                                         </div>
-                                        <input 
+                                        <input
                                             type="number"
                                             value={calcData.duration}
-                                            onChange={e => setCalcData({...calcData, duration: e.target.value})}
+                                            onChange={e => setCalcData({ ...calcData, duration: e.target.value })}
                                             className="w-full bg-gray-50 border-none rounded-2xl p-4 text-lg font-black focus:ring-2 focus:ring-black transition-all mt-2"
                                         />
                                     </div>
@@ -597,7 +597,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                 <div className="p-8 bg-gray-50/30 flex flex-col justify-center space-y-8">
                                     <div className="text-center">
                                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Estimated Monthly EMI</p>
-                                        <h4 className="text-4xl font-black text-gray-900">${emi.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</h4>
+                                        <h4 className="text-4xl font-black text-gray-900">${emi.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
                                     </div>
 
                                     <div className="space-y-4">
@@ -613,15 +613,15 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                                 <div className="w-2 h-2 rounded-full bg-gray-300" />
                                                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Interest</span>
                                             </div>
-                                            <span className="text-sm font-black text-gray-900">${totalInterest.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                            <span className="text-sm font-black text-gray-900">${totalInterest.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                         </div>
                                         <div className="pt-4 border-t border-gray-200 flex justify-between items-center">
                                             <span className="text-xs font-black uppercase tracking-widest">Total Payable</span>
-                                            <span className="text-lg font-black text-gray-900">${totalPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                            <span className="text-lg font-black text-gray-900">${totalPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                         </div>
                                     </div>
 
-                                    <Link 
+                                    <Link
                                         href={route('loans.apply')}
                                         className="w-full bg-black text-white py-4 rounded-2xl font-black text-sm text-center hover:scale-[1.02] active:scale-95 transition-all"
                                     >
@@ -638,14 +638,14 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
             <AnimatePresence>
                 {showStatementModal && (
                     <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowStatementModal(false)}
                             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                         />
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -740,7 +740,7 @@ export default function Index({ auth, stats, activeLoans, recentTransactions }) 
                                 <button className="flex-1 bg-white text-black border border-gray-200 py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
                                     <Upload className="w-4 h-4" /> Export CSV
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => window.print()}
                                     className="flex-1 bg-black text-white py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10"
                                 >

@@ -4,12 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use App\Models\Transaction;
+use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class LoanController extends Controller
 {
+    protected $loanService;
+
+    public function __construct(LoanService $loanService)
+    {
+        $this->loanService = $loanService;
+    }
+
     public function index()
     {
         $loans = auth()->user()->loans()->orderBy('created_at', 'desc')->get();
@@ -64,17 +72,12 @@ class LoanController extends Controller
         }
 
         DB::transaction(function () use ($user, $loan, $request) {
-            // Deduct from balance
             $user->decrement('balance', $request->amount);
-
-            // Deduct from loan remaining amount
             $loan->decrement('remaining_amount', $request->amount);
             
-            // Update progress
             $newProgress = round((($loan->amount - $loan->remaining_amount) / $loan->amount) * 100);
             $loan->update(['progress' => $newProgress]);
 
-            // Create Transaction
             Transaction::create([
                 'user_id' => $user->id,
                 'transaction_id' => 'TXN-' . strtoupper(uniqid()),
@@ -90,6 +93,7 @@ class LoanController extends Controller
 
         return back()->with('success', 'EMI Paid successfully!');
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -99,18 +103,33 @@ class LoanController extends Controller
             'purpose' => 'required|string',
         ]);
 
+        $user = auth()->user();
+        
+        if ($user->kyc_status !== 'approved') {
+            return back()->withErrors(['loan_type' => 'KYC verification is required before applying for institutional credit.']);
+        }
+
+        $riskScore = $this->loanService->calculateRiskScore($user, $request->amount);
+
         $loan = auth()->user()->loans()->create([
             'type' => ucfirst($request->loan_type) . ' Loan',
             'provider' => 'HarborBank',
             'amount' => $request->amount,
             'remaining_amount' => $request->amount,
-            'interest_rate' => 4.5, // Default for testing
-            'duration' => $request->duration . ' Months',
-            'monthly_payment' => $request->amount / $request->duration,
-            'status' => 'approved', // Auto-approved for demo purposes
+            'interest_rate' => 0,
+            'duration' => $request->duration,
+            'monthly_payment' => 0, 
+            'status' => 'pending',
             'progress' => 0,
+            'purpose' => $request->purpose,
+            'risk_score' => $riskScore,
+            'financial_snapshot' => [
+                'balance' => $user->balance,
+                'currency' => $user->currency,
+                'total_transactions' => $user->transactions()->count(),
+            ]
         ]);
 
-        return redirect()->route('loans.index')->with('success', 'Loan application submitted successfully!');
+        return redirect()->route('loans.index')->with('success', 'Loan application submitted for protocol review.');
     }
 }

@@ -1,15 +1,15 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
 import { Head, Link } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    Users, FileText, Landmark, ShieldCheck, 
+import {
+    Users, FileText, Landmark, ShieldCheck,
     AlertCircle, ArrowUpRight, BarChart3,
     Activity, Clock, ChevronRight, TrendingUp,
     ArrowDownRight, ShieldAlert, Zap, Search,
     MoreHorizontal, Filter
 } from 'lucide-react';
-import { 
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, 
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid,
     Tooltip, ResponsiveContainer, BarChart, Bar, Cell
 } from 'recharts';
 import { useState } from 'react';
@@ -68,44 +68,44 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
 
                 {/* Primary Intelligence Nodes */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <AdminStatCard 
-                        label="Total Nodes" 
-                        value={stats.total_users.toLocaleString()} 
+                    <AdminStatCard
+                        label="Total Nodes"
+                        value={stats.total_users.toLocaleString()}
                         subtext="Cumulative unique user IDs"
                         icon={Users}
                         trend="+12.5%"
                     />
-                    <AdminStatCard 
-                        label="Protocol Volume" 
-                        value={`$${(stats.total_transactions / 1000).toFixed(1)}K`} 
+                    <AdminStatCard
+                        label="Protocol Volume"
+                        value={`$${(stats.total_transactions / 1000).toFixed(1)}K`}
                         subtext="Total network transactions"
                         icon={Activity}
                         trend="+8.2%"
                     />
-                    <AdminStatCard 
-                        label="Net Inflow" 
-                        value={`$${(stats.total_deposits / 1000000).toFixed(1)}M`} 
+                    <AdminStatCard
+                        label="Net Inflow"
+                        value={`$${(stats.total_deposits / 1000000).toFixed(1)}M`}
                         subtext="Cumulative deposit assets"
                         icon={TrendingUp}
                         trend="+15.4%"
                     />
-                    <AdminStatCard 
-                        label="Net Outflow" 
-                        value={`$${(stats.total_withdrawals / 1000000).toFixed(1)}M`} 
+                    <AdminStatCard
+                        label="Net Outflow"
+                        value={`$${(stats.total_withdrawals / 1000000).toFixed(1)}M`}
                         subtext="Cumulative withdrawal assets"
                         icon={ArrowDownRight}
                         trend="-2.1%"
                         trendType="down"
                     />
-                    <AdminStatCard 
-                        label="Credit Backlog" 
-                        value={stats.pending_loans} 
+                    <AdminStatCard
+                        label="Credit Backlog"
+                        value={stats.pending_loans}
                         subtext="Loans awaiting approval"
                         icon={Landmark}
                     />
-                    <AdminStatCard 
-                        label="Risk Anomalies" 
-                        value={stats.suspicious_transactions} 
+                    <AdminStatCard
+                        label="Risk Anomalies"
+                        value={stats.suspicious_transactions}
                         subtext="Flagged protocol activities"
                         icon={ShieldAlert}
                         trendType="down"
@@ -124,7 +124,7 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                     <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-1">Institutional Data Monitoring</p>
                                 </div>
                                 <div className="flex bg-white/5 p-1.5 rounded-2xl border border-white/10">
-                                    <button 
+                                    <button
                                         onClick={() => setActiveChart('revenue')}
                                         className={clsx(
                                             "px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
@@ -133,7 +133,7 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                     >
                                         Revenue
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={() => setActiveChart('growth')}
                                         className={clsx(
                                             "px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
@@ -151,22 +151,22 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                         <AreaChart data={revenueData}>
                                             <defs>
                                                 <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.3}/>
-                                                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0}/>
+                                                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0} />
                                                 </linearGradient>
                                             </defs>
                                             <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} />
-                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 10, fontWeight: 900}} />
-                                            <YAxis axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 10, fontWeight: 900}} />
-                                            <Tooltip contentStyle={{backgroundColor: '#000', border: '1px solid #333', borderRadius: '20px'}} itemStyle={{color: '#FFF', fontSize: '10px', fontWeight: 'bold'}} />
+                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 10, fontWeight: 900 }} />
+                                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 10, fontWeight: 900 }} />
+                                            <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '20px' }} itemStyle={{ color: '#FFF', fontSize: '10px', fontWeight: 'bold' }} />
                                             <Area type="monotone" dataKey="value" stroke="#FFFFFF" strokeWidth={4} fillOpacity={1} fill="url(#colorRev)" />
                                         </AreaChart>
                                     ) : (
                                         <BarChart data={growthData}>
                                             <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} />
-                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 10, fontWeight: 900}} />
-                                            <YAxis axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 10, fontWeight: 900}} />
-                                            <Tooltip contentStyle={{backgroundColor: '#000', border: '1px solid #333', borderRadius: '20px'}} itemStyle={{color: '#FFF', fontSize: '10px', fontWeight: 'bold'}} cursor={{fill: '#222'}} />
+                                            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 10, fontWeight: 900 }} />
+                                            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 10, fontWeight: 900 }} />
+                                            <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '20px' }} itemStyle={{ color: '#FFF', fontSize: '10px', fontWeight: 'bold' }} cursor={{ fill: '#222' }} />
                                             <Bar dataKey="value" radius={[10, 10, 0, 0]}>
                                                 {growthData.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={index === growthData.length - 1 ? '#FFFFFF' : '#333'} />
@@ -237,7 +237,7 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                 <h3 className="text-sm font-black tracking-tighter uppercase">Risk Surveillance</h3>
                                 <ShieldAlert className="w-5 h-5 text-red-600" />
                             </div>
-                            
+
                             <div className="space-y-6 relative z-10">
                                 {fraudAlerts.map(alert => (
                                     <div key={alert.id} className="p-4 bg-black/5 rounded-2xl border border-black/5 space-y-2">
@@ -291,10 +291,10 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                         <span className="text-[10px] font-black text-white">42%</span>
                                     </div>
                                     <div className="h-1 bg-white/5 w-full rounded-full overflow-hidden">
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: "42%" }}
-                                            className="h-full bg-white" 
+                                            className="h-full bg-white"
                                         />
                                     </div>
                                 </div>
@@ -304,10 +304,10 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                                         <span className="text-[10px] font-black text-white">128</span>
                                     </div>
                                     <div className="h-1 bg-white/5 w-full rounded-full overflow-hidden">
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: "65%" }}
-                                            className="h-full bg-purple-600 shadow-[0_0_10px_rgba(168,85,247,0.5)]" 
+                                            className="h-full bg-purple-600 shadow-[0_0_10px_rgba(168,85,247,0.5)]"
                                         />
                                     </div>
                                 </div>

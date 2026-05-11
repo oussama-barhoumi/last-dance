@@ -19,7 +19,7 @@ class SuperAdminController extends Controller
         // Calculate some global stats
         $totalBalance = User::sum('balance');
         $totalTransactions = \App\Models\Transaction::count();
-        
+
         // Simple monthly transaction volume for the chart
         $chartData = [
             ['month' => 'Jul', 'volume' => 400],
@@ -65,7 +65,43 @@ class SuperAdminController extends Controller
 
     public function analytics()
     {
-        return Inertia::render('SuperAdmin/Analytics');
+        $loans = \App\Models\Loan::all();
+        
+        $loanTypeDistribution = $loans->groupBy('type')->map(fn($group) => [
+            'name' => $group->first()->type,
+            'value' => $group->sum('amount')
+        ])->values();
+
+        $statusDistribution = $loans->groupBy('status')->map(fn($group) => [
+            'name' => ucfirst($group->first()->status),
+            'value' => $group->count()
+        ])->values();
+
+        $monthlyVolume = \App\Models\Loan::select(
+            \DB::raw("strftime('%m', created_at) as month"),
+            \DB::raw('SUM(amount) as total')
+        )
+        ->groupBy('month')
+        ->get()
+        ->map(function ($item) {
+            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return [
+                'name' => $months[(int)$item->month - 1],
+                'value' => (float)$item->total
+            ];
+        });
+
+        return Inertia::render('SuperAdmin/Analytics', [
+            'loanStats' => [
+                'total_volume' => $loans->sum('amount'),
+                'active_capital' => $loans->where('status', 'approved')->sum('remaining_amount'),
+                'interest_yield' => $loans->sum(fn($l) => ($l->amount * ($l->interest_rate ?? 0) / 100)),
+                'default_rate' => 0.5, // Mock
+            ],
+            'typeData' => $loanTypeDistribution,
+            'statusData' => $statusDistribution,
+            'volumeData' => $monthlyVolume,
+        ]);
     }
 
     public function transactions()

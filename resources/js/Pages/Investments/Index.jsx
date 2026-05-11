@@ -1,15 +1,15 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
 import { Head, useForm, usePage, router } from '@inertiajs/react';
-import { 
-    TrendingUp, TrendingDown, Wallet, PieChart as PieIcon, 
+import {
+    TrendingUp, TrendingDown, Wallet, PieChart as PieIcon,
     ArrowUpRight, ArrowDownLeft, Plus, Filter,
     Briefcase, Globe, Zap, History, ChevronRight,
     Search, AlertCircle, Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, 
-    Tooltip, ResponsiveContainer, PieChart, Pie, Cell 
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid,
+    Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
 import { useState, useEffect } from 'react';
 import clsx from 'clsx';
@@ -27,7 +27,7 @@ const chartData = [
 const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#3B82F6'];
 
 const AssetCard = ({ asset }) => (
-    <motion.div 
+    <motion.div
         whileHover={{ y: -5 }}
         className="bg-white p-6 rounded-[32px] shadow-sm border border-gray-50 group transition-all"
     >
@@ -64,7 +64,7 @@ const AssetCard = ({ asset }) => (
                     <p className="text-sm font-black text-gray-900">${parseFloat(asset.value).toLocaleString()}</p>
                 </div>
             </div>
-            
+
             <div className="flex gap-2 pt-2">
                 <button className="flex-1 py-2 rounded-xl bg-black text-white text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-transform">Buy More</button>
                 <button className="flex-1 py-2 rounded-xl bg-gray-50 text-gray-900 text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">Sell</button>
@@ -111,19 +111,19 @@ const StockMarket = ({ userBalance }) => {
 
     const handleTrade = (type) => {
         if (!quote || !search) return;
-        
+
         router.post(route(`trade.${type}`), {
             symbol: search.toUpperCase(),
             shares: shares,
             price: quote.c,
-            company_name: search.toUpperCase() 
+            company_name: search.toUpperCase()
         });
     };
 
     return (
         <div className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-50 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 rounded-full blur-3xl -mr-32 -mt-32" />
-            
+
             <div className="relative z-10">
                 <div className="flex justify-between items-center mb-8">
                     <div>
@@ -142,7 +142,7 @@ const StockMarket = ({ userBalance }) => {
                     <div className="space-y-6">
                         <div className="space-y-8">
                             <div className="relative">
-                                <input 
+                                <input
                                     type="text"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value.toUpperCase())}
@@ -151,7 +151,7 @@ const StockMarket = ({ userBalance }) => {
                                     className="w-full bg-gray-50 border-none rounded-2xl p-5 text-sm font-bold focus:ring-2 focus:ring-black transition-all pl-14"
                                 />
                                 <Search className="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" />
-                                <button 
+                                <button
                                     onClick={() => fetchQuote()}
                                     disabled={loading}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 bg-black text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform disabled:opacity-50"
@@ -171,7 +171,7 @@ const StockMarket = ({ userBalance }) => {
                                 </div>
                                 <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar no-scrollbar scroll-smooth">
                                     {suggestedStocks.map((stock) => (
-                                        <button 
+                                        <button
                                             key={stock.symbol}
                                             onClick={() => handleSuggestClick(stock.symbol)}
                                             className={clsx(
@@ -210,7 +210,7 @@ const StockMarket = ({ userBalance }) => {
                         </div>
 
                         {quote && quote.c > 0 ? (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className="bg-gray-50 rounded-[32px] p-6 border border-gray-100"
@@ -254,9 +254,9 @@ const StockMarket = ({ userBalance }) => {
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shares to Trade</label>
                                         <div className="flex items-center gap-4 bg-white rounded-xl p-1 border border-gray-200">
                                             <button onClick={() => setShares(Math.max(1, shares - 1))} className="w-8 h-8 flex items-center justify-center hover:bg-gray-50 rounded-lg transition-colors font-black">-</button>
-                                            <input 
-                                                type="number" 
-                                                value={shares} 
+                                            <input
+                                                type="number"
+                                                value={shares}
                                                 onChange={(e) => setShares(parseFloat(e.target.value) || 0)}
                                                 className="w-12 text-center border-none p-0 text-xs font-black focus:ring-0 bg-transparent"
                                             />
@@ -265,13 +265,13 @@ const StockMarket = ({ userBalance }) => {
                                     </div>
 
                                     <div className="flex gap-3">
-                                        <button 
+                                        <button
                                             onClick={() => handleTrade('buy')}
                                             className="flex-1 bg-black text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10"
                                         >
                                             Confirm Buy Order
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => handleTrade('sell')}
                                             className="flex-1 bg-white border border-gray-200 text-gray-900 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-50 transition-all"
                                         >
@@ -420,31 +420,31 @@ export default function Index({ auth, investments, stats, recentTransactions }) 
                                 <AreaChart data={chartData}>
                                     <defs>
                                         <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.1}/>
-                                            <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                                            <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                                    <XAxis 
-                                        dataKey="name" 
-                                        axisLine={false} 
-                                        tickLine={false} 
-                                        tick={{fill: '#9CA3AF', fontSize: 10, fontWeight: 700}}
+                                    <XAxis
+                                        dataKey="name"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#9CA3AF', fontSize: 10, fontWeight: 700 }}
                                         dy={10}
                                     />
-                                    <YAxis 
-                                        hide 
+                                    <YAxis
+                                        hide
                                     />
-                                    <Tooltip 
+                                    <Tooltip
                                         contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700 }}
                                     />
-                                    <Area 
-                                        type="monotone" 
-                                        dataKey="value" 
-                                        stroke="#8B5CF6" 
+                                    <Area
+                                        type="monotone"
+                                        dataKey="value"
+                                        stroke="#8B5CF6"
                                         strokeWidth={4}
-                                        fillOpacity={1} 
-                                        fill="url(#colorValue)" 
+                                        fillOpacity={1}
+                                        fill="url(#colorValue)"
                                         isAnimationActive={false}
                                     />
                                 </AreaChart>
@@ -577,7 +577,7 @@ export default function Index({ auth, investments, stats, recentTransactions }) 
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="mt-10 p-6 rounded-3xl bg-purple-600 shadow-xl shadow-purple-600/20">
                             <p className="text-xs font-black uppercase tracking-widest mb-2">Pro Insights</p>
                             <p className="text-[10px] font-medium leading-relaxed opacity-90">

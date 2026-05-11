@@ -29,32 +29,32 @@ class AdminController extends Controller
             DB::raw("strftime('%m', created_at) as month"),
             DB::raw('SUM(amount * 0.02) as revenue') // Assuming 2% fee as revenue
         )
-        ->where('created_at', '>=', now()->subMonths(6))
-        ->groupBy('month')
-        ->get()
-        ->map(function ($item) {
-            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            return [
-                'name' => $months[(int)$item->month - 1],
-                'value' => (float)$item->revenue
-            ];
-        });
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupBy('month')
+            ->get()
+            ->map(function ($item) {
+                $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return [
+                    'name' => $months[(int) $item->month - 1],
+                    'value' => (float) $item->revenue
+                ];
+            });
 
         // 3. User Growth (Last 6 Months)
         $growthData = User::select(
             DB::raw("strftime('%m', created_at) as month"),
             DB::raw('COUNT(*) as total')
         )
-        ->where('created_at', '>=', now()->subMonths(6))
-        ->groupBy('month')
-        ->get()
-        ->map(function ($item) {
-            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            return [
-                'name' => $months[(int)$item->month - 1],
-                'value' => (int)$item->total
-            ];
-        });
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupBy('month')
+            ->get()
+            ->map(function ($item) {
+                $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return [
+                    'name' => $months[(int) $item->month - 1],
+                    'value' => (int) $item->total
+                ];
+            });
 
         // 4. Recent Transactions
         $recentTransactions = Transaction::with(['sender', 'receiver', 'user'])

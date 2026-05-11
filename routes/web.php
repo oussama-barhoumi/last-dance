@@ -36,6 +36,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::get('/super-admin/transactions', [\App\Http\Controllers\AdminTransactionController::class, 'index'])->name('super-admin.transactions.index');
         Route::get('/super-admin/transactions/export', [\App\Http\Controllers\AdminTransactionController::class, 'exportCsv'])->name('super-admin.transactions.export');
+
+        // Shared Loan Management
+        Route::get('/admin/loans', [\App\Http\Controllers\AdminLoanController::class, 'index'])->name('admin.loans.index');
+        Route::post('/admin/loans/{loan}/approve', [\App\Http\Controllers\AdminLoanController::class, 'approve'])->name('admin.loans.approve');
+        Route::post('/admin/loans/{loan}/reject', [\App\Http\Controllers\AdminLoanController::class, 'reject'])->name('admin.loans.reject');
+        Route::post('/admin/loans/{loan}/risk', [\App\Http\Controllers\AdminLoanController::class, 'updateRisk'])->name('admin.loans.risk-update');
     });
 
     // Super Admin Exclusive Routes
@@ -43,7 +49,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\SuperAdminController::class, 'index'])->name('dashboard');
         Route::get('/admins', [\App\Http\Controllers\SuperAdminController::class, 'manageAdmins'])->name('admins.index');
         Route::get('/analytics', [\App\Http\Controllers\SuperAdminController::class, 'analytics'])->name('analytics.index');
-        Route::get('/loans', [\App\Http\Controllers\SuperAdminController::class, 'loans'])->name('loans.index');
+        
+        // Refactored Loan Routes
+        Route::get('/loans', [\App\Http\Controllers\AdminLoanController::class, 'index'])->name('loans.index');
+        Route::post('/loans/{loan}/approve', [\App\Http\Controllers\AdminLoanController::class, 'approve'])->name('loans.approve');
+        Route::post('/loans/{loan}/reject', [\App\Http\Controllers\AdminLoanController::class, 'reject'])->name('loans.reject');
+        Route::post('/loans/{loan}/risk', [\App\Http\Controllers\AdminLoanController::class, 'updateRisk'])->name('loans.risk-update');
+
         Route::get('/settings', [\App\Http\Controllers\SuperAdminController::class, 'settings'])->name('settings.index');
         Route::get('/fraud', [\App\Http\Controllers\SuperAdminController::class, 'fraud'])->name('fraud.index');
         Route::get('/logs', [\App\Http\Controllers\SuperAdminController::class, 'logs'])->name('logs.index');

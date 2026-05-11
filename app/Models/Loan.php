@@ -7,8 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Loan extends Model
 {
     protected $fillable = [
-        'user_id', 'type', 'provider', 'amount', 'remaining_amount', 
-        'interest_rate', 'duration', 'monthly_payment', 'status', 'progress'
+        'user_id',
+        'type',
+        'provider',
+        'amount',
+        'remaining_amount',
+        'interest_rate',
+        'duration',
+        'monthly_payment',
+        'status',
+        'progress'
     ];
 
     public function user()

@@ -1,14 +1,14 @@
 import DashboardLayout from '@/Layouts/DashboardLayout/DashboardLayout';
 import { Head } from '@inertiajs/react';
-import { 
-    BarChart3, PieChart as PieIcon, TrendingUp, TrendingDown, 
-    Download, Calendar, Filter, FileText, 
+import {
+    BarChart3, PieChart as PieIcon, TrendingUp, TrendingDown,
+    Download, Calendar, Filter, FileText,
     ChevronRight, ArrowUpRight, ArrowDownLeft,
     Wallet, Target, Info, Search, MoreHorizontal
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { 
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, 
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid,
     Tooltip, ResponsiveContainer, Cell, PieChart, Pie,
     LineChart, Line
 } from 'recharts';
@@ -114,16 +114,16 @@ export default function Index({ stats, categoryBreakdown, recentReports }) {
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={monthlyComparison} barGap={8}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                                    <XAxis 
-                                        dataKey="name" 
-                                        axisLine={false} 
-                                        tickLine={false} 
-                                        tick={{fill: '#9CA3AF', fontSize: 10, fontWeight: 700}}
+                                    <XAxis
+                                        dataKey="name"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#9CA3AF', fontSize: 10, fontWeight: 700 }}
                                         dy={10}
                                     />
                                     <YAxis hide />
-                                    <Tooltip 
-                                        cursor={{fill: '#F9FAFB'}}
+                                    <Tooltip
+                                        cursor={{ fill: '#F9FAFB' }}
                                         contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 700 }}
                                     />
                                     <Bar dataKey="income" fill="#0A0A0A" radius={[6, 6, 0, 0]} />

@@ -25,34 +25,34 @@ export default function BalanceHistoryChart() {
                 <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                     <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                        <XAxis 
-                            dataKey="name" 
-                            axisLine={false} 
-                            tickLine={false} 
+                        <XAxis
+                            dataKey="name"
+                            axisLine={false}
+                            tickLine={false}
                             tick={{ fill: '#9CA3AF', fontSize: 12, fontWeight: 600 }}
                             dy={15}
                         />
-                        <YAxis 
-                            axisLine={false} 
-                            tickLine={false} 
+                        <YAxis
+                            axisLine={false}
+                            tickLine={false}
                             tick={{ fill: '#9CA3AF', fontSize: 12, fontWeight: 600 }}
                             ticks={[0, 200, 400, 600, 800]}
                         />
-                        <Tooltip 
-                            contentStyle={{ 
-                                backgroundColor: '#000', 
-                                border: 'none', 
+                        <Tooltip
+                            contentStyle={{
+                                backgroundColor: '#000',
+                                border: 'none',
                                 borderRadius: '12px',
-                                color: '#fff' 
+                                color: '#fff'
                             }}
                             itemStyle={{ color: '#fff' }}
                             cursor={{ stroke: '#F3F4F6', strokeWidth: 2 }}
                         />
-                        <Line 
-                            type="monotone" 
-                            dataKey="value" 
-                            stroke="#000" 
-                            strokeWidth={4} 
+                        <Line
+                            type="monotone"
+                            dataKey="value"
+                            stroke="#000"
+                            strokeWidth={4}
                             dot={false}
                             activeDot={{ r: 8, stroke: '#fff', strokeWidth: 4, fill: '#000' }}
                         />

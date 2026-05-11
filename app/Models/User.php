@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\KycDocument;
 
-#[Fillable(['name', 'email', 'profile_photo_path', 'password', 'phone', 'address', 'kyc_status', 'is_admin', 'balance', 'currency', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'])]
+#[Fillable(['name', 'email', 'profile_photo_path', 'password', 'phone', 'address', 'kyc_status', 'is_admin', 'role', 'is_blocked', 'is_active', 'balance', 'currency', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'])]
 #[Hidden(['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes'])]
 class User extends Authenticatable
 {
