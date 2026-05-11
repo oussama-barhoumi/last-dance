@@ -2,29 +2,47 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import clsx from 'clsx';
 import { 
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
-    TrendingUp, Settings, LogOut, Globe, Anchor, ChevronDown, Camera,
-    ShieldAlert, ShieldCheck, User as UserIcon, FileText, Landmark,
-    Users, Activity, Lock, Cpu, Download
+    TrendingUp, Settings, LogOut, Globe, Landmark, ChevronDown, 
+    Cpu, MessageSquare, Mic, Bell, Search, Menu, X, User
 } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) => (
+const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor = "bg-purple-500" }) => (
     <Link 
         href={href} 
         className={clsx(
-            "flex items-center justify-between px-6 py-4 transition-all group border-l-4",
+            "relative flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group",
             active 
-                ? "text-white border-white bg-white/5" 
-                : "text-gray-500 border-transparent hover:text-white hover:bg-white/5 hover:border-white/20"
+                ? "text-white bg-white/5 border border-white/10 shadow-[0_0_20px_rgba(139,92,246,0.1)]" 
+                : "text-gray-400 hover:text-white hover:bg-white/5"
         )}
     >
-        <div className="flex items-center gap-4">
-            <Icon className={clsx("w-5 h-5 transition-colors", active ? "text-white" : "text-gray-500 group-hover:text-white")} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">{label}</span>
+        {active && (
+            <motion.div 
+                layoutId="activeGlow"
+                className="absolute inset-0 rounded-2xl border border-purple-500/50 blur-[2px] pointer-events-none"
+                initial={false}
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+        )}
+        
+        <div className="flex items-center gap-3 relative z-10">
+            <div className={clsx(
+                "p-2 rounded-lg transition-colors",
+                active ? "text-purple-400" : "text-gray-500 group-hover:text-purple-400"
+            )}>
+                <Icon className="w-5 h-5" />
+            </div>
+            <span className="text-sm font-medium tracking-tight">{label}</span>
         </div>
+
         {badge && (
-            <span className={clsx("px-2 py-0.5 rounded-none text-[8px] font-black text-white border border-white/20", badgeColor)}>
+            <span className={clsx(
+                "relative z-10 px-2 py-0.5 rounded-full text-[10px] font-bold text-white shadow-lg",
+                badgeColor,
+                "after:absolute after:inset-0 after:rounded-full after:animate-pulse after:bg-inherit after:opacity-40"
+            )}>
                 {badge}
             </span>
         )}
@@ -33,229 +51,195 @@ const NavItem = ({ icon: Icon, label, active, href = "#", badge, badgeColor }) =
 
 export default function Sidebar() {
     const { auth } = usePage().props;
-    const [showLogoutModal, setShowLogoutModal] = useState(false);
-    const fileInputRef = useRef(null);
-    const { data, setData, post, processing } = useForm({
-        avatar: null,
-    });
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
-    const role = auth.user.role;
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 10);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
-    const handleAvatarClick = () => {
-        fileInputRef.current.click();
-    };
+    const navItems = [
+        { icon: LayoutDashboard, label: "Dashboard", href: route('dashboard'), active: route().current('dashboard') },
+        { icon: ArrowLeftRight, label: "Transactions", href: route('transactions.index'), active: route().current('transactions.index') },
+        { icon: Landmark, label: "Accounts", href: route('accounts.index'), active: route().current('accounts.index') },
+        { icon: CreditCard, label: "Cards", href: route('cards.index'), active: route().current('cards.index'), badge: "3" },
+        { icon: Wallet, label: "Investments", href: route('investments.index'), active: route().current('investments.index'), badge: "PRO" },
+        { icon: BarChart, label: "Reports", href: "#", active: false },
+        { icon: TrendingUp, label: "Loans", href: route('loans.index'), active: route().current('loans.index') },
+    ];
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setData('avatar', file);
-            const formData = new FormData();
-            formData.append('avatar', file);
-            post(route('profile.avatar.update'), {
-                forceFormData: true,
-            });
-        }
-    };
+    const aiItems = [
+        { icon: Cpu, label: "AI Assistant", href: route('ai-assistant.index'), active: route().current('ai-assistant.index') },
+        { icon: Mic, label: "Voice Bank AI", href: route('voice-call.index'), active: route().current('voice-call.index'), badge: "LIVE", badgeColor: "bg-red-500" },
+    ];
 
-    return (
-        <aside className="fixed left-0 top-0 h-screen w-[240px] bg-black flex flex-col z-50 border-r border-white/10 font-mono uppercase tracking-tighter">
-            <div className="p-8">
-                <Link href="/" className="flex items-center gap-4 group">
-                    <div className="bg-white p-2 rounded-none group-hover:invert transition-all duration-500">
-                        <Anchor className="w-6 h-6 text-black" />
+    const SidebarContent = () => (
+        <div className="flex flex-col h-full">
+            {/* Branding */}
+            <div className="p-8 relative">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-purple-500 blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
+                        <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-2.5 rounded-xl relative z-10 shadow-lg shadow-purple-500/20">
+                            <Landmark className="w-6 h-6 text-white" />
+                        </div>
                     </div>
-                    <span className="text-xl font-black text-white tracking-tighter">HARBORBANK</span>
+                    <div className="flex flex-col">
+                        <span className="text-lg font-bold text-white tracking-tight leading-none">HarborBank</span>
+                        <span className="text-[10px] font-medium text-purple-400/80 tracking-widest uppercase mt-1">Institutional</span>
+                    </div>
                 </Link>
             </div>
 
-            {/* Navigation Section */}
-            <div className="flex-1 overflow-y-auto pt-6">
-                <div className="px-6 mb-6">
-                    <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Protocol Control</span>
+            {/* Navigation */}
+            <div className="flex-1 overflow-y-auto px-4 space-y-8 scrollbar-hide py-4">
+                <div className="space-y-1">
+                    <p className="px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4">Core Banking</p>
+                    {navItems.map((item, idx) => (
+                        <NavItem key={idx} {...item} />
+                    ))}
                 </div>
-                <nav className="space-y-0">
-                    {/* Role-Specific Dashboards */}
-                    {role === 'super_admin' && (
-                        <>
-                            <div className="px-6 mt-4 mb-2">
-                                <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Root Control</span>
-                            </div>
-                            <NavItem icon={ShieldAlert} label="Manage Admins" href={route('super-admin.admins.index')} active={route().current('super-admin.admins.index')} />
-                            <NavItem icon={Users} label="Manage Users" href={route('super-admin.users.index')} active={route().current('super-admin.users.index')} />
-                            <NavItem icon={BarChart} label="Bank Analytics" href={route('super-admin.analytics.index')} active={route().current('super-admin.analytics.index')} />
-                            <NavItem icon={Activity} label="Tx Monitoring" href={route('super-admin.transactions.index')} active={route().current('super-admin.transactions.index')} />
-                            <NavItem icon={Lock} label="Freeze Accounts" href={route('super-admin.users.index')} />
-                            <NavItem icon={Landmark} label="Approve Loans" href={route('super-admin.loans.index')} active={route().current('super-admin.loans.index')} />
-                            <NavItem icon={Settings} label="System Settings" href={route('super-admin.settings.index')} active={route().current('super-admin.settings.index')} />
-                            <NavItem icon={ShieldAlert} label="Fraud Detection" href={route('super-admin.fraud.index')} active={route().current('super-admin.fraud.index')} badge="ALERT" badgeColor="bg-red-600 border-red-600" />
-                            <NavItem icon={FileText} label="Logs & Alerts" href={route('super-admin.logs.index')} active={route().current('super-admin.logs.index')} />
-                            <NavItem icon={Cpu} label="AI Monitoring" href={route('super-admin.ai-monitoring.index')} active={route().current('super-admin.ai-monitoring.index')} badge="BETA" badgeColor="bg-white text-black" />
-                            <NavItem icon={BarChart} label="AI Assistant" href={route('ai-assistant.index')} active={route().current('ai-assistant.index')} />
-                            <NavItem icon={Globe} label="Voice Coach" href={route('voice-coach.index')} active={route().current('voice-coach.index')} />
-                            <NavItem icon={Download} label="Reports & Exports" href={route('super-admin.reports.index')} active={route().current('super-admin.reports.index')} />
-                        </>
-                    )}
-                    
-                    {role === 'admin' && (
-                        <>
-                            <div className="px-6 mt-4 mb-2">
-                                <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Ops Console</span>
-                            </div>
-                            <NavItem 
-                                icon={ShieldCheck} 
-                                label="Admin Console" 
-                                active={route().current('admin.dashboard')} 
-                                href={route('admin.dashboard')} 
-                            />
-                            <NavItem icon={Users} label="Manage Users" href="#" />
-                            <NavItem icon={Landmark} label="Loan Requests" href={route('admin.dashboard')} />
-                            <NavItem icon={FileText} label="KYC Audit" href={route('admin.kyc.index')} active={route().current('admin.kyc.index')} />
-                        </>
-                    )}
 
-                    {/* Core Services Section - Only for Admins and Users */}
-                    {role !== 'super_admin' && (
-                        <>
-                            <div className="px-6 mt-8 mb-4">
-                                <span className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em]">Core Services</span>
-                            </div>
-
-                            <NavItem 
-                                icon={LayoutDashboard} 
-                                label="User Dashboard" 
-                                active={route().current('dashboard')} 
-                                href={route('dashboard')} 
-                            />
-                            <NavItem icon={Activity} label="AI Assistant" active={route().current('ai-assistant.index')} href={route('ai-assistant.index')} badge="AI" badgeColor="bg-blue-600 border-blue-600" />
-                            <NavItem icon={Globe} label="Voice Coach" active={route().current('voice-coach.index')} href={route('voice-coach.index')} badge="LIVE" badgeColor="bg-red-600 border-red-600" />
-                            <NavItem icon={Cpu} label="Voice Call" active={route().current('voice-call.index')} href={route('voice-call.index')} />
-                            <NavItem icon={ArrowLeftRight} label="Transactions" active={route().current('transactions.index')} href={route('transactions.index')} />
-                            <NavItem icon={CreditCard} label="Cards" active={route().current('cards.index')} href={route('cards.index')} />
-                            <NavItem icon={Wallet} label="Investment" active={route().current('investments.index')} href={route('investments.index')} />
-                            <NavItem icon={TrendingUp} label="Loans" active={route().current('loans.index')} href={route('loans.index')} />
-                        </>
-                    )}
-                </nav>
+                <div className="space-y-1">
+                    <p className="px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4">AI Protocols</p>
+                    {aiItems.map((item, idx) => (
+                        <NavItem key={idx} {...item} />
+                    ))}
+                </div>
             </div>
 
             {/* Bottom Section */}
-            <div className="p-8 mt-auto border-t border-white/5">
-                <div className="bg-white/5 p-4 flex items-center justify-between mb-8 border border-white/10">
-                    <div className="relative group/avatar cursor-pointer" onClick={handleAvatarClick}>
-                        <img 
-                            src={auth.user.profile_photo_url} 
-                            alt="User" 
-                            className={clsx(
-                                "w-10 h-10 rounded-none grayscale transition-all",
-                                processing ? "opacity-50" : "group-hover/avatar:grayscale-0"
-                            )}
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity bg-black/40">
-                            <Camera className="w-4 h-4 text-white" />
+            <div className="p-4 mt-auto">
+                <div className="bg-white/5 rounded-3xl border border-white/10 p-4 space-y-4">
+                    {/* User Card */}
+                    <div className="flex items-center gap-3 px-2">
+                        <div className="relative">
+                            <img 
+                                src={auth.user.profile_photo_url} 
+                                alt={auth.user.name} 
+                                className="w-10 h-10 rounded-xl object-cover border border-white/10"
+                            />
+                            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[#0D0D0D] rounded-full" />
                         </div>
-                        <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            onChange={handleFileChange} 
-                            className="hidden" 
-                            accept="image/*"
-                        />
-                    </div>
-                    <div className="flex gap-4 pr-2">
-                        <Link 
-                            href={route('settings.index')}
-                            className={clsx(
-                                "transition-colors",
-                                route().current('settings.index') ? "text-white" : "text-gray-500 hover:text-white"
-                            )}
-                        >
-                            <Settings className="w-4 h-4" />
-                        </Link>
-                        <button 
-                            onClick={() => setShowLogoutModal(true)}
-                            className="text-gray-500 hover:text-white transition-colors"
-                        >
-                            <LogOut className="w-4 h-4" />
-                        </button>
-                    </div>
-                </div>
-
-                {role === 'super_admin' && (
-                    <div className="px-6 mb-8 mt-4">
-                        <div className="bg-white/5 border border-white/10 p-4 space-y-3">
-                            <div className="flex items-center justify-between">
-                                <span className="text-[7px] font-black text-gray-500 uppercase tracking-[0.2em]">System Integrity</span>
-                                <div className="flex gap-1">
-                                    <div className="w-1 h-1 bg-green-500 animate-pulse" />
-                                    <div className="w-1 h-1 bg-green-500 animate-pulse delay-75" />
-                                    <div className="w-1 h-1 bg-green-500 animate-pulse delay-150" />
-                                </div>
-                            </div>
-                            <div className="h-0.5 bg-white/10 w-full overflow-hidden">
-                                <motion.div 
-                                    animate={{ x: ['-100%', '100%'] }} 
-                                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                    className="h-full bg-white/40 w-1/2" 
-                                />
-                            </div>
-                            <div className="flex justify-between items-center text-[6px] font-black text-gray-600 uppercase tracking-widest">
-                                <span>Core: Optimal</span>
-                                <span>Lat: 12ms</span>
-                            </div>
+                        <div className="flex flex-col min-w-0">
+                            <span className="text-sm font-bold text-white truncate">{auth.user.name}</span>
+                            <span className="text-[10px] font-medium text-gray-500 truncate lowercase">{auth.user.email}</span>
                         </div>
                     </div>
-                )}
 
-                <div className="flex items-center gap-3 text-gray-600 text-[8px] font-black uppercase tracking-widest px-2 hover:text-white cursor-pointer transition-colors">
-                    <ShieldCheck className="w-3 h-3 text-white" />
-                    <span>Clearance: L3_ROOT</span>
-                    <ChevronDown className="w-2 h-2 ml-auto" />
+                    <div className="h-[1px] bg-white/10 w-full" />
+
+                    {/* Actions */}
+                    <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1">
+                            <Link 
+                                href={route('settings.index')}
+                                className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+                                title="Settings"
+                            >
+                                <Settings className="w-4 h-4" />
+                            </Link>
+                            <Link 
+                                href={route('logout')} 
+                                method="post" 
+                                as="button"
+                                className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-all"
+                                title="Logout"
+                            >
+                                <LogOut className="w-4 h-4" />
+                            </Link>
+                        </div>
+
+                        <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-xl border border-white/5 cursor-pointer hover:bg-black/60 transition-colors group">
+                            <Globe className="w-3 h-3 text-gray-500 group-hover:text-purple-400 transition-colors" />
+                            <span className="text-[10px] font-bold text-gray-400 group-hover:text-white transition-colors uppercase tracking-widest">EN</span>
+                            <ChevronDown className="w-2.5 h-2.5 text-gray-600 group-hover:text-gray-400" />
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    );
 
-            {/* Logout Modal */}
+    return (
+        <>
+            {/* Desktop Sidebar */}
+            <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] bg-[#0D0D0D] border-r border-white/10 flex-col z-[60] overflow-hidden">
+                {/* Topographic Background Overlay */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <pattern id="topo" width="200" height="200" patternUnits="userSpaceOnUse">
+                                <path d="M0 100 C 20 80, 40 120, 60 100 S 100 80, 120 100 S 160 120, 180 100 S 200 80, 220 100" fill="none" stroke="white" strokeWidth="1" />
+                                <path d="M0 150 C 20 130, 40 170, 60 150 S 100 130, 120 150 S 160 170, 180 150 S 200 130, 220 150" fill="none" stroke="white" strokeWidth="0.5" />
+                                <path d="M0 50 C 20 30, 40 70, 60 50 S 100 30, 120 50 S 160 70, 180 50 S 200 30, 220 50" fill="none" stroke="white" strokeWidth="0.5" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#topo)" />
+                    </svg>
+                </div>
+                
+                {/* Glow Effects */}
+                <div className="absolute top-0 -left-20 w-40 h-40 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute bottom-0 -right-20 w-60 h-60 bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
+
+                <div className="relative z-10 flex flex-col h-full">
+                    <SidebarContent />
+                </div>
+            </aside>
+
+            {/* Mobile Header */}
+            <div className={clsx(
+                "lg:hidden fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-6 z-[70] transition-all duration-300",
+                scrolled ? "bg-[#0D0D0D]/80 backdrop-blur-xl border-b border-white/10" : "bg-transparent"
+            )}>
+                <Link href="/" className="flex items-center gap-2">
+                    <div className="bg-purple-600 p-1.5 rounded-lg">
+                        <Landmark className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-sm font-bold text-white tracking-tight">HarborBank</span>
+                </Link>
+                <button 
+                    onClick={() => setIsMobileOpen(true)}
+                    className="p-2 bg-white/5 rounded-xl border border-white/10 text-white active:scale-90 transition-transform"
+                >
+                    <Menu className="w-5 h-5" />
+                </button>
+            </div>
+
+            {/* Mobile Drawer */}
             <AnimatePresence>
-                {showLogoutModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                {isMobileOpen && (
+                    <>
                         <motion.div 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            onClick={() => setShowLogoutModal(false)}
-                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                            onClick={() => setIsMobileOpen(false)}
+                            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[80] lg:hidden"
                         />
                         <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
-                            className="bg-black w-full max-w-sm border border-white/20 relative overflow-hidden p-10 text-center shadow-2xl"
+                            initial={{ x: "-100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "-100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="fixed left-0 top-0 bottom-0 w-[300px] bg-[#0D0D0D] border-r border-white/10 z-[90] lg:hidden"
                         >
-                            <div className="w-16 h-16 bg-white text-black flex items-center justify-center mx-auto mb-8">
-                                <LogOut className="w-8 h-8" />
-                            </div>
-                            <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">Terminate Session</h3>
-                            <p className="text-[10px] text-gray-500 mb-10 uppercase tracking-widest font-bold">Are you sure you want to disconnect from the HarborBank protocol?</p>
-                            
-                            <div className="flex flex-col gap-4">
-                                <Link 
-                                    href={route('logout')} 
-                                    method="post" 
-                                    as="button" 
-                                    className="w-full bg-white text-black font-black py-4 rounded-none hover:bg-gray-200 transition-all text-xs uppercase tracking-widest"
-                                >
-                                    Confirm Disconnect
-                                </Link>
+                            <div className="absolute top-6 right-6">
                                 <button 
-                                    onClick={() => setShowLogoutModal(false)}
-                                    className="text-[10px] font-black text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
+                                    onClick={() => setIsMobileOpen(false)}
+                                    className="p-2 bg-white/5 rounded-xl text-gray-400 hover:text-white transition-colors"
                                 >
-                                    Abort
+                                    <X className="w-5 h-5" />
                                 </button>
                             </div>
+                            <SidebarContent />
                         </motion.div>
-                    </div>
+                    </>
                 )}
             </AnimatePresence>
-        </aside>
+        </>
     );
 }
