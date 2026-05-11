@@ -48,7 +48,10 @@ class BudgetController extends Controller
 
     public function destroy(Budget $budget)
     {
-        $this->authorize('delete', $budget);
+        if ($budget->user_id !== request()->user()->id) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $budget->delete();
 
         return Redirect::back()->with('success', 'Budget activity deleted.');

@@ -4,7 +4,7 @@ import {
     MoreHorizontal, X, Wallet, Tag, Smartphone, Heart, 
     Trash2, Info, CheckCircle2, Sparkles 
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { useForm, usePage, router } from '@inertiajs/react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -13,13 +13,14 @@ const iconMap = {
     ShoppingBag, Car, Home, Film, Utensils, Zap, Smartphone, Heart
 };
 
-const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
+const BudgetItem = forwardRef(({ icon, name, spent, budget, color, onDelete }, ref) => {
     const { t } = useTranslation();
     const Icon = iconMap[icon] || Tag;
     const percentage = Math.min((spent / budget) * 100, 100);
     
     return (
         <motion.div 
+            ref={ref}
             layout
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -79,7 +80,7 @@ const BudgetItem = ({ icon, name, spent, budget, color, onDelete }) => {
             </div>
         </motion.div>
     );
-};
+});
 
 export default function SpendingManagement() {
     const { t } = useTranslation();
