@@ -34,7 +34,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/super-admin/users/{user}/toggle-block', [\App\Http\Controllers\UserController::class, 'toggleBlock'])->name('super-admin.users.toggle-block');
         Route::post('/super-admin/users/{user}/toggle-active', [\App\Http\Controllers\UserController::class, 'toggleActive'])->name('super-admin.users.toggle-active');
         
-        Route::get('/super-admin/transactions', [\App\Http\Controllers\SuperAdminController::class, 'transactions'])->name('super-admin.transactions.index');
+        Route::get('/super-admin/transactions', [\App\Http\Controllers\AdminTransactionController::class, 'index'])->name('super-admin.transactions.index');
+        Route::get('/super-admin/transactions/export', [\App\Http\Controllers\AdminTransactionController::class, 'exportCsv'])->name('super-admin.transactions.export');
     });
 
     // Super Admin Exclusive Routes
