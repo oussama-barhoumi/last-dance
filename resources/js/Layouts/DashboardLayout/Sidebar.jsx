@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { 
     LayoutDashboard, ArrowLeftRight, CreditCard, Wallet, BarChart, 
     TrendingUp, Settings, LogOut, Globe, Landmark, ChevronDown, 
-    Cpu, MessageSquare, Mic, Bell, Search, Menu, X, User
+    Cpu, MessageSquare, Mic, Bell, Search, Menu, X, User,
+    Activity, ShieldAlert, ShieldCheck, Lock
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -54,13 +55,15 @@ export default function Sidebar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
+    const role = auth.user.role;
+
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 10);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navItems = [
+    const userItems = [
         { icon: LayoutDashboard, label: "Dashboard", href: route('dashboard'), active: route().current('dashboard') },
         { icon: ArrowLeftRight, label: "Transactions", href: route('transactions.index'), active: route().current('transactions.index') },
         { icon: Landmark, label: "Accounts", href: route('accounts.index'), active: route().current('accounts.index') },
@@ -68,6 +71,31 @@ export default function Sidebar() {
         { icon: Wallet, label: "Investments", href: route('investments.index'), active: route().current('investments.index'), badge: "PRO" },
         { icon: BarChart, label: "Reports", href: "#", active: false },
         { icon: TrendingUp, label: "Loans", href: route('loans.index'), active: route().current('loans.index') },
+    ];
+
+    const adminItems = [
+        { icon: LayoutDashboard, label: "Dashboard", href: route('admin.dashboard'), active: route().current('admin.dashboard') },
+        { icon: User, label: "Users Management", href: route('super-admin.users.index'), active: route().current('super-admin.users.index') },
+        { icon: Activity, label: "Transactions Monitoring", href: route('super-admin.transactions.index'), active: route().current('super-admin.transactions.index') },
+        { icon: Landmark, label: "Loan Requests", href: route('admin.dashboard'), active: false },
+        { icon: CreditCard, label: "Cards Management", href: "#", active: false },
+        { icon: ShieldCheck, label: "KYC Verification", href: route('admin.kyc.index'), active: route().current('admin.kyc.index'), badge: "PENDING" },
+        { icon: MessageSquare, label: "Support Tickets", href: "#", active: false },
+        { icon: BarChart, label: "Reports", href: "#", active: false },
+        { icon: Bell, label: "Notifications", href: "#", active: false },
+    ];
+
+    const superAdminItems = [
+        { icon: LayoutDashboard, label: "Dashboard", href: route('super-admin.dashboard'), active: route().current('super-admin.dashboard') },
+        { icon: ShieldCheck, label: "Admin Management", href: route('super-admin.admins.index'), active: route().current('super-admin.admins.index') },
+        { icon: BarChart, label: "System Analytics", href: route('super-admin.analytics.index'), active: route().current('super-admin.analytics.index') },
+        { icon: Activity, label: "Bank Statistics", href: "#", active: false },
+        { icon: ShieldAlert, label: "Fraud Detection", href: route('super-admin.fraud.index'), active: route().current('super-admin.fraud.index'), badge: "ALERT", badgeColor: "bg-red-500" },
+        { icon: Lock, label: "Security Logs", href: route('super-admin.logs.index'), active: route().current('super-admin.logs.index') },
+        { icon: ArrowLeftRight, label: "Transaction Control", href: route('super-admin.transactions.index'), active: false },
+        { icon: User, label: "User Control", href: route('super-admin.users.index'), active: false },
+        { icon: Settings, label: "System Settings", href: route('super-admin.settings.index'), active: route().current('super-admin.settings.index') },
+        { icon: Cpu, label: "AI Monitoring", href: route('super-admin.ai-monitoring.index'), active: route().current('super-admin.ai-monitoring.index'), badge: "PRO" },
     ];
 
     const aiItems = [
@@ -95,13 +123,17 @@ export default function Sidebar() {
 
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto px-4 space-y-8 scrollbar-hide py-4">
+                {/* Role Specific Section */}
                 <div className="space-y-1">
-                    <p className="px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4">Core Banking</p>
-                    {navItems.map((item, idx) => (
-                        <NavItem key={idx} {...item} />
-                    ))}
+                    <p className="px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4">
+                        {role === 'super_admin' ? 'Root Terminal' : role === 'admin' ? 'Ops Console' : 'Core Banking'}
+                    </p>
+                    {role === 'super_admin' && superAdminItems.map((item, idx) => <NavItem key={idx} {...item} />)}
+                    {role === 'admin' && adminItems.map((item, idx) => <NavItem key={idx} {...item} />)}
+                    {role === 'user' && userItems.map((item, idx) => <NavItem key={idx} {...item} />)}
                 </div>
 
+                {/* Shared AI Section */}
                 <div className="space-y-1">
                     <p className="px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4">AI Protocols</p>
                     {aiItems.map((item, idx) => (
@@ -125,7 +157,7 @@ export default function Sidebar() {
                         </div>
                         <div className="flex flex-col min-w-0">
                             <span className="text-sm font-bold text-white truncate">{auth.user.name}</span>
-                            <span className="text-[10px] font-medium text-gray-500 truncate lowercase">{auth.user.email}</span>
+                            <span className="text-[10px] font-medium text-purple-400 uppercase tracking-widest">{role.replace('_', ' ')}</span>
                         </div>
                     </div>
 

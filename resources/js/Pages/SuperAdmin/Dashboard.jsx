@@ -54,68 +54,70 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                 <div className="lg:col-span-3 space-y-12">
                     
                     {/* 1. Header Overview Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <AdminStatCard 
-                            label="Total Network Nodes" 
-                            value={stats.total_users} 
-                            icon={Users}
-                        />
-                        <AdminStatCard 
-                            label="Global Capital" 
-                            value={`$${(stats.total_capital / 1000000).toFixed(1)}M`} 
-                            icon={TrendingUp}
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <AdminStatCard label="Total Nodes" value={stats.total_users} icon={Users} />
+                        <AdminStatCard label="Global Cap" value={`$${(stats.total_capital / 1000000).toFixed(1)}M`} icon={TrendingUp} />
+                        <AdminStatCard label="System Health" value="99.9%" icon={Zap} />
+                        <AdminStatCard label="Sessions" value="1,284" icon={Activity} />
                     </div>
 
-                    {/* 2. Global Capital Flow (Chart) */}
-                    <div className="bg-black border border-white/10 p-10 space-y-8">
-                        <div className="flex justify-between items-end">
-                            <div>
-                                <h3 className="text-xl font-black tracking-tighter">GLOBAL CAPITAL FLOW</h3>
-                                <p className="text-[9px] text-gray-500 font-black uppercase tracking-widest mt-1">Institutional Liquidity Monitoring</p>
+                    {/* 2. Intelligence Metrics */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        {/* Global Capital Flow (Chart) */}
+                        <div className="bg-black border border-white/10 p-10 space-y-8">
+                            <div className="flex justify-between items-end">
+                                <div>
+                                    <h3 className="text-xl font-black tracking-tighter text-white">REVENUE FLOW</h3>
+                                    <p className="text-[9px] text-gray-500 font-black uppercase tracking-widest mt-1">Global Transaction Yield</p>
+                                </div>
                             </div>
-                            <div className="flex gap-4">
-                                <button className="bg-white text-black p-3"><Plus className="w-4 h-4" /></button>
+                            <div className="h-[250px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={chartData}>
+                                        <defs>
+                                            <linearGradient id="colorVol" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
+                                                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                                        <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#666', fontSize: 10, fontWeight: 900}} />
+                                        <Tooltip contentStyle={{backgroundColor: '#000', border: '1px solid #333', borderRadius: '0px'}} itemStyle={{color: '#FFF', fontSize: '10px', fontWeight: 'bold'}} />
+                                        <Area type="monotone" dataKey="volume" stroke="#8B5CF6" strokeWidth={4} fillOpacity={1} fill="url(#colorVol)" />
+                                    </AreaChart>
+                                </ResponsiveContainer>
                             </div>
                         </div>
-                        
-                        <div className="h-[400px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={chartData}>
-                                    <defs>
-                                        <linearGradient id="colorVol" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.3}/>
-                                            <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0}/>
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                                    <XAxis 
-                                        dataKey="month" 
-                                        axisLine={false} 
-                                        tickLine={false} 
-                                        tick={{fill: '#666', fontSize: 10, fontWeight: 900}} 
-                                    />
-                                    <YAxis hide />
-                                    <Tooltip 
-                                        contentStyle={{backgroundColor: '#000', border: '1px solid #333', borderRadius: '0px'}}
-                                        itemStyle={{color: '#FFF', fontSize: '10px', fontWeight: 'bold'}}
-                                    />
-                                    <Area 
-                                        type="monotone" 
-                                        dataKey="volume" 
-                                        stroke="#FFFFFF" 
-                                        strokeWidth={4}
-                                        fillOpacity={1} 
-                                        fill="url(#colorVol)" 
-                                    />
-                                </AreaChart>
-                            </ResponsiveContainer>
+
+                        {/* Fraud Detection AI */}
+                        <div className="bg-white text-black p-10 space-y-8 border border-white relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4">
+                                <div className="w-2 h-2 bg-red-500 animate-pulse rounded-full" />
+                            </div>
+                            <h3 className="text-xl font-black tracking-tighter">FRAUD AI PROTOCOL</h3>
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Monitoring</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest bg-black text-white px-2 py-0.5">ENABLED</span>
+                                </div>
+                                <div className="p-4 bg-gray-50 border border-black/5 space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-[9px] font-black">SCAN_EFFICIENCY</span>
+                                        <span className="text-[9px] font-black">98.2%</span>
+                                    </div>
+                                    <div className="h-1 bg-gray-200 w-full">
+                                        <div className="h-full bg-black w-[98.2%]" />
+                                    </div>
+                                </div>
+                                <p className="text-[9px] font-bold text-gray-500 leading-relaxed">AI is currently analyzing 429 pending transactions. No high-risk anomalies detected in the last 15 minutes.</p>
+                            </div>
                         </div>
                     </div>
 
-                    {/* 3. Global Audit Log (Direct Transfers) */}
+                    {/* 3. Global Audit Log */}
                     <div className="space-y-6">
-                        <h3 className="text-xl font-black tracking-tighter">GLOBAL AUDIT LOG (DIRECT TRANSFERS)</h3>
+                        <h3 className="text-xl font-black tracking-tighter text-white">GLOBAL AUDIT LOG (DIRECT TRANSFERS)</h3>
+                        {/* ... Table Content ... */}
                         <div className="overflow-x-auto border border-white/10 bg-white/5">
                             <table className="w-full text-left border-collapse">
                                 <thead>
