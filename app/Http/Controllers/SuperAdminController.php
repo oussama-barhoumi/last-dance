@@ -43,9 +43,11 @@ class SuperAdminController extends Controller
                 'active_users' => User::where('is_blocked', false)->count(),
                 'total_capital' => $totalBalance,
                 'total_transactions' => $totalTransactions,
+                'pending_loans' => \App\Models\Loan::where('status', 'pending_review')->count(),
             ],
             'chartData' => $chartData,
             'blockedUsers' => User::where('is_blocked', true)->take(5)->get(),
+            'pendingLoans' => \App\Models\Loan::with('user')->where('status', 'pending_review')->latest()->take(5)->get(),
         ]);
     }
 

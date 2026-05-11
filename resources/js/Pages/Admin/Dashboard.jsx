@@ -41,7 +41,7 @@ const AdminStatCard = ({ label, value, subtext, icon: Icon, trend, trendType = '
     </div>
 );
 
-export default function AdminDashboard({ stats, revenueData, growthData, recentTransactions, recentUsers, fraudAlerts }) {
+export default function AdminDashboard({ stats, revenueData, growthData, recentTransactions, recentUsers, fraudAlerts, pendingLoans }) {
     const [activeChart, setActiveChart] = useState('revenue');
 
     return (
@@ -254,7 +254,42 @@ export default function AdminDashboard({ stats, revenueData, growthData, recentT
                             <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[40px]" />
                         </div>
 
-                        {/* 4. Network Nodes (Recent Users) */}
+                        {/* 4. Pending Loan Protocols (NEW) */}
+                        <div className="bg-[#0A0A0A] border border-white/10 p-8 rounded-[40px] space-y-8 group relative overflow-hidden">
+                            <div className="flex justify-between items-center relative z-10">
+                                <h3 className="text-sm font-black text-white tracking-tighter uppercase">Credit Queue</h3>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
+                                    <Landmark className="w-5 h-5 text-gray-500" />
+                                </div>
+                            </div>
+                            <div className="space-y-6 relative z-10">
+                                {pendingLoans.map(loan => (
+                                    <Link 
+                                        key={loan.id} 
+                                        href={route('admin.loans.index')}
+                                        className="flex items-center justify-between group cursor-pointer border-b border-white/5 pb-4 last:border-0 last:pb-0"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 bg-white/5 border border-white/10 text-white flex items-center justify-center rounded-xl font-black text-xs group-hover:bg-white group-hover:text-black transition-all">
+                                                {loan.user?.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <p className="text-[11px] font-black text-white">{loan.user?.name}</p>
+                                                <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">${Number(loan.amount).toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                                        <ArrowUpRight className="w-4 h-4 text-gray-700 group-hover:text-white transition-colors" />
+                                    </Link>
+                                ))}
+                                {pendingLoans.length === 0 && (
+                                    <p className="text-[10px] text-gray-600 font-black uppercase text-center py-4">No Pending Protocols</p>
+                                )}
+                            </div>
+                            <Link href={route('admin.loans.index')} className="block w-full text-center py-4 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all">View All Requests</Link>
+                        </div>
+
+                        {/* 5. Network Nodes (Recent Users) */}
                         <div className="bg-white/5 border border-white/10 p-8 rounded-[40px] space-y-8">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-sm font-black text-white tracking-tighter uppercase">Recent Nodes</h3>

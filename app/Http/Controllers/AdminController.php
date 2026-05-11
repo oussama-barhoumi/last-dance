@@ -18,9 +18,9 @@ class AdminController extends Controller
         $stats = [
             'total_users' => User::count(),
             'total_transactions' => Transaction::count(),
-            'total_deposits' => Transaction::where('type', 'deposit')->sum('amount'),
-            'total_withdrawals' => Transaction::where('type', 'withdrawal')->sum('amount'),
-            'pending_loans' => Loan::where('status', 'pending')->count(),
+            'total_deposits' => Transaction::where('type', 'credit')->sum('amount'),
+            'total_withdrawals' => Transaction::where('type', 'debit')->sum('amount'),
+            'pending_loans' => Loan::where('status', 'pending_review')->count(),
             'suspicious_transactions' => Transaction::where('amount', '>', 10000)->count(), // Example rule
         ];
 
@@ -74,6 +74,13 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+        // 7. Pending Loan Requests
+        $pendingLoans = Loan::with('user')
+            ->where('status', 'pending_review')
+            ->latest()
+            ->take(5)
+            ->get();
+
         return Inertia::render('Admin/Dashboard', [
             'stats' => $stats,
             'revenueData' => $revenueData,
@@ -81,6 +88,7 @@ class AdminController extends Controller
             'recentTransactions' => $recentTransactions,
             'recentUsers' => $recentUsers,
             'fraudAlerts' => $fraudAlerts,
+            'pendingLoans' => $pendingLoans,
         ]);
     }
 }

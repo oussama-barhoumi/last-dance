@@ -23,7 +23,7 @@ const AdminStatCard = ({ label, value, type, icon: Icon }) => (
     </div>
 );
 
-export default function SuperAdminDashboard({ recentUsers, recentTransactions, stats, chartData, blockedUsers, flash }) {
+export default function SuperAdminDashboard({ recentUsers, recentTransactions, stats, chartData, blockedUsers, flash, pendingLoans }) {
     const handleToggleBlock = (user) => {
         if (confirm(`INITIATE PROTOCOL: ${user.is_blocked ? 'RESTORE' : 'BLOCK'} ACCESS FOR ${user.name}?`)) {
             router.post(route('super-admin.users.toggle-block', user.id));
@@ -211,7 +211,49 @@ export default function SuperAdminDashboard({ recentUsers, recentTransactions, s
                 {/* Right Sidebar (1 Column) */}
                 <div className="space-y-10">
 
-                    {/* 4. Suspended Protocols (Blocked Users) */}
+                    {/* 4. Credit Queue (Pending Loans) */}
+                    <div className="bg-black border border-white p-8 space-y-8 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4">
+                            <div className="w-2 h-2 bg-orange-500 animate-pulse rounded-full shadow-[0_0_10px_#f97316]" />
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <h3 className="text-sm font-black tracking-tighter">CREDIT QUEUE</h3>
+                            <Landmark className="w-4 h-4 text-gray-500" />
+                        </div>
+
+                        <div className="space-y-6">
+                            {pendingLoans.map(loan => (
+                                <Link 
+                                    key={loan.id} 
+                                    href={route('super-admin.loans.index')}
+                                    className="flex items-center justify-between border-b border-white/10 pb-4 last:border-0"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-8 h-8 bg-white/10 text-white flex items-center justify-center text-[10px] font-black">
+                                            {loan.user?.name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black">{loan.user?.name}</p>
+                                            <p className="text-[8px] text-gray-500 font-bold uppercase tracking-widest">${Number(loan.amount).toLocaleString()}</p>
+                                        </div>
+                                    </div>
+                                    <ArrowUpRight className="w-4 h-4 text-gray-700 group-hover:text-white transition-colors" />
+                                </Link>
+                            ))}
+                            {pendingLoans.length === 0 && (
+                                <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest py-10 text-center">No Pending Protocols</p>
+                            )}
+                        </div>
+
+                        <Link 
+                            href={route('super-admin.loans.index')}
+                            className="block w-full border-2 border-white py-4 text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all text-center"
+                        >
+                            Review All Credit
+                        </Link>
+                    </div>
+
+                    {/* 5. Suspended Protocols (Blocked Users) */}
                     <div className="bg-white text-black p-8 border border-white space-y-8">
                         <div className="flex justify-between items-center">
                             <h3 className="text-sm font-black tracking-tighter">SUSPENDED NODES</h3>

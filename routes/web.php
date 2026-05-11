@@ -54,6 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/loans', [\App\Http\Controllers\AdminLoanController::class, 'index'])->name('loans.index');
         Route::post('/loans/{loan}/approve', [\App\Http\Controllers\AdminLoanController::class, 'approve'])->name('loans.approve');
         Route::post('/loans/{loan}/reject', [\App\Http\Controllers\AdminLoanController::class, 'reject'])->name('loans.reject');
+        Route::post('/loans/{loan}/review', [\App\Http\Controllers\AdminLoanController::class, 'review'])->name('loans.review');
         Route::post('/loans/{loan}/risk', [\App\Http\Controllers\AdminLoanController::class, 'updateRisk'])->name('loans.risk-update');
 
         Route::get('/settings', [\App\Http\Controllers\SuperAdminController::class, 'settings'])->name('settings.index');

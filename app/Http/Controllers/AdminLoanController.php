@@ -3,98 +3,73 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
-use App\Models\User;
-use App\Services\LoanService;
+use App\Models\Banker;
+use App\Services\LoanApprovalService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 
 class AdminLoanController extends Controller
 {
-    protected $loanService;
+    protected $approvalService;
 
-    public function __construct(LoanService $loanService)
+    public function __construct(LoanApprovalService $approvalService)
     {
-        $this->loanService = $loanService;
+        $this->approvalService = $approvalService;
     }
 
-    /**
-     * Display listing of loan requests.
-     */
     public function index(Request $request)
     {
-        $query = Loan::with('user');
+        $query = Loan::with(['user', 'aiAnalysis', 'banker', 'assignment.banker']);
 
-        if ($request->status && $request->status !== 'all') {
-            $query->where('status', $request->status);
+        // Filters
+        if ($request->status) $query->where('status', $request->status);
+        if ($request->risk_level) {
+            $query->whereHas('aiAnalysis', function($q) use ($request) {
+                $q->where('risk_level', $request->risk_level);
+            });
         }
 
-        if ($request->type && $request->type !== 'all') {
-            $query->where('type', $request->type);
-        }
+        $loans = $query->latest()->paginate(15)->withQueryString();
 
-        $loans = $query->latest()->paginate(15)->through(function ($loan) {
-            $loan->repayment_schedule = $this->loanService->generateRepaymentSchedule(
-                (float)$loan->amount, 
-                (int)$loan->duration, 
-                (float)($loan->interest_rate ?? 5.0)
-            );
-            return $loan;
-        });
-
-        $stats = [
-            'pending_count' => Loan::where('status', 'pending')->count(),
-            'total_disbursed' => Loan::where('status', 'approved')->sum('amount'),
-            'average_risk' => round(Loan::avg('risk_score') ?? 0, 1),
-            'approval_rate' => Loan::count() > 0 ? round((Loan::where('status', 'approved')->count() / Loan::count()) * 100, 1) : 0,
-        ];
-
-        return Inertia::render('SuperAdmin/Loans', [
+        return Inertia::render('Admin/Loans/Index', [
             'loans' => $loans,
-            'stats' => $stats,
-            'filters' => $request->only(['status', 'type']),
+            'stats' => [
+                'pending' => Loan::where('status', 'pending_review')->count(),
+                'under_review' => Loan::where('status', 'under_review')->count(),
+                'high_risk' => Loan::whereHas('aiAnalysis', fn($q) => $q->where('risk_level', 'high'))->count(),
+            ],
+            'filters' => $request->only(['status', 'risk_level']),
         ]);
     }
 
-    /**
-     * Approve a loan request.
-     */
     public function approve(Request $request, Loan $loan)
     {
-        $request->validate([
-            'interest_rate' => 'required|numeric|min:0',
-            'admin_notes' => 'nullable|string',
+        $this->approvalService->approve($loan, $request->admin_notes);
+        
+        // Log the decision for audit
+        \Illuminate\Support\Facades\Log::info('Loan Approved', [
+            'loan_id' => $loan->id,
+            'admin_id' => auth()->id(),
+            'timestamp' => now(),
         ]);
 
-        $this->loanService->approve($loan, (float)$request->interest_rate, $request->admin_notes);
-
-        return Redirect::back()->with('success', 'Institutional credit authorized. Funds synchronized to node balance.');
+        return Redirect::back()->with('success', 'Institutional credit authorized. Funds disbursed.');
     }
 
-    /**
-     * Reject a loan request.
-     */
     public function reject(Request $request, Loan $loan)
     {
-        $request->validate([
-            'admin_notes' => 'required|string',
-        ]);
+        $request->validate(['admin_notes' => 'required|string']);
+        
+        $this->approvalService->reject($loan, $request->admin_notes);
 
-        $loan->update([
-            'status' => 'rejected',
-            'admin_notes' => $request->admin_notes,
-        ]);
-
-        return Redirect::back()->with('success', 'Credit application rejected and archived.');
+        return Redirect::back()->with('success', 'Loan request rejected.');
     }
 
-    /**
-     * Update risk score manually if needed.
-     */
-    public function updateRisk(Request $request, Loan $loan)
+    public function review(Request $request, Loan $loan)
     {
-        $request->validate(['risk_score' => 'required|integer|min:0|max:100']);
-        $loan->update(['risk_score' => $request->risk_score]);
-        return Redirect::back()->with('success', 'Manual risk override applied.');
+        $this->approvalService->review($loan, $request->admin_notes);
+
+        return Redirect::back()->with('success', 'Loan moved to under review status.');
     }
 }
